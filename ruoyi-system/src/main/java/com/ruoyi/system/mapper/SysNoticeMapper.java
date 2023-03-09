@@ -2,12 +2,14 @@ package com.ruoyi.system.mapper;
 
 import java.util.List;
 import com.ruoyi.system.domain.SysNotice;
+import org.springframework.stereotype.Component;
 
 /**
  * 通知公告表 数据层
  * 
  * @author ruoyi
  */
+@Component
 public interface SysNoticeMapper
 {
     /**
