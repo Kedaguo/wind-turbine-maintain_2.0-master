@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import com.ruoyi.system.domain.SysUserRole;
 import org.springframework.stereotype.Component;
@@ -10,8 +12,7 @@ import org.springframework.stereotype.Component;
  * 
  * @author ruoyi
  */
-@Component
-public interface SysUserRoleMapper
+public interface SysUserRoleMapper extends BaseMapper<SysUserRole>
 {
     /**
      * 通过用户ID删除用户和角色关联

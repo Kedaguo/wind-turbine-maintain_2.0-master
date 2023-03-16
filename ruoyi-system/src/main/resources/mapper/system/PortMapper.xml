@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PortMapper">
+    
+    <resultMap type="Port" id="PortResult">
+        <result property="pId"    column="p_id"    />
+        <result property="pPortname"    column="p_portname"    />
+        <result property="pLongitude"    column="p_longitude"    />
+        <result property="pLatitude"    column="p_latitude"    />
+        <result property="pCostperday"    column="p_costperday"    />
+        <result property="pFixdcost"    column="p_fixdcost"    />
+        <result property="pCostPerVessalCall"    column="p_cost_per_vessal_call"    />
+        <result property="pWeatherLimit"    column="p_weather_limit"    />
+        <result property="pDepthPort"    column="p_depth_port"    />
+        <result property="pTrafficControl"    column="p_traffic_control"    />
+    </resultMap>
+
+    <sql id="selectPortVo">
+        select p_id, p_portname, p_longitude, p_latitude, p_costperday, p_fixdcost, p_cost_per_vessal_call, p_weather_limit, p_depth_port, p_traffic_control from tl_port
+    </sql>
+
+    <select id="selectPortList" parameterType="Port" resultMap="PortResult">
+        <include refid="selectPortVo"/>
+        <where>  
+            <if test="pPortname != null  and pPortname != ''"> and p_portname like concat('%', #{pPortname}, '%')</if>
+            <if test="pLongitude != null  and pLongitude != ''"> and p_longitude = #{pLongitude}</if>
+            <if test="pLatitude != null  and pLatitude != ''"> and p_latitude = #{pLatitude}</if>
+            <if test="pCostperday != null "> and p_costperday = #{pCostperday}</if>
+            <if test="pFixdcost != null "> and p_fixdcost = #{pFixdcost}</if>
+            <if test="pCostPerVessalCall != null "> and p_cost_per_vessal_call = #{pCostPerVessalCall}</if>
+            <if test="pWeatherLimit != null "> and p_weather_limit = #{pWeatherLimit}</if>
+            <if test="pDepthPort != null "> and p_depth_port = #{pDepthPort}</if>
+            <if test="pTrafficControl != null  and pTrafficControl != ''"> and p_traffic_control = #{pTrafficControl}</if>
+        </where>
+    </select>
+    
+    <select id="selectPortByPId" parameterType="Long" resultMap="PortResult">
+        <include refid="selectPortVo"/>
+        where p_id = #{pId}
+    </select>
+        
+    <insert id="insertPort" parameterType="Port" useGeneratedKeys="true" keyProperty="pId">
+        insert into tl_port
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pPortname != null">p_portname,</if>
+            <if test="pLongitude != null">p_longitude,</if>
+            <if test="pLatitude != null">p_latitude,</if>
+            <if test="pCostperday != null">p_costperday,</if>
+            <if test="pFixdcost != null">p_fixdcost,</if>
+            <if test="pCostPerVessalCall != null">p_cost_per_vessal_call,</if>
+            <if test="pWeatherLimit != null">p_weather_limit,</if>
+            <if test="pDepthPort != null">p_depth_port,</if>
+            <if test="pTrafficControl != null">p_traffic_control,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pPortname != null">#{pPortname},</if>
+            <if test="pLongitude != null">#{pLongitude},</if>
+            <if test="pLatitude != null">#{pLatitude},</if>
+            <if test="pCostperday != null">#{pCostperday},</if>
+            <if test="pFixdcost != null">#{pFixdcost},</if>
+            <if test="pCostPerVessalCall != null">#{pCostPerVessalCall},</if>
+            <if test="pWeatherLimit != null">#{pWeatherLimit},</if>
+            <if test="pDepthPort != null">#{pDepthPort},</if>
+            <if test="pTrafficControl != null">#{pTrafficControl},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePort" parameterType="Port">
+        update tl_port
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pPortname != null">p_portname = #{pPortname},</if>
+            <if test="pLongitude != null">p_longitude = #{pLongitude},</if>
+            <if test="pLatitude != null">p_latitude = #{pLatitude},</if>
+            <if test="pCostperday != null">p_costperday = #{pCostperday},</if>
+            <if test="pFixdcost != null">p_fixdcost = #{pFixdcost},</if>
+            <if test="pCostPerVessalCall != null">p_cost_per_vessal_call = #{pCostPerVessalCall},</if>
+            <if test="pWeatherLimit != null">p_weather_limit = #{pWeatherLimit},</if>
+            <if test="pDepthPort != null">p_depth_port = #{pDepthPort},</if>
+            <if test="pTrafficControl != null">p_traffic_control = #{pTrafficControl},</if>
+        </trim>
+        where p_id = #{pId}
+    </update>
+
+    <delete id="deletePortByPId" parameterType="Long">
+        delete from tl_port where p_id = #{pId}
+    </delete>
+
+    <delete id="deletePortByPIds" parameterType="String">
+        delete from tl_port where p_id in 
+        <foreach item="pId" collection="array" open="(" separator="," close=")">
+            #{pId}
+        </foreach>
+    </delete>
+</mapper>

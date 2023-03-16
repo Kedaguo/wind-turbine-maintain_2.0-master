@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TurbineWindMapper">
+    
+    <resultMap type="TurbineWind" id="TurbineWindResult">
+        <result property="tId"    column="t_id"    />
+        <result property="tModel"    column="t_model"    />
+        <result property="tPrice"    column="t_price"    />
+        <result property="tRatePower"    column="t_rate_power"    />
+        <result property="tPowerVelocityCurve"    column="t_power_velocity_curve"    />
+        <result property="tHeight"    column="t_height"    />
+        <result property="tLifetime"    column="t_lifetime"    />
+        <result property="tCost"    column="t_cost"    />
+        <result property="tLongitude"    column="t_longitude"    />
+        <result property="tLatitude"    column="t_latitude"    />
+        <result property="tBrand"    column="t_brand"    />
+        <result property="tFaultState"    column="t_fault_state"    />
+        <result property="tMaintainState"    column="t_maintain_state"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTurbineWindVo">
+        select t_id, t_model, t_price, t_rate_power, t_power_velocity_curve, t_height, t_lifetime, t_cost, t_longitude, t_latitude, t_brand, t_fault_state, t_maintain_state, create_by, create_time, update_by, update_time from tl_turbine_wind
+    </sql>
+
+    <select id="selectTurbineWindList" parameterType="TurbineWind" resultMap="TurbineWindResult">
+        <include refid="selectTurbineWindVo"/>
+        <where>  
+            <if test="tPrice != null "> and t_price = #{tPrice}</if>
+            <if test="tRatePower != null  and tRatePower != ''"> and t_rate_power = #{tRatePower}</if>
+            <if test="tHeight != null "> and t_height = #{tHeight}</if>
+            <if test="tLifetime != null "> and t_lifetime = #{tLifetime}</if>
+            <if test="tCost != null "> and t_cost = #{tCost}</if>
+            <if test="tBrand != null  and tBrand != ''"> and t_brand = #{tBrand}</if>
+            <if test="tFaultState != null "> and t_fault_state = #{tFaultState}</if>
+            <if test="tMaintainState != null "> and t_maintain_state = #{tMaintainState}</if>
+        </where>
+    </select>
+    
+    <select id="selectTurbineWindByTId" parameterType="Long" resultMap="TurbineWindResult">
+        <include refid="selectTurbineWindVo"/>
+        where t_id = #{tId}
+    </select>
+        
+    <insert id="insertTurbineWind" parameterType="TurbineWind" useGeneratedKeys="true" keyProperty="tId">
+        insert into tl_turbine_wind
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tModel != null">t_model,</if>
+            <if test="tPrice != null">t_price,</if>
+            <if test="tRatePower != null">t_rate_power,</if>
+            <if test="tPowerVelocityCurve != null">t_power_velocity_curve,</if>
+            <if test="tHeight != null">t_height,</if>
+            <if test="tLifetime != null">t_lifetime,</if>
+            <if test="tCost != null">t_cost,</if>
+            <if test="tLongitude != null">t_longitude,</if>
+            <if test="tLatitude != null">t_latitude,</if>
+            <if test="tBrand != null">t_brand,</if>
+            <if test="tFaultState != null">t_fault_state,</if>
+            <if test="tMaintainState != null">t_maintain_state,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tModel != null">#{tModel},</if>
+            <if test="tPrice != null">#{tPrice},</if>
+            <if test="tRatePower != null">#{tRatePower},</if>
+            <if test="tPowerVelocityCurve != null">#{tPowerVelocityCurve},</if>
+            <if test="tHeight != null">#{tHeight},</if>
+            <if test="tLifetime != null">#{tLifetime},</if>
+            <if test="tCost != null">#{tCost},</if>
+            <if test="tLongitude != null">#{tLongitude},</if>
+            <if test="tLatitude != null">#{tLatitude},</if>
+            <if test="tBrand != null">#{tBrand},</if>
+            <if test="tFaultState != null">#{tFaultState},</if>
+            <if test="tMaintainState != null">#{tMaintainState},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTurbineWind" parameterType="TurbineWind">
+        update tl_turbine_wind
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tModel != null">t_model = #{tModel},</if>
+            <if test="tPrice != null">t_price = #{tPrice},</if>
+            <if test="tRatePower != null">t_rate_power = #{tRatePower},</if>
+            <if test="tPowerVelocityCurve != null">t_power_velocity_curve = #{tPowerVelocityCurve},</if>
+            <if test="tHeight != null">t_height = #{tHeight},</if>
+            <if test="tLifetime != null">t_lifetime = #{tLifetime},</if>
+            <if test="tCost != null">t_cost = #{tCost},</if>
+            <if test="tLongitude != null">t_longitude = #{tLongitude},</if>
+            <if test="tLatitude != null">t_latitude = #{tLatitude},</if>
+            <if test="tBrand != null">t_brand = #{tBrand},</if>
+            <if test="tFaultState != null">t_fault_state = #{tFaultState},</if>
+            <if test="tMaintainState != null">t_maintain_state = #{tMaintainState},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where t_id = #{tId}
+    </update>
+
+    <delete id="deleteTurbineWindByTId" parameterType="Long">
+        delete from tl_turbine_wind where t_id = #{tId}
+    </delete>
+
+    <delete id="deleteTurbineWindByTIds" parameterType="String">
+        delete from tl_turbine_wind where t_id in 
+        <foreach item="tId" collection="array" open="(" separator="," close=")">
+            #{tId}
+        </foreach>
+    </delete>
+</mapper>

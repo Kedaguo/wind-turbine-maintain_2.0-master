@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
  * 
  * @author ruoyi
  */
-@Component
 public interface SysRoleMapper
 {
     /**

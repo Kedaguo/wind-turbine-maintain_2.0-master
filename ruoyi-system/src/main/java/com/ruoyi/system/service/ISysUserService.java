@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.domain.SysUserRole;
 
 /**
  * 用户 业务层
@@ -17,6 +18,12 @@ public interface ISysUserService
      * @return 用户信息集合信息
      */
     public List<SysUser> selectUserList(SysUser user);
+
+    /*
+    根据条件分页查询学生和用户列表
+     */
+    public List<SysUser> listByRoles(SysUserRole sysUserRole);
+
 
     /**
      * 根据条件分页查询已分配用户角色列表

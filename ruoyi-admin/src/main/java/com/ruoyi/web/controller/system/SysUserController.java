@@ -2,19 +2,15 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.SysUserRole;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -64,6 +60,35 @@ public class SysUserController extends BaseController
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
     }
+
+    /*
+    根据角色获取用户列表  学生 教师
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:listByRole')")
+    @GetMapping("/listByRole")
+    public TableDataInfo listByRoles(SysUserRole sysUserRole)
+    {
+        startPage();
+        List<SysUser> list = userService.listByRoles(sysUserRole);
+        return getDataTable(list);
+    }
+
+    /*
+    老师分配小组
+     */
+
+//    @PreAuthorize("@ss.hasPermi('system:user:divide')")
+//    @GetMapping("/divide")
+//    public TableDataInfo divideStudentGroup(@RequestParam Integer groupNumber)
+//    {
+//        startPage();
+////        List<SysUser> list = userService.listByRoles(sysUserRole);
+////        return getDataTable(list);
+//        return
+//    }
+
+
+
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
@@ -223,6 +248,10 @@ public class SysUserController extends BaseController
         List<SysRole> roles = roleService.selectRolesByUserId(userId);
         ajax.put("user", user);
         ajax.put("roles", SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList()));
+        /*
+        SysUser.isAdmin(userId) ? roles : roles.stream().filter(r -> !r.isAdmin()).collect(Collectors.toList())
+        具体来说，这段代码使用了三目运算符，其格式为condition ? value1 : value2。如果condition为真，则返回value1，否则返回value2。
+         */
         return ajax;
     }
 

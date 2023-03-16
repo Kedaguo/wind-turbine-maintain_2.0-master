@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.FaultMapper">
+    
+    <resultMap type="Fault" id="FaultResult">
+        <result property="fId"    column="f_id"    />
+        <result property="fFrequencyPerYear"    column="f_frequency_per_year"    />
+        <result property="fConsumableCost"    column="f_consumable_cost"    />
+        <result property="fBoatModel"    column="f_boat_model"    />
+        <result property="fPrepareDuration"    column="f_prepare_duration"    />
+        <result property="fMaintainDuration"    column="f_maintain_duration"    />
+        <result property="fPeopleNumber"    column="f_people_number"    />
+        <result property="fFaultType"    column="f_fault_type"    />
+        <result property="fFaultDevice"    column="f_fault_device"    />
+        <result property="fFaultfre"    column="f_faultfre"    />
+    </resultMap>
+
+    <sql id="selectFaultVo">
+        select f_id, f_frequency_per_year, f_consumable_cost, f_boat_model, f_prepare_duration, f_maintain_duration, f_people_number, f_fault_type, f_fault_device, f_faultfre from tl_fault
+    </sql>
+
+    <select id="selectFaultList" parameterType="Fault" resultMap="FaultResult">
+        <include refid="selectFaultVo"/>
+        <where>  
+            <if test="fFrequencyPerYear != null  and fFrequencyPerYear != ''"> and f_frequency_per_year = #{fFrequencyPerYear}</if>
+            <if test="fConsumableCost != null "> and f_consumable_cost = #{fConsumableCost}</if>
+            <if test="fBoatModel != null "> and f_boat_model = #{fBoatModel}</if>
+            <if test="fPrepareDuration != null "> and f_prepare_duration = #{fPrepareDuration}</if>
+            <if test="fMaintainDuration != null  and fMaintainDuration != ''"> and f_maintain_duration = #{fMaintainDuration}</if>
+            <if test="fPeopleNumber != null "> and f_people_number = #{fPeopleNumber}</if>
+            <if test="fFaultType != null "> and f_fault_type = #{fFaultType}</if>
+            <if test="fFaultDevice != null  and fFaultDevice != ''"> and f_fault_device = #{fFaultDevice}</if>
+            <if test="fFaultfre != null  and fFaultfre != ''"> and f_faultfre = #{fFaultfre}</if>
+        </where>
+    </select>
+    
+    <select id="selectFaultByFId" parameterType="Long" resultMap="FaultResult">
+        <include refid="selectFaultVo"/>
+        where f_id = #{fId}
+    </select>
+        
+    <insert id="insertFault" parameterType="Fault">
+        insert into tl_fault
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fId != null">f_id,</if>
+            <if test="fFrequencyPerYear != null">f_frequency_per_year,</if>
+            <if test="fConsumableCost != null">f_consumable_cost,</if>
+            <if test="fBoatModel != null">f_boat_model,</if>
+            <if test="fPrepareDuration != null">f_prepare_duration,</if>
+            <if test="fMaintainDuration != null">f_maintain_duration,</if>
+            <if test="fPeopleNumber != null">f_people_number,</if>
+            <if test="fFaultType != null">f_fault_type,</if>
+            <if test="fFaultDevice != null">f_fault_device,</if>
+            <if test="fFaultfre != null">f_faultfre,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="fId != null">#{fId},</if>
+            <if test="fFrequencyPerYear != null">#{fFrequencyPerYear},</if>
+            <if test="fConsumableCost != null">#{fConsumableCost},</if>
+            <if test="fBoatModel != null">#{fBoatModel},</if>
+            <if test="fPrepareDuration != null">#{fPrepareDuration},</if>
+            <if test="fMaintainDuration != null">#{fMaintainDuration},</if>
+            <if test="fPeopleNumber != null">#{fPeopleNumber},</if>
+            <if test="fFaultType != null">#{fFaultType},</if>
+            <if test="fFaultDevice != null">#{fFaultDevice},</if>
+            <if test="fFaultfre != null">#{fFaultfre},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFault" parameterType="Fault">
+        update tl_fault
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="fFrequencyPerYear != null">f_frequency_per_year = #{fFrequencyPerYear},</if>
+            <if test="fConsumableCost != null">f_consumable_cost = #{fConsumableCost},</if>
+            <if test="fBoatModel != null">f_boat_model = #{fBoatModel},</if>
+            <if test="fPrepareDuration != null">f_prepare_duration = #{fPrepareDuration},</if>
+            <if test="fMaintainDuration != null">f_maintain_duration = #{fMaintainDuration},</if>
+            <if test="fPeopleNumber != null">f_people_number = #{fPeopleNumber},</if>
+            <if test="fFaultType != null">f_fault_type = #{fFaultType},</if>
+            <if test="fFaultDevice != null">f_fault_device = #{fFaultDevice},</if>
+            <if test="fFaultfre != null">f_faultfre = #{fFaultfre},</if>
+        </trim>
+        where f_id = #{fId}
+    </update>
+
+    <delete id="deleteFaultByFId" parameterType="Long">
+        delete from tl_fault where f_id = #{fId}
+    </delete>
+
+    <delete id="deleteFaultByFIds" parameterType="String">
+        delete from tl_fault where f_id in 
+        <foreach item="fId" collection="array" open="(" separator="," close=")">
+            #{fId}
+        </foreach>
+    </delete>
+</mapper>

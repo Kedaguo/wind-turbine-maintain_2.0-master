@@ -3,7 +3,10 @@ package com.ruoyi.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.validation.Validator;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +61,16 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     private ISysConfigService configService;
 
+    @Resource
+    private SysUserMapper sysUserMapper;
+
+
     @Autowired
     protected Validator validator;
+
+    @Resource
+    private SysUserRoleMapper sysUserRoleMapper;
+
 
     /**
      * 根据条件分页查询用户列表
@@ -72,6 +83,21 @@ public class SysUserServiceImpl implements ISysUserService
     public List<SysUser> selectUserList(SysUser user)
     {
         return userMapper.selectUserList(user);
+    }
+
+    @Override
+    public List<SysUser> listByRoles (SysUserRole sysUserRole) {
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("role_id",sysUserRole.getRoleId());
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        List<SysUser> sysUsers = new ArrayList<>();
+        for (SysUserRole userRole:sysUserRoles){
+            QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
+            sysUserQueryWrapper.eq("user_id",userRole.getUserId());
+            SysUser sysUser = sysUserMapper.selectOne(sysUserQueryWrapper);
+            sysUsers.add(sysUser);
+        }
+        return sysUsers;
     }
 
     /**
