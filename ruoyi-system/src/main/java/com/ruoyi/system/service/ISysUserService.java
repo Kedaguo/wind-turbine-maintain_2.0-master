@@ -11,6 +11,16 @@ import com.ruoyi.system.domain.SysUserRole;
  */
 public interface ISysUserService
 {
+
+
+    /*
+    根据user_name查询用户角色
+     */
+    public Long selectRoleByUserName(String username);
+
+
+
+
     /**
      * 根据条件分页查询用户列表
      * 

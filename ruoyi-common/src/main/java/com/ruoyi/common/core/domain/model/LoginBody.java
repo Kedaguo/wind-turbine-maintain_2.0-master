@@ -12,6 +12,7 @@ public class LoginBody
      */
     private String username;
 
+
     /**
      * 用户密码
      */

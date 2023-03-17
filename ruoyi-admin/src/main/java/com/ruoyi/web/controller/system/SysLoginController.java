@@ -2,6 +2,11 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import java.util.Set;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.mapper.SysUserMapper;
+import com.ruoyi.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +21,8 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.framework.web.service.SysPermissionService;
 import com.ruoyi.system.service.ISysMenuService;
+
+import javax.annotation.Resource;
 
 /**
  * 登录验证
@@ -33,6 +40,11 @@ public class SysLoginController
 
     @Autowired
     private SysPermissionService permissionService;
+    @Resource
+    private ISysUserService iSysUserService;
+
+    @Resource
+    private TokenService tokenService;
 
     /**
      * 登录方法
@@ -48,6 +60,8 @@ public class SysLoginController
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
         ajax.put(Constants.TOKEN, token);
+        Long state = iSysUserService.selectRoleByUserName(loginBody.getUsername());
+        ajax.put("state",state);
         return ajax;
     }
 

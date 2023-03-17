@@ -1,6 +1,9 @@
 package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.system.mapper.SysUserRoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -52,6 +55,8 @@ public class SysLoginService
     @Autowired
     private ISysConfigService configService;
 
+
+
     /**
      * 登录验证
      * 
@@ -75,6 +80,7 @@ public class SysLoginService
             AuthenticationContextHolder.setContext(authenticationToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
+            //检验用户角色是否一致
         }
         catch (Exception e)
         {
@@ -97,6 +103,7 @@ public class SysLoginService
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
         // 生成token
+
         return tokenService.createToken(loginUser);
     }
 

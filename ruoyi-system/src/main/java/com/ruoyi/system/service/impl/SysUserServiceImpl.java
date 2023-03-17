@@ -71,6 +71,20 @@ public class SysUserServiceImpl implements ISysUserService
     @Resource
     private SysUserRoleMapper sysUserRoleMapper;
 
+    @Override
+    public Long selectRoleByUserName (String username) {
+        QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
+        sysUserQueryWrapper.eq("user_name",username);
+        SysUser sysUser = sysUserMapper.selectOne(sysUserQueryWrapper);
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("user_id",sysUser.getUserId());
+        SysUserRole userRole = sysUserRoleMapper.selectOne(sysUserRoleQueryWrapper);
+        if (userRole.getRoleId() == 101){
+            return 2l;
+        }else {
+            return 1l;
+        }
+    }
 
     /**
      * 根据条件分页查询用户列表
@@ -84,6 +98,7 @@ public class SysUserServiceImpl implements ISysUserService
     {
         return userMapper.selectUserList(user);
     }
+
 
     @Override
     public List<SysUser> listByRoles (SysUserRole sysUserRole) {
