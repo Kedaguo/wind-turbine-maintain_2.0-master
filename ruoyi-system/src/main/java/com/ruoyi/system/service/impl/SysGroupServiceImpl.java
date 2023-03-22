@@ -46,12 +46,14 @@ public class SysGroupServiceImpl implements ISysGroupService
     /**
      * 新增小组管理
      * 
-     * @param sysGroup 小组管理
+     * @param sysGroup 小组管理  分配小组
      * @return 结果
      */
     @Override
     public int insertSysGroup(SysGroup sysGroup)
     {
+
+
         return sysGroupMapper.insertSysGroup(sysGroup);
     }
 

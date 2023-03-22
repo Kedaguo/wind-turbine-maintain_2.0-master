@@ -55,6 +55,7 @@ public class SysLoginController
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginBody loginBody)
     {
+        System.out.println("loginBody"+loginBody);
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
         String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
@@ -62,6 +63,7 @@ public class SysLoginController
         ajax.put(Constants.TOKEN, token);
         Long state = iSysUserService.selectRoleByUserName(loginBody.getUsername());
         ajax.put("state",state);
+        System.out.println("ajax"+ajax);
         return ajax;
     }
 

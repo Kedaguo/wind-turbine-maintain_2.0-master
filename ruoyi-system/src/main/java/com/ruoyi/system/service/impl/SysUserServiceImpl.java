@@ -7,9 +7,12 @@ import javax.annotation.Resource;
 import javax.validation.Validator;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.system.domain.SysStudentInfo;
+import com.ruoyi.system.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.QuerydslUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -25,11 +28,6 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.SysPost;
 import com.ruoyi.system.domain.SysUserPost;
 import com.ruoyi.system.domain.SysUserRole;
-import com.ruoyi.system.mapper.SysPostMapper;
-import com.ruoyi.system.mapper.SysRoleMapper;
-import com.ruoyi.system.mapper.SysUserMapper;
-import com.ruoyi.system.mapper.SysUserPostMapper;
-import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
@@ -62,23 +60,29 @@ public class SysUserServiceImpl implements ISysUserService
     private ISysConfigService configService;
 
     @Resource
-    private SysUserMapper sysUserMapper;
+    private SysStudentInfoMapper sysStudentInfoMapper;
 
 
     @Autowired
     protected Validator validator;
 
     @Resource
+    private SysUserMapper sysUserMapper;
+
+    @Resource
     private SysUserRoleMapper sysUserRoleMapper;
 
     @Override
     public Long selectRoleByUserName (String username) {
-        QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
-        sysUserQueryWrapper.eq("user_name",username);
-        SysUser sysUser = sysUserMapper.selectOne(sysUserQueryWrapper);
+//        QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
+//        sysUserQueryWrapper.eq("user_name",username);
+//        SysUser sysUser = userMapper.selectOne(sysUserQueryWrapper);
+
+        SysUser sysUser = sysUserMapper.selectUserByUserName(username);
+//        System.out.println(sysUser);
         QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
         sysUserRoleQueryWrapper.eq("user_id",sysUser.getUserId());
-        SysUserRole userRole = sysUserRoleMapper.selectOne(sysUserRoleQueryWrapper);
+        SysUserRole userRole = userRoleMapper.selectOne(sysUserRoleQueryWrapper);
         if (userRole.getRoleId() == 101){
             return 2l;
         }else {
@@ -104,12 +108,12 @@ public class SysUserServiceImpl implements ISysUserService
     public List<SysUser> listByRoles (SysUserRole sysUserRole) {
         QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
         sysUserRoleQueryWrapper.eq("role_id",sysUserRole.getRoleId());
-        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        List<SysUserRole> sysUserRoles = userRoleMapper.selectList(sysUserRoleQueryWrapper);
         List<SysUser> sysUsers = new ArrayList<>();
         for (SysUserRole userRole:sysUserRoles){
             QueryWrapper<SysUser> sysUserQueryWrapper = new QueryWrapper<>();
             sysUserQueryWrapper.eq("user_id",userRole.getUserId());
-            SysUser sysUser = sysUserMapper.selectOne(sysUserQueryWrapper);
+            SysUser sysUser = userMapper.selectOne(sysUserQueryWrapper);
             sysUsers.add(sysUser);
         }
         return sysUsers;
@@ -303,6 +307,9 @@ public class SysUserServiceImpl implements ISysUserService
         insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
+        if (user.getRoleId() == 101){
+            insertStudentInfo(user);
+        }
         return rows;
     }
 
@@ -315,7 +322,7 @@ public class SysUserServiceImpl implements ISysUserService
     @Override
     public boolean registerUser(SysUser user)
     {
-        return userMapper.insertUser(user) > 0;
+        return  userMapper.insertUser(user) > 0;
     }
 
     /**
@@ -416,6 +423,16 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.resetUserPwd(userName, password);
     }
 
+
+
+    /*
+    新增学生信息
+     */
+    public void insertStudentInfo(SysUser user){
+        SysStudentInfo sysStudentInfo = new SysStudentInfo();
+        sysStudentInfo.setUserName(user.getUserName());
+        sysStudentInfoMapper.insert(sysStudentInfo);
+    }
     /**
      * 新增用户角色信息
      * 
@@ -486,6 +503,12 @@ public class SysUserServiceImpl implements ISysUserService
         userRoleMapper.deleteUserRoleByUserId(userId);
         // 删除用户与岗位表
         userPostMapper.deleteUserPostByUserId(userId);
+        //删除学生与信息表
+        if (userRoleMapper.selectById(userId).getRoleId() == 101){
+            QueryWrapper<SysStudentInfo> sysStudentInfoQueryWrapper = new QueryWrapper<>();
+            sysStudentInfoQueryWrapper.eq("user_name",userMapper.selectUserById(userId).getUserName());
+            sysStudentInfoMapper.delete(sysStudentInfoQueryWrapper);
+        }
         return userMapper.deleteUserById(userId);
     }
 
@@ -499,8 +522,14 @@ public class SysUserServiceImpl implements ISysUserService
     @Transactional
     public int deleteUserByIds(Long[] userIds)
     {
+        List<Long> list = new ArrayList<>();
         for (Long userId : userIds)
         {
+            if (userRoleMapper.selectById(userId).getRoleId() == 101) {
+                QueryWrapper<SysStudentInfo> sysStudentInfoQueryWrapper = new QueryWrapper<>();
+                sysStudentInfoQueryWrapper.eq("user_name",selectUserById(userId).getUserName());
+                sysStudentInfoMapper.delete(sysStudentInfoQueryWrapper);
+            }
             checkUserAllowed(new SysUser(userId));
             checkUserDataScope(userId);
         }
@@ -508,6 +537,7 @@ public class SysUserServiceImpl implements ISysUserService
         userRoleMapper.deleteUserRole(userIds);
         // 删除用户与岗位关联
         userPostMapper.deleteUserPost(userIds);
+        //删除用户与学生信息表关联
         return userMapper.deleteUserByIds(userIds);
     }
 
