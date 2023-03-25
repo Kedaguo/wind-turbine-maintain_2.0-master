@@ -65,7 +65,7 @@ public class SysUserController extends BaseController
     根据角色获取用户列表  学生 教师
      */
     @PreAuthorize("@ss.hasPermi('system:user:listByRole')")
-    @GetMapping("/listByRole")
+    @PostMapping("/listByRole")
     public TableDataInfo listByRoles(SysUserRole sysUserRole)
     {
         startPage();

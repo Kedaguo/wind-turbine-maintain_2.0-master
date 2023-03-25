@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Fault;
 
 /**
@@ -58,4 +60,8 @@ public interface IFaultService
      * @return 结果
      */
     public int deleteFaultByFId(Long fId);
+
+
+
+
 }

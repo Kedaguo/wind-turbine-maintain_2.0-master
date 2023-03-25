@@ -1,0 +1,167 @@
+package com.ruoyi.system.domain;
+
+import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+/**
+ * task对象 tl_task
+ * 
+ * @author 赵建达
+ * @date 2023-03-24
+ */
+public class Task extends BaseEntity
+{
+    private static final long serialVersionUID = 1L;
+
+    /** 任务编号 */
+    private Long taskId;
+
+    /** 学生编号 */
+    private Long userId;
+
+    /** 任务成本 */
+    @Excel(name = "任务成本")
+    private Long taskCost;
+
+    /** 任务花费时间 */
+    @Excel(name = "任务花费时间")
+    private String taskTime;
+
+    /** 任务成绩 */
+    @Excel(name = "任务成绩")
+    private Long taskPoints;
+
+    /** 任务状态 */
+    @Excel(name = "任务状态")
+    private Long taskState;
+
+    /** 任务开始时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "任务开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date taskStartTime;
+
+    /** 任务结束时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "任务结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date taskEndTime;
+
+    /** 任务发布时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "任务发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date taskCreateTime;
+
+    /** 发布人 */
+    @Excel(name = "发布人")
+    private String taskCreateBy;
+
+    public void setTaskId(Long taskId) 
+    {
+        this.taskId = taskId;
+    }
+
+    public Long getTaskId() 
+    {
+        return taskId;
+    }
+    public void setUserId(Long userId) 
+    {
+        this.userId = userId;
+    }
+
+    public Long getUserId() 
+    {
+        return userId;
+    }
+    public void setTaskCost(Long taskCost) 
+    {
+        this.taskCost = taskCost;
+    }
+
+    public Long getTaskCost() 
+    {
+        return taskCost;
+    }
+    public void setTaskTime(String taskTime) 
+    {
+        this.taskTime = taskTime;
+    }
+
+    public String getTaskTime() 
+    {
+        return taskTime;
+    }
+    public void setTaskPoints(Long taskPoints) 
+    {
+        this.taskPoints = taskPoints;
+    }
+
+    public Long getTaskPoints() 
+    {
+        return taskPoints;
+    }
+    public void setTaskState(Long taskState) 
+    {
+        this.taskState = taskState;
+    }
+
+    public Long getTaskState() 
+    {
+        return taskState;
+    }
+    public void setTaskStartTime(Date taskStartTime) 
+    {
+        this.taskStartTime = taskStartTime;
+    }
+
+    public Date getTaskStartTime() 
+    {
+        return taskStartTime;
+    }
+    public void setTaskEndTime(Date taskEndTime) 
+    {
+        this.taskEndTime = taskEndTime;
+    }
+
+    public Date getTaskEndTime() 
+    {
+        return taskEndTime;
+    }
+    public void setTaskCreateTime(Date taskCreateTime) 
+    {
+        this.taskCreateTime = taskCreateTime;
+    }
+
+    public Date getTaskCreateTime() 
+    {
+        return taskCreateTime;
+    }
+    public void setTaskCreateBy(String taskCreateBy) 
+    {
+        this.taskCreateBy = taskCreateBy;
+    }
+
+    public String getTaskCreateBy() 
+    {
+        return taskCreateBy;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+            .append("taskId", getTaskId())
+            .append("userId", getUserId())
+            .append("taskCost", getTaskCost())
+            .append("taskTime", getTaskTime())
+            .append("taskPoints", getTaskPoints())
+            .append("taskState", getTaskState())
+            .append("taskStartTime", getTaskStartTime())
+            .append("taskEndTime", getTaskEndTime())
+            .append("taskCreateTime", getTaskCreateTime())
+            .append("taskCreateBy", getTaskCreateBy())
+            .toString();
+    }
+}

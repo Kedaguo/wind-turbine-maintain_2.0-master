@@ -61,7 +61,7 @@ public class RepairOrderController extends BaseController
 
  */
     @ApiOperation(value = "初始化保养信息")
-    @PreAuthorize(value = "@ss.hasPermi('system:turbinefault:generateFault')")
+    @PreAuthorize(value = "@ss.hasPermi('system:turbinefault:generateMaintain')")
     @PostMapping(value ="/generateMaintain")
     public AjaxResult generateMaintain(@RequestBody List<TurbineMaintain> turbineMaintains){
         return iMaintainService.generateMaintain(turbineMaintains);

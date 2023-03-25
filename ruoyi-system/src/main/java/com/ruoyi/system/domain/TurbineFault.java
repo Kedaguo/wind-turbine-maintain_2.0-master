@@ -1,9 +1,12 @@
 package com.ruoyi.system.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * turbineFault对象 tl_turbine_fault
@@ -20,7 +23,17 @@ public class TurbineFault extends BaseEntity
 
     /** 故障编号 */
     private Long fId;
+    /** 发生故障时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date faultTime;
 
+    public Date getFaultTime () {
+        return faultTime;
+    }
+
+    public void setFaultTime (Date faultTime) {
+        this.faultTime = faultTime;
+    }
     public void settId(Long tId) 
     {
         this.tId = tId;

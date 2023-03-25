@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskBoatMapper">
+    
+    <resultMap type="TaskBoat" id="TaskBoatResult">
+        <result property="bId"    column="b_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="bState"    column="b_state"    />
+        <result property="bWorkState"    column="b_work_state"    />
+        <result property="bStartTime"    column="b_start_time"    />
+        <result property="bEndTime"    column="b_end_time"    />
+        <result property="bLongitude"    column="b_longitude"    />
+        <result property="bLatitude"    column="b_latitude"    />
+    </resultMap>
+
+    <sql id="selectTaskBoatVo">
+        select b_id, task_id, b_state, b_work_state, b_start_time, b_end_time, b_longitude, b_latitude from tl_task_boat
+    </sql>
+
+    <select id="selectTaskBoatList" parameterType="TaskBoat" resultMap="TaskBoatResult">
+        <include refid="selectTaskBoatVo"/>
+        <where>  
+            <if test="bState != null "> and b_state = #{bState}</if>
+            <if test="bWorkState != null "> and b_work_state = #{bWorkState}</if>
+            <if test="bStartTime != null "> and b_start_time = #{bStartTime}</if>
+            <if test="bEndTime != null "> and b_end_time = #{bEndTime}</if>
+            <if test="bLongitude != null  and bLongitude != ''"> and b_longitude = #{bLongitude}</if>
+            <if test="bLatitude != null  and bLatitude != ''"> and b_latitude = #{bLatitude}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskBoatByBId" parameterType="Long" resultMap="TaskBoatResult">
+        <include refid="selectTaskBoatVo"/>
+        where b_id = #{bId}
+    </select>
+        
+    <insert id="insertTaskBoat" parameterType="TaskBoat">
+        insert into tl_task_boat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bId != null">b_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="bState != null">b_state,</if>
+            <if test="bWorkState != null">b_work_state,</if>
+            <if test="bStartTime != null">b_start_time,</if>
+            <if test="bEndTime != null">b_end_time,</if>
+            <if test="bLongitude != null">b_longitude,</if>
+            <if test="bLatitude != null">b_latitude,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bId != null">#{bId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="bState != null">#{bState},</if>
+            <if test="bWorkState != null">#{bWorkState},</if>
+            <if test="bStartTime != null">#{bStartTime},</if>
+            <if test="bEndTime != null">#{bEndTime},</if>
+            <if test="bLongitude != null">#{bLongitude},</if>
+            <if test="bLatitude != null">#{bLatitude},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaskBoat" parameterType="TaskBoat">
+        update tl_task_boat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="bState != null">b_state = #{bState},</if>
+            <if test="bWorkState != null">b_work_state = #{bWorkState},</if>
+            <if test="bStartTime != null">b_start_time = #{bStartTime},</if>
+            <if test="bEndTime != null">b_end_time = #{bEndTime},</if>
+            <if test="bLongitude != null">b_longitude = #{bLongitude},</if>
+            <if test="bLatitude != null">b_latitude = #{bLatitude},</if>
+        </trim>
+        where b_id = #{bId}
+    </update>
+
+    <delete id="deleteTaskBoatByBId" parameterType="Long">
+        delete from tl_task_boat where b_id = #{bId}
+    </delete>
+
+    <delete id="deleteTaskBoatByBIds" parameterType="String">
+        delete from tl_task_boat where b_id in 
+        <foreach item="bId" collection="array" open="(" separator="," close=")">
+            #{bId}
+        </foreach>
+    </delete>
+</mapper>
