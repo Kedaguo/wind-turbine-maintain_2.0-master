@@ -28,7 +28,7 @@ import Layout from '@/layout'
   }
  */
 
-// 公共路由
+// 公共路由,也就是意味着谁都可以访问不需要权限验证
 export const constantRoutes = [
   {
     path: '/redirect',
@@ -51,6 +51,33 @@ export const constantRoutes = [
     component: () => import('@/views/register'),
     hidden: true
   },
+  {
+    path: '/student',
+    component: () => import('@/views/student'),
+    hidden: true,
+    redirect: 'student/echarts',
+    children: [
+      {
+        path: 'echarts',
+        component: () => import('@/views/student/components/echarts'),
+      },
+      {
+        path: 'operate',
+        component: () => import('@/views/student/components/operate'),
+      },
+      {
+        path: 'windturbine',
+        component: () => import('@/views/student/components/windturbine'),
+        children: [
+          {
+            path: 'online',
+            component: () => import('@/views/student/components/windturbine/online'),
+          },
+        ]
+      },
+    ]
+  },
+
   {
     path: '/404',
     component: () => import('@/views/error/404'),
@@ -87,7 +114,8 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
+
 ]
 
 // 动态路由，基于用户权限动态去加载

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TlWindturbineMapper">
+    
+    <resultMap type="TlWindturbine" id="TlWindturbineResult">
+        <result property="id"    column="id"    />
+        <result property="faultCode"    column="fault_code"    />
+        <result property="faultInformation"    column="fault_information"    />
+    </resultMap>
+
+    <sql id="selectTlWindturbineVo">
+        select id, fault_code, fault_information from tl_windturbine
+    </sql>
+
+    <select id="selectTlWindturbineList" parameterType="TlWindturbine" resultMap="TlWindturbineResult">
+        <include refid="selectTlWindturbineVo"/>
+        <where>  
+            <if test="faultCode != null "> and fault_code = #{faultCode}</if>
+            <if test="faultInformation != null  and faultInformation != ''"> and fault_information = #{faultInformation}</if>
+        </where>
+    </select>
+    
+    <select id="selectTlWindturbineById" parameterType="Long" resultMap="TlWindturbineResult">
+        <include refid="selectTlWindturbineVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTlWindturbine" parameterType="TlWindturbine" useGeneratedKeys="true" keyProperty="id">
+        insert into tl_windturbine
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="faultCode != null">fault_code,</if>
+            <if test="faultInformation != null">fault_information,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="faultCode != null">#{faultCode},</if>
+            <if test="faultInformation != null">#{faultInformation},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTlWindturbine" parameterType="TlWindturbine">
+        update tl_windturbine
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="faultCode != null">fault_code = #{faultCode},</if>
+            <if test="faultInformation != null">fault_information = #{faultInformation},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTlWindturbineById" parameterType="Long">
+        delete from tl_windturbine where id = #{id}
+    </delete>
+
+    <delete id="deleteTlWindturbineByIds" parameterType="String">
+        delete from tl_windturbine where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

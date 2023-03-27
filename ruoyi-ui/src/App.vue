@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- 路由入口 -->
     <router-view />
     <theme-picker />
   </div>

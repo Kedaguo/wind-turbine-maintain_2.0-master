@@ -8,8 +8,10 @@ import { isRelogin } from '@/utils/request'
 
 NProgress.configure({ showSpinner: false })
 
-const whiteList = ['/login', '/register']
+const whiteList = ['/login', '/register','/student', '/student/echarts', '/student/windturbine',
+'/student/windturbine/online']
 
+//进行全局路由跳转之前都要先进入这个方法
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {

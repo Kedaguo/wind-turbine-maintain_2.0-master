@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '海上风电管理系统',
+      title: '海上风电维护系统',
       logo: logoImg
     }
   }
