@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.Boat;
 
 /**
@@ -9,7 +11,7 @@ import com.ruoyi.system.domain.Boat;
  * @author 赵建达
  * @date 2023-03-13
  */
-public interface BoatMapper 
+public interface BoatMapper extends BaseMapper<Boat>
 {
     /**
      * 查询boat

@@ -1,11 +1,17 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ruoyi.system.domain.TurbineWind;
+import com.ruoyi.system.mapper.TurbineWindMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskTurbineMapper;
 import com.ruoyi.system.domain.TaskTurbine;
 import com.ruoyi.system.service.ITaskTurbineService;
+
+import javax.annotation.Resource;
 
 /**
  * taskTurbineService业务层处理
@@ -18,6 +24,9 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
 {
     @Autowired
     private TaskTurbineMapper taskTurbineMapper;
+
+    @Resource
+    private TurbineWindMapper turbineWindMapper;
 
     /**
      * 查询taskTurbine
@@ -38,9 +47,12 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
      * @return taskTurbine
      */
     @Override
-    public List<TaskTurbine> selectTaskTurbineList(TaskTurbine taskTurbine)
+    public List<TurbineWind> selectTaskTurbineList(TaskTurbine taskTurbine)
     {
-        return taskTurbineMapper.selectTaskTurbineList(taskTurbine);
+        List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
+        List<Long> turbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
+        return turbineWindMapper.selectBatchIds(turbineIds);
+
     }
 
     /**

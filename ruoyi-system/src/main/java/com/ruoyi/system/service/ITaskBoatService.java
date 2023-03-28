@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Boat;
 import com.ruoyi.system.domain.TaskBoat;
 
 /**
@@ -25,7 +27,7 @@ public interface ITaskBoatService
      * @param taskBoat taskBoat
      * @return taskBoat集合
      */
-    public List<TaskBoat> selectTaskBoatList(TaskBoat taskBoat);
+    public List<Boat> selectTaskBoatList(TaskBoat taskBoat);
 
     /**
      * 新增taskBoat

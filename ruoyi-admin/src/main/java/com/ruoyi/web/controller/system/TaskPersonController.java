@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.Person;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,7 @@ public class TaskPersonController extends BaseController
     public TableDataInfo list(TaskPerson taskPerson)
     {
         startPage();
-        List<TaskPerson> list = taskPersonService.selectTaskPersonList(taskPerson);
+        List<Person> list = taskPersonService.selectTaskPersonList(taskPerson);
         return getDataTable(list);
     }
 
@@ -54,8 +56,8 @@ public class TaskPersonController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, TaskPerson taskPerson)
     {
-        List<TaskPerson> list = taskPersonService.selectTaskPersonList(taskPerson);
-        ExcelUtil<TaskPerson> util = new ExcelUtil<TaskPerson>(TaskPerson.class);
+        List<Person> list = taskPersonService.selectTaskPersonList(taskPerson);
+        ExcelUtil<Person> util = new ExcelUtil<Person>(Person.class);
         util.exportExcel(response, list, "taskPerson数据");
     }
 

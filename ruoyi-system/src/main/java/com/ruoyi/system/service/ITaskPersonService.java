@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Person;
 import com.ruoyi.system.domain.TaskPerson;
 
 /**
@@ -25,7 +27,7 @@ public interface ITaskPersonService
      * @param taskPerson taskPerson
      * @return taskPerson集合
      */
-    public List<TaskPerson> selectTaskPersonList(TaskPerson taskPerson);
+    public List<Person> selectTaskPersonList(TaskPerson taskPerson);
 
     /**
      * 新增taskPerson

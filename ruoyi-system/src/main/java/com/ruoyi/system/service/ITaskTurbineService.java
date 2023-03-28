@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.TaskTurbine;
+import com.ruoyi.system.domain.TurbineWind;
 
 /**
  * taskTurbineService接口
@@ -25,7 +26,7 @@ public interface ITaskTurbineService
      * @param taskTurbine taskTurbine
      * @return taskTurbine集合
      */
-    public List<TaskTurbine> selectTaskTurbineList(TaskTurbine taskTurbine);
+    public List<TurbineWind> selectTaskTurbineList(TaskTurbine taskTurbine);
 
     /**
      * 新增taskTurbine

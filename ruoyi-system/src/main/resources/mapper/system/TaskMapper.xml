@@ -6,11 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Task" id="TaskResult">
         <result property="taskId"    column="task_id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="taskCost"    column="task_cost"    />
-        <result property="taskTime"    column="task_time"    />
-        <result property="taskPoints"    column="task_points"    />
-        <result property="taskState"    column="task_state"    />
+        <result property="taskName"    column="task_name"    />
         <result property="taskStartTime"    column="task_start_time"    />
         <result property="taskEndTime"    column="task_end_time"    />
         <result property="taskCreateTime"    column="task_create_time"    />
@@ -18,14 +14,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskVo">
-        select task_id, user_id, task_cost, task_time, task_points, task_state, task_start_time, task_end_time, task_create_time, task_create_by from tl_task
+        select task_id, task_name, task_start_time, task_end_time, task_create_time, task_create_by from tl_task
     </sql>
 
     <select id="selectTaskList" parameterType="Task" resultMap="TaskResult">
         <include refid="selectTaskVo"/>
         <where>  
-            <if test="taskPoints != null "> and task_points = #{taskPoints}</if>
-            <if test="taskState != null "> and task_state = #{taskState}</if>
+            <if test="taskName != null  and taskName != ''"> and task_name like concat('%', #{taskName}, '%')</if>
+            <if test="taskStartTime != null "> and task_start_time = #{taskStartTime}</if>
+            <if test="taskEndTime != null "> and task_end_time = #{taskEndTime}</if>
             <if test="taskCreateTime != null "> and task_create_time = #{taskCreateTime}</if>
             <if test="taskCreateBy != null  and taskCreateBy != ''"> and task_create_by = #{taskCreateBy}</if>
         </where>
@@ -39,22 +36,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertTask" parameterType="Task" useGeneratedKeys="true" keyProperty="taskId">
         insert into tl_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="userId != null">user_id,</if>
-            <if test="taskCost != null">task_cost,</if>
-            <if test="taskTime != null">task_time,</if>
-            <if test="taskPoints != null">task_points,</if>
-            <if test="taskState != null">task_state,</if>
+            <if test="taskName != null">task_name,</if>
             <if test="taskStartTime != null">task_start_time,</if>
             <if test="taskEndTime != null">task_end_time,</if>
             <if test="taskCreateTime != null">task_create_time,</if>
             <if test="taskCreateBy != null">task_create_by,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="userId != null">#{userId},</if>
-            <if test="taskCost != null">#{taskCost},</if>
-            <if test="taskTime != null">#{taskTime},</if>
-            <if test="taskPoints != null">#{taskPoints},</if>
-            <if test="taskState != null">#{taskState},</if>
+            <if test="taskName != null">#{taskName},</if>
             <if test="taskStartTime != null">#{taskStartTime},</if>
             <if test="taskEndTime != null">#{taskEndTime},</if>
             <if test="taskCreateTime != null">#{taskCreateTime},</if>
@@ -65,11 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTask" parameterType="Task">
         update tl_task
         <trim prefix="SET" suffixOverrides=",">
-            <if test="userId != null">user_id = #{userId},</if>
-            <if test="taskCost != null">task_cost = #{taskCost},</if>
-            <if test="taskTime != null">task_time = #{taskTime},</if>
-            <if test="taskPoints != null">task_points = #{taskPoints},</if>
-            <if test="taskState != null">task_state = #{taskState},</if>
+            <if test="taskName != null">task_name = #{taskName},</if>
             <if test="taskStartTime != null">task_start_time = #{taskStartTime},</if>
             <if test="taskEndTime != null">task_end_time = #{taskEndTime},</if>
             <if test="taskCreateTime != null">task_create_time = #{taskCreateTime},</if>

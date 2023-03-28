@@ -10,8 +10,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * task对象 tl_task
  * 
- * @author 赵建达
- * @date 2023-03-24
+ * @author JianDa
+ * @date 2023-03-27
  */
 public class Task extends BaseEntity
 {
@@ -20,24 +20,9 @@ public class Task extends BaseEntity
     /** 任务编号 */
     private Long taskId;
 
-    /** 学生编号 */
-    private Long userId;
-
-    /** 任务成本 */
-    @Excel(name = "任务成本")
-    private Long taskCost;
-
-    /** 任务花费时间 */
-    @Excel(name = "任务花费时间")
-    private String taskTime;
-
-    /** 任务成绩 */
-    @Excel(name = "任务成绩")
-    private Long taskPoints;
-
-    /** 任务状态 */
-    @Excel(name = "任务状态")
-    private Long taskState;
+    /** 任务名称 */
+    @Excel(name = "任务名称")
+    private String taskName;
 
     /** 任务开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -67,50 +52,14 @@ public class Task extends BaseEntity
     {
         return taskId;
     }
-    public void setUserId(Long userId) 
+    public void setTaskName(String taskName) 
     {
-        this.userId = userId;
+        this.taskName = taskName;
     }
 
-    public Long getUserId() 
+    public String getTaskName() 
     {
-        return userId;
-    }
-    public void setTaskCost(Long taskCost) 
-    {
-        this.taskCost = taskCost;
-    }
-
-    public Long getTaskCost() 
-    {
-        return taskCost;
-    }
-    public void setTaskTime(String taskTime) 
-    {
-        this.taskTime = taskTime;
-    }
-
-    public String getTaskTime() 
-    {
-        return taskTime;
-    }
-    public void setTaskPoints(Long taskPoints) 
-    {
-        this.taskPoints = taskPoints;
-    }
-
-    public Long getTaskPoints() 
-    {
-        return taskPoints;
-    }
-    public void setTaskState(Long taskState) 
-    {
-        this.taskState = taskState;
-    }
-
-    public Long getTaskState() 
-    {
-        return taskState;
+        return taskName;
     }
     public void setTaskStartTime(Date taskStartTime) 
     {
@@ -153,11 +102,7 @@ public class Task extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("taskId", getTaskId())
-            .append("userId", getUserId())
-            .append("taskCost", getTaskCost())
-            .append("taskTime", getTaskTime())
-            .append("taskPoints", getTaskPoints())
-            .append("taskState", getTaskState())
+            .append("taskName", getTaskName())
             .append("taskStartTime", getTaskStartTime())
             .append("taskEndTime", getTaskEndTime())
             .append("taskCreateTime", getTaskCreateTime())

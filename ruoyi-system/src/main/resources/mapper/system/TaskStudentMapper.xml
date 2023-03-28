@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskStudentMapper">
+    
+    <resultMap type="TaskStudent" id="TaskStudentResult">
+        <result property="userId"    column="user_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="taskCost"    column="task_cost"    />
+        <result property="taskCharge"    column="task_charge"    />
+        <result property="taskTime"    column="task_time"    />
+        <result property="taskPoints"    column="task_points"    />
+        <result property="taskState"    column="task_state"    />
+    </resultMap>
+
+    <sql id="selectTaskStudentVo">
+        select user_id, task_id, task_cost, task_charge, task_time, task_points, task_state from tl_task_student
+    </sql>
+
+    <select id="selectTaskStudentList" parameterType="TaskStudent" resultMap="TaskStudentResult">
+        <include refid="selectTaskStudentVo"/>
+        <where>  
+            <if test="taskCost != null "> and task_cost = #{taskCost}</if>
+            <if test="taskCharge != null "> and task_charge = #{taskCharge}</if>
+            <if test="taskTime != null  and taskTime != ''"> and task_time = #{taskTime}</if>
+            <if test="taskPoints != null "> and task_points = #{taskPoints}</if>
+            <if test="taskState != null "> and task_state = #{taskState}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskStudentByUserId" parameterType="Long" resultMap="TaskStudentResult">
+        <include refid="selectTaskStudentVo"/>
+        where user_id = #{userId}
+    </select>
+        
+    <insert id="insertTaskStudent" parameterType="TaskStudent">
+        insert into tl_task_student
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="taskCost != null">task_cost,</if>
+            <if test="taskCharge != null">task_charge,</if>
+            <if test="taskTime != null">task_time,</if>
+            <if test="taskPoints != null">task_points,</if>
+            <if test="taskState != null">task_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="taskCost != null">#{taskCost},</if>
+            <if test="taskCharge != null">#{taskCharge},</if>
+            <if test="taskTime != null">#{taskTime},</if>
+            <if test="taskPoints != null">#{taskPoints},</if>
+            <if test="taskState != null">#{taskState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaskStudent" parameterType="TaskStudent">
+        update tl_task_student
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="taskCost != null">task_cost = #{taskCost},</if>
+            <if test="taskCharge != null">task_charge = #{taskCharge},</if>
+            <if test="taskTime != null">task_time = #{taskTime},</if>
+            <if test="taskPoints != null">task_points = #{taskPoints},</if>
+            <if test="taskState != null">task_state = #{taskState},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteTaskStudentByUserId" parameterType="Long">
+        delete from tl_task_student where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteTaskStudentByUserIds" parameterType="String">
+        delete from tl_task_student where user_id in 
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

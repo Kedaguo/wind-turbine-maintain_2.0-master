@@ -2,6 +2,8 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.Boat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,14 +37,14 @@ public class TaskBoatController extends BaseController
     private ITaskBoatService taskBoatService;
 
     /**
-     * 查询taskBoat列表
+     * 查询taskBoat列表  根据task_id 查询当前学生的已分配船舶
      */
     @PreAuthorize("@ss.hasPermi('system:taskBoat:list')")
     @GetMapping("/list")
     public TableDataInfo list(TaskBoat taskBoat)
     {
         startPage();
-        List<TaskBoat> list = taskBoatService.selectTaskBoatList(taskBoat);
+        List<Boat> list = taskBoatService.selectTaskBoatList(taskBoat);
         return getDataTable(list);
     }
 
@@ -54,8 +56,8 @@ public class TaskBoatController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, TaskBoat taskBoat)
     {
-        List<TaskBoat> list = taskBoatService.selectTaskBoatList(taskBoat);
-        ExcelUtil<TaskBoat> util = new ExcelUtil<TaskBoat>(TaskBoat.class);
+        List<Boat> list = taskBoatService.selectTaskBoatList(taskBoat);
+        ExcelUtil<Boat> util = new ExcelUtil<Boat>(Boat.class);
         util.exportExcel(response, list, "taskBoat数据");
     }
 

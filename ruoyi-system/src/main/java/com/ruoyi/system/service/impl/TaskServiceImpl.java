@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.service.ITaskService;
 
@@ -48,6 +50,16 @@ public class TaskServiceImpl implements ITaskService
     @Resource
     private BoatMapper boatMapper;
 
+    @Resource
+    private SysUserMapper sysUserMapper;
+
+    @Resource
+    private SysUserRoleMapper sysUserRoleMapper;
+
+    @Resource
+    private TaskStudentMapper taskStudentMapper;
+
+
     /**
      * 查询task
      *
@@ -58,6 +70,14 @@ public class TaskServiceImpl implements ITaskService
     public Task selectTaskByTaskId(Long taskId)
     {
         return taskMapper.selectTaskByTaskId(taskId);
+    }
+
+    @Override
+    public List<Task> selectTaskListByTeacher (String username) {
+        Task task = new Task();
+        task.setTaskCreateBy(username);
+        return taskMapper.selectTaskList(task);
+
     }
 
     /**
@@ -81,25 +101,46 @@ public class TaskServiceImpl implements ITaskService
     @Override
     public AjaxResult insertTask(Task task, LoginUser loginUser)
     {
-        Task task1 = checkOnLyOneTask(task);
+        task.setTaskCreateTime(DateUtils.getNowDate());
+        task.setCreateBy(loginUser.getUsername());
+        taskMapper.insertTask(task);
+        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
+        taskQueryWrapper.eq("task_create_time",task.getTaskCreateTime())
+                .eq("task_create_by",task.getTaskCreateBy());
+        Task task1 = taskMapper.selectOne(taskQueryWrapper);
+//        任务关联风机
+        taskRelevanceTurbine(task1);
+        //任务关联维修人员
+        taskRelevancePerson(task1);
+        //任务关联船舶
+        taskRelevanceBoat(task1);
+        //任务关联学生
+        taskRelevanceStudent(task1);
 
-        if (task1==null){
-            task.setTaskCreateTime(DateUtils.getNowDate());
-            task.setTaskCreateBy(loginUser.getUsername());
-            task.setTaskState(1l);
-            taskMapper.insertTask(task);
-            Task task2 = checkOnLyOneTask(task);
-            //任务关联风机
-            taskRelevanceTurbine(task2);
-            //任务关联维修人员
-            taskRelevancePerson(task2);
-            //任务关联船舶配
-            taskRelevanceBoat(task2);
-            return AjaxResult.success();
-        }else{
-            return AjaxResult.error("此学生存在未开始的任务，不可添加新任务！！！",104);
+        return AjaxResult.success();
+
+
+    }
+    /*
+    任务关联学生
+     */
+    public void taskRelevanceStudent(Task task){
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("role_id",101l);
+        List<SysUserRole> students =sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        List<Long> studentRoleIds = students.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectBatchIds(studentRoleIds);
+        List<Long> studentIds = sysUserRoles.stream().map(SysUserRole::getUserId).collect(Collectors.toList());
+        for(Long user_id:studentIds){
+            TaskStudent taskStudent = new TaskStudent();
+            taskStudent.setUserId(user_id);
+            taskStudent.setTaskId(task.getTaskId());
+            taskStudent.setTaskState(1l);//任务未开始
+            taskStudentMapper.insertTaskStudent(taskStudent);
         }
     }
+
+
     /*
     任务关联风机
      */
@@ -151,13 +192,13 @@ public class TaskServiceImpl implements ITaskService
     0 当前学生未开始的任务为0   1 当前学生未开始的任务为1   other 当前学生未开始的任务错误
 
      */
-    public Task checkOnLyOneTask(Task task){
-        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
-        taskQueryWrapper.eq("user_id",task.getUserId())
-                .eq("task_state",1l);
-        Task task1 = taskMapper.selectOne(taskQueryWrapper);
-        return task1;
-    }
+//    public Task checkOnLyOneTask(Task task){
+//        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
+//        taskQueryWrapper.eq("user_id",task.getUserId())
+//                .eq("task_state",1l);
+//        Task task1 = taskMapper.selectOne(taskQueryWrapper);
+//        return task1;
+//    }
 
 
 
@@ -186,6 +227,7 @@ public class TaskServiceImpl implements ITaskService
             deleteTaskBoatByTaskBoatIds(taskId);
             deleteTaskPersonByTaskPersonIds(taskId);
             deleteTaskTurbineByTaskTurbineIds(taskId);
+            deleteTaskStudentByTaskStudentIds(taskId);
         }
         return taskMapper.deleteTaskByTaskIds(taskIds);
     }
@@ -210,6 +252,13 @@ public class TaskServiceImpl implements ITaskService
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
         List<Long> taskTurbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
         return taskTurbineMapper.deleteBatchIds(taskTurbineIds);
+    }
+    public int deleteTaskStudentByTaskStudentIds(Long taskId){
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(taskId);
+        List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
+        List<Long> taskStudentsIds = taskStudents.stream().map(TaskStudent::getUserId).collect(Collectors.toList());
+        return taskStudentMapper.deleteBatchIds(taskStudentsIds);
     }
     /**
      * 删除task信息

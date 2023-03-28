@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.system.domain.Task;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * taskService接口
@@ -12,6 +13,7 @@ import com.ruoyi.system.domain.Task;
  * @author 赵建达
  * @date 2023-03-24
  */
+@Transactional
 public interface ITaskService 
 {
     /**
@@ -21,6 +23,12 @@ public interface ITaskService
      * @return task
      */
     public Task selectTaskByTaskId(Long taskId);
+
+    /*
+    根据教师查询任务
+     */
+    public List<Task> selectTaskListByTeacher(String username);
+
 
     /**
      * 查询task列表

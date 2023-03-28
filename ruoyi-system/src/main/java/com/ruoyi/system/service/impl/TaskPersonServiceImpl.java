@@ -1,11 +1,17 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ruoyi.system.domain.Person;
+import com.ruoyi.system.mapper.PersonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskPersonMapper;
 import com.ruoyi.system.domain.TaskPerson;
 import com.ruoyi.system.service.ITaskPersonService;
+
+import javax.annotation.Resource;
 
 /**
  * taskPersonService业务层处理
@@ -18,6 +24,10 @@ public class TaskPersonServiceImpl implements ITaskPersonService
 {
     @Autowired
     private TaskPersonMapper taskPersonMapper;
+
+    @Resource
+    private PersonMapper personMapper;
+
 
     /**
      * 查询taskPerson
@@ -38,9 +48,11 @@ public class TaskPersonServiceImpl implements ITaskPersonService
      * @return taskPerson
      */
     @Override
-    public List<TaskPerson> selectTaskPersonList(TaskPerson taskPerson)
+    public List<Person> selectTaskPersonList(TaskPerson taskPerson)
     {
-        return taskPersonMapper.selectTaskPersonList(taskPerson);
+        List<TaskPerson> taskPeople = taskPersonMapper.selectTaskPersonList(taskPerson);
+        List<Long> peopleIds = taskPeople.stream().map(TaskPerson::getpId).collect(Collectors.toList());
+        return personMapper.selectBatchIds(peopleIds);
     }
 
     /**

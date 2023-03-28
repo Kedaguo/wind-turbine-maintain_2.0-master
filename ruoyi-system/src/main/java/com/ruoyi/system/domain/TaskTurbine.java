@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * taskTurbine对象 tl_task_turbine
  * 
  * @author JianDa
- * @date 2023-03-25
+ * @date 2023-03-28
  */
 public class TaskTurbine extends BaseEntity
 {
@@ -19,6 +19,7 @@ public class TaskTurbine extends BaseEntity
     private Long tId;
 
     /** 任务编号 */
+    @Excel(name = "任务编号")
     private Long taskId;
 
     /** 故障编号 */
@@ -36,6 +37,10 @@ public class TaskTurbine extends BaseEntity
     /** 保养状态 */
     @Excel(name = "保养状态")
     private Integer mState;
+
+    /** 发电量 */
+    @Excel(name = "发电量")
+    private Long tCharge;
 
     public void settId(Long tId) 
     {
@@ -91,6 +96,15 @@ public class TaskTurbine extends BaseEntity
     {
         return mState;
     }
+    public void settCharge(Long tCharge) 
+    {
+        this.tCharge = tCharge;
+    }
+
+    public Long gettCharge() 
+    {
+        return tCharge;
+    }
 
     @Override
     public String toString() {
@@ -101,6 +115,7 @@ public class TaskTurbine extends BaseEntity
             .append("mId", getmId())
             .append("fState", getfState())
             .append("mState", getmState())
+            .append("tCharge", gettCharge())
             .toString();
     }
 }

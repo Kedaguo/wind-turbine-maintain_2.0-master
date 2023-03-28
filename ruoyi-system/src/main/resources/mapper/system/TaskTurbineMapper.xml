@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskTurbineMapper">
+    
+    <resultMap type="TaskTurbine" id="TaskTurbineResult">
+        <result property="tId"    column="t_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="fId"    column="f_id"    />
+        <result property="mId"    column="m_id"    />
+        <result property="fState"    column="f_state"    />
+        <result property="mState"    column="m_state"    />
+        <result property="tCharge"    column="t_charge"    />
+    </resultMap>
+
+    <sql id="selectTaskTurbineVo">
+        select t_id, task_id, f_id, m_id, f_state, m_state, t_charge from tl_task_turbine
+    </sql>
+
+    <select id="selectTaskTurbineList" parameterType="TaskTurbine" resultMap="TaskTurbineResult">
+        <include refid="selectTaskTurbineVo"/>
+        <where>  
+            <if test="fId != null "> and f_id = #{fId}</if>
+            <if test="mId != null "> and m_id = #{mId}</if>
+            <if test="fState != null "> and f_state = #{fState}</if>
+            <if test="mState != null "> and m_state = #{mState}</if>
+            <if test="tCharge != null "> and t_charge = #{tCharge}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskTurbineByTId" parameterType="Long" resultMap="TaskTurbineResult">
+        <include refid="selectTaskTurbineVo"/>
+        where t_id = #{tId}
+    </select>
+        
+    <insert id="insertTaskTurbine" parameterType="TaskTurbine">
+        insert into tl_task_turbine
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tId != null">t_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="fId != null">f_id,</if>
+            <if test="mId != null">m_id,</if>
+            <if test="fState != null">f_state,</if>
+            <if test="mState != null">m_state,</if>
+            <if test="tCharge != null">t_charge,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tId != null">#{tId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="fId != null">#{fId},</if>
+            <if test="mId != null">#{mId},</if>
+            <if test="fState != null">#{fState},</if>
+            <if test="mState != null">#{mState},</if>
+            <if test="tCharge != null">#{tCharge},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaskTurbine" parameterType="TaskTurbine">
+        update tl_task_turbine
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="fId != null">f_id = #{fId},</if>
+            <if test="mId != null">m_id = #{mId},</if>
+            <if test="fState != null">f_state = #{fState},</if>
+            <if test="mState != null">m_state = #{mState},</if>
+            <if test="tCharge != null">t_charge = #{tCharge},</if>
+        </trim>
+        where t_id = #{tId}
+    </update>
+
+    <delete id="deleteTaskTurbineByTId" parameterType="Long">
+        delete from tl_task_turbine where t_id = #{tId}
+    </delete>
+
+    <delete id="deleteTaskTurbineByTIds" parameterType="String">
+        delete from tl_task_turbine where t_id in 
+        <foreach item="tId" collection="array" open="(" separator="," close=")">
+            #{tId}
+        </foreach>
+    </delete>
+</mapper>

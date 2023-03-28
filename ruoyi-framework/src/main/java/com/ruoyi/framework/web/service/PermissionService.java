@@ -22,6 +22,11 @@ public class PermissionService
 
     /** 管理员角色权限标识 */
     private static final String SUPER_ADMIN = "admin";
+    /** 学生角色权限标识 */
+    private static final String TEACHER = "teacher";
+
+    /** 教师角色权限标识 */
+    private static final String STUDENT = "student";
 
     private static final String ROLE_DELIMETER = ",";
 

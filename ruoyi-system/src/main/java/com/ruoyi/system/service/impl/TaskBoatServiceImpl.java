@@ -1,11 +1,18 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.ruoyi.system.domain.Boat;
+import com.ruoyi.system.mapper.BoatMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskBoatMapper;
 import com.ruoyi.system.domain.TaskBoat;
 import com.ruoyi.system.service.ITaskBoatService;
+
+import javax.annotation.Resource;
 
 /**
  * taskBoatService业务层处理
@@ -18,6 +25,9 @@ public class TaskBoatServiceImpl implements ITaskBoatService
 {
     @Autowired
     private TaskBoatMapper taskBoatMapper;
+
+    @Resource
+    private BoatMapper boatMapper;
 
     /**
      * 查询taskBoat
@@ -38,9 +48,12 @@ public class TaskBoatServiceImpl implements ITaskBoatService
      * @return taskBoat
      */
     @Override
-    public List<TaskBoat> selectTaskBoatList(TaskBoat taskBoat)
+    public List<Boat> selectTaskBoatList(TaskBoat taskBoat)
     {
-        return taskBoatMapper.selectTaskBoatList(taskBoat);
+        List<TaskBoat> taskBoats = taskBoatMapper.selectTaskBoatList(taskBoat);
+        List<Long> boatIds = taskBoats.stream().map(TaskBoat::getbId).collect(Collectors.toList());
+        return boatMapper.selectBatchIds(boatIds);
+
     }
 
     /**

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.Task;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,6 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.service.ITaskService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -46,18 +46,19 @@ public class TaskController extends BaseController
 
 
     /**
-     * 查询task列表  学生查看查询task列表  user_id  老师查看  task_create_by  username
+     *老师查看  task_create_by  username
      */
-    @PreAuthorize("@ss.hasPermi('system:task:list')")
+    @PreAuthorize("@ss.hasPermi('system:task:listByTeacher')")
     @GetMapping("/list")
-    public TableDataInfo list(Task task)
+    public TableDataInfo list(HttpServletRequest request)
     {
         startPage();
-        List<Task> list = taskService.selectTaskList(task);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<Task> list = taskService.selectTaskListByTeacher(loginUser.getUsername());
         return getDataTable(list);
     }
     /**
-     *
+     *查询task列表  学生查看查询task列表  user_id
      */
     @PreAuthorize("@ss.hasPermi('system:task:listByStudent')")
     @GetMapping("/listByStudent")
