@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="任务成绩" prop="taskPoints">
-        <el-input
-          v-model="queryParams.taskPoints"
-          placeholder="请输入任务成绩"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="任务状态" prop="taskState">
         <el-select v-model="queryParams.taskState" placeholder="请选择任务状态" clearable>
           <el-option
@@ -90,26 +82,17 @@
     <el-table v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="任务编号" align="center" prop="taskId" />
-      <el-table-column label="学生编号" align="center" prop="userId" />
-      <el-table-column label="任务成本" align="center" prop="taskCost" />
-      <el-table-column label="任务花费时间" align="center" prop="taskTime" />
-      <el-table-column label="任务成绩" align="center" prop="taskPoints" />
-      <el-table-column label="任务状态" align="center" prop="taskState">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.tl_task_state" :value="scope.row.taskState"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="任务开始时间" align="center" prop="taskStartTime" width="180">
+      <el-table-column label="任务开始时间" align="center" prop="taskStartTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.taskStartTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任务结束时间" align="center" prop="taskEndTime" width="180">
+      <el-table-column label="任务结束时间" align="center" prop="taskEndTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.taskEndTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任务发布时间" align="center" prop="taskCreateTime" width="180">
+      <el-table-column label="任务发布时间" align="center" prop="taskCreateTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.taskCreateTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -134,7 +117,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <pagination
       v-show="total>0"
       :total="total"
@@ -142,29 +124,9 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或修改task对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="任务成本" prop="taskCost">
-          <el-input v-model="form.taskCost" placeholder="请输入任务成本" />
-        </el-form-item>
-        <el-form-item label="任务花费时间" prop="taskTime">
-          <el-input v-model="form.taskTime" placeholder="请输入任务花费时间" />
-        </el-form-item>
-        <el-form-item label="任务成绩" prop="taskPoints">
-          <el-input v-model="form.taskPoints" placeholder="请输入任务成绩" />
-        </el-form-item>
-        <el-form-item label="任务状态" prop="taskState">
-          <el-select v-model="form.taskState" placeholder="请选择任务状态">
-            <el-option
-              v-for="dict in dict.type.tl_task_state"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">  
         <el-form-item label="任务开始时间" prop="taskStartTime">
           <el-date-picker clearable
             v-model="form.taskStartTime"
@@ -181,17 +143,6 @@
             placeholder="请选择任务结束时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="任务发布时间" prop="taskCreateTime">
-          <el-date-picker clearable
-            v-model="form.taskCreateTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择任务发布时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="发布人" prop="taskCreateBy">
-          <el-input v-model="form.taskCreateBy" placeholder="请输入发布人" />
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -200,13 +151,7 @@
     </el-dialog>
   </div>
 </template>
-<!--<style>-->
 
-<!--element.style {-->
-<!--  width: 96px;-->
-<!--}-->
-
-<!--</style>-->
 <script>
 import { listTask, getTask, delTask, addTask, updateTask } from "@/api/system/task";
 

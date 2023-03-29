@@ -1,6 +1,8 @@
 package com.ruoyi.system.domain;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -13,7 +15,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author JianDa
  * @date 2023-03-27
  */
-public class Task extends BaseEntity
+@TableName(value = "tl_task")
+public class Task
 {
     private static final long serialVersionUID = 1L;
 

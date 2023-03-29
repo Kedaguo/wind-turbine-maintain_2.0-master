@@ -2,7 +2,7 @@
   <div class="app-container home">
     <el-row>
       <el-col :span="8">
-        <div class="grid-content  e-form">
+        <div class="grid-content e-form">
           <el-row :gutter="6"><ve-line :data="chartData" :mark-line="markLine"></ve-line></el-row>
           <el-row :gutter="6">
             <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
@@ -48,6 +48,7 @@
         </div>
       </el-col>
       <el-col :span="16">
+        <div><h3>当前时间：{{ time }}</h3></div>
         <div class="grid-content bg-purple-light">
           <baidu-map class="bm-view" ak="fE3WYGSDWGkTXsjM0SAxisTysOr4ft5u" :center="center" :zoom="zoom"
             scroll-wheel-zoom="true">
@@ -85,6 +86,7 @@ import BmPointCollection from 'vue-baidu-map/components/overlays/PointCollection
 import BmPolyline from 'vue-baidu-map/components/overlays/Polyline.vue'
 import VeLine from 'v-charts/lib/line.common'
 import { list } from "@/api/index";
+import { time } from 'console'
 
 
 export default {
@@ -99,11 +101,11 @@ export default {
     BmPolyline,
   },
   data() {
-    //暂时将可出海的海量高度设置为平均值。
     this.markLine = {
       data: [{ name: "平均线", type: "average" }]
     };
     return {
+      time:'',
       center: {
         lng: 119.9215439, lat: 25.72599323
       },
@@ -157,12 +159,17 @@ export default {
     };
   },
   mounted() {
-
+    setInterval(() => {
+      this.time=Date().toLocaleString();
+    }, 1000) 
   },
   methods: {
+    //获取当前时间
+    getTime(){
+      
+    },
     handleClose(tag) {
       this.formData.linePath.splice(this.formData.linePath.indexOf(tag), 1);
-      console.log(this.formData.linePath)
     },
     goTarget(href) {
       window.open(href, "_blank");
@@ -179,9 +186,7 @@ export default {
     },
 
     clickHandler(e) {
-      console.log(e)
       this.formData.linePath.push({id:e.id, lng: e.lng, lat: e.lat })
-      console.log(this.formData.linePath)
       //alert(`单击点的坐标为：${e.lng}, ${e.lat}`);
     },
 
@@ -208,12 +213,12 @@ export default {
   width: 100%;
   height: 150px;
 }
-
+ 
 .bm-view {
   padding: 0px;
   margin: 0px;
   width: 100%;
-  height: 800px;
+  height: 700px;
 }
 
 .el-row {

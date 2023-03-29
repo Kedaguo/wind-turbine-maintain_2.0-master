@@ -129,6 +129,7 @@
       <el-table-column label="经度" align="center" prop="tLongitude" />
       <el-table-column label="纬度" align="center" prop="tLatitude" />
       <el-table-column label="品牌" align="center" prop="tBrand" />
+      <el-table-column label="发电量" align="center" prop="tBrand" />
       <el-table-column label="故障信息" align="center" prop="tFaultState">
         <template slot-scope="scope">
           <el-tag :type="scope.row.tFaultState === 3 ? 'primary' : 'danger'"><dict-tag :options="dict.type.lt_turbine_fault" :value="scope.row.tFaultState"/></el-tag>

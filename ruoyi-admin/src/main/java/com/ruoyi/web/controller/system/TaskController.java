@@ -95,12 +95,12 @@ public class TaskController extends BaseController
     /**
      * 教师发布任务
      */
-    @Transactional
     @PreAuthorize("@ss.hasPermi('system:task:add')")
     @Log(title = "task", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Task task, HttpServletRequest request)
     {
+        System.out.println("task"+task);
         LoginUser loginUser = tokenService.getLoginUser(request);
         return taskService.insertTask(task,loginUser);
     }

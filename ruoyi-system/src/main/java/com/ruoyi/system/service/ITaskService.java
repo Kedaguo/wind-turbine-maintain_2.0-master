@@ -13,8 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author 赵建达
  * @date 2023-03-24
  */
-@Transactional
-public interface ITaskService 
+public interface ITaskService
 {
     /**
      * 查询task
