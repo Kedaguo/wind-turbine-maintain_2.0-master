@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.Task;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * taskMapper接口
@@ -11,6 +12,7 @@ import com.ruoyi.system.domain.Task;
  * @author 赵建达
  * @date 2023-03-24
  */
+@Mapper
 public interface TaskMapper extends BaseMapper<Task>
 {
     /**

@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
@@ -110,8 +111,8 @@ public class TaskServiceImpl implements ITaskService
         QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
         taskQueryWrapper.eq("task_create_time",nowDate)
                 .eq("task_create_by",taskCreateBy);
-//        taskQueryWrapper.eq("task_id",2);
         Task task1 = taskMapper.selectOne(taskQueryWrapper);
+        System.out.println("task1"+task1);
 //        任务关联风机
         taskRelevanceTurbine(task1);
         //任务关联维修人员
@@ -239,29 +240,63 @@ public class TaskServiceImpl implements ITaskService
         TaskBoat taskBoat = new TaskBoat();
         taskBoat.setTaskId(taskId);
         List<TaskBoat> taskBoats = taskBoatMapper.selectTaskBoatList(taskBoat);
-        List<Long> taskBoatIds = taskBoats.stream().map(TaskBoat::getbId).collect(Collectors.toList());
-        return taskBoatMapper.deleteBatchIds(taskBoatIds);
+//        long[] taskBoatIds = taskBoats.stream().map(TaskBoat::getbId).mapToLong(t->t.longValue()).toArray();
+//        Long[] taskBoatIds = taskBoats.stream().map(TaskBoat::getbId).toArray(Long[]::new);
+        for (TaskBoat taskBoat1:taskBoats){
+            QueryWrapper<TaskBoat> taskBoatQueryWrapper = new QueryWrapper<>();
+            taskBoatQueryWrapper.eq("b_id",taskBoat1.getbId())
+                    .eq("task_id",taskBoat1.getTaskId());
+            taskBoatMapper.delete(taskBoatQueryWrapper);
+        }
+        return 1;
     }
     public int deleteTaskPersonByTaskPersonIds(Long taskId){
+        System.out.println("taskId"+taskId);
         TaskPerson taskPerson = new TaskPerson();
         taskPerson.setTaskId(taskId);
         List<TaskPerson> taskPeople = taskPersonMapper.selectTaskPersonList(taskPerson);
-        List<Long> taskPeopleIds = taskPeople.stream().map(TaskPerson::getpId).collect(Collectors.toList());
-        return taskPersonMapper.deleteBatchIds(taskPeopleIds);
+        for (TaskPerson taskPerson1:taskPeople){
+            QueryWrapper<TaskPerson> taskPersonQueryWrapper = new QueryWrapper<>();
+            taskPersonQueryWrapper.eq("p_id",taskPerson1.getpId())
+                    .eq("task_id",taskPerson1.getTaskId());
+            taskPersonMapper.delete(taskPersonQueryWrapper);
+        }
+
+//        List<Long> taskPeopleIds = taskPeople.stream().map(TaskPerson::getpId).collect(Collectors.toList());
+//        Long[] taskPeopleIds = taskPeople.stream().map(TaskPerson::getpId).toArray(Long[]::new);
+        return 1;
+
+
     }
     public int deleteTaskTurbineByTaskTurbineIds(Long taskId){
         TaskTurbine taskTurbine = new TaskTurbine();
         taskTurbine.setTaskId(taskId);
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
-        List<Long> taskTurbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
-        return taskTurbineMapper.deleteBatchIds(taskTurbineIds);
+//        List<Long> taskTurbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
+//        Long[] taskTurbineIds = taskTurbines.stream().map(TaskTurbine::gettId).toArray(Long[]::new);
+        for (TaskTurbine taskTurbine1:taskTurbines){
+            QueryWrapper<TaskTurbine> taskTurbineQueryWrapper = new QueryWrapper<>();
+            taskTurbineQueryWrapper.eq("t_id",taskTurbine1.gettId())
+                    .eq("task_id",taskTurbine1.getTaskId());
+            taskTurbineMapper.delete(taskTurbineQueryWrapper);
+        }
+        return 1;
+
+
     }
     public int deleteTaskStudentByTaskStudentIds(Long taskId){
         TaskStudent taskStudent = new TaskStudent();
         taskStudent.setTaskId(taskId);
         List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
-        List<Long> taskStudentsIds = taskStudents.stream().map(TaskStudent::getUserId).collect(Collectors.toList());
-        return taskStudentMapper.deleteBatchIds(taskStudentsIds);
+//        List<Long> taskStudentsIds = taskStudents.stream().map(TaskStudent::getUserId).collect(Collectors.toList());
+//        Long[] taskStudentsIds =taskStudents.stream().map(TaskStudent::getUserId).toArray(Long[]::new);
+        for (TaskStudent taskStudent1:taskStudents){
+            QueryWrapper<TaskStudent> taskStudentQueryWrapper = new QueryWrapper<>();
+            taskStudentQueryWrapper.eq("user_id",taskStudent1.getUserId())
+                    .eq("task_id",taskStudent1.getTaskId());
+            taskStudentMapper.delete(taskStudentQueryWrapper);
+        }
+        return 1;
     }
     /**
      * 删除task信息

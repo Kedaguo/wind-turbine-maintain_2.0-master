@@ -48,7 +48,7 @@ public class TaskController extends BaseController
     /**
      *老师查看  task_create_by  username
      */
-    @PreAuthorize("@ss.hasPermi('system:task:listByTeacher')")
+//    @PreAuthorize("@ss.hasPermi('system:task:listByTeacher')")
     @GetMapping("/list")
     public TableDataInfo list(HttpServletRequest request)
     {
