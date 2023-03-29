@@ -38,9 +38,9 @@ public class Task
     private Date taskEndTime;
 
     /** 任务发布时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:MM:SS")
     @Excel(name = "任务发布时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date taskCreateTime;
+    private String taskCreateTime;
 
     /** 发布人 */
     @Excel(name = "发布人")
@@ -82,16 +82,25 @@ public class Task
     {
         return taskEndTime;
     }
-    public void setTaskCreateTime(Date taskCreateTime) 
-    {
+//    public void setTaskCreateTime(Date taskCreateTime)
+//    {
+//        this.taskCreateTime = taskCreateTime;
+//    }
+//
+//    public Date getTaskCreateTime()
+//    {
+//        return taskCreateTime;
+//    }
+
+    public String getTaskCreateTime () {
+        return taskCreateTime;
+    }
+
+    public void setTaskCreateTime (String taskCreateTime) {
         this.taskCreateTime = taskCreateTime;
     }
 
-    public Date getTaskCreateTime() 
-    {
-        return taskCreateTime;
-    }
-    public void setTaskCreateBy(String taskCreateBy) 
+    public void setTaskCreateBy(String taskCreateBy)
     {
         this.taskCreateBy = taskCreateBy;
     }

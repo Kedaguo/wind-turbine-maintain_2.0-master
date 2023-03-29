@@ -104,12 +104,12 @@ public class TaskServiceImpl implements ITaskService
     public AjaxResult insertTask(Task task, LoginUser loginUser)
     {
         Date nowDate = DateUtils.getNowDate();
-        task.setTaskCreateTime(nowDate);
+        task.setTaskCreateTime(nowDate.toString());
         task.setTaskCreateBy(loginUser.getUsername());
         int i = taskMapper.insert(task);
         String taskCreateBy = task.getTaskCreateBy();
         QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
-        taskQueryWrapper.eq("task_create_time",nowDate)
+        taskQueryWrapper.eq("task_create_time",nowDate.toString())
                 .eq("task_create_by",taskCreateBy);
         Task task1 = taskMapper.selectOne(taskQueryWrapper);
         System.out.println("task1"+task1);
