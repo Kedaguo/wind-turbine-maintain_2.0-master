@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -101,16 +102,16 @@ public class TaskServiceImpl implements ITaskService
     @Override
     public AjaxResult insertTask(Task task, LoginUser loginUser)
     {
-        task.setTaskCreateTime(DateUtils.getNowDate());
+        Date nowDate = DateUtils.getNowDate();
+        task.setTaskCreateTime(nowDate);
         task.setTaskCreateBy(loginUser.getUsername());
         int i = taskMapper.insert(task);
-        System.out.println("i" + i);
+        String taskCreateBy = task.getTaskCreateBy();
         QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
-//        taskQueryWrapper.eq("task_create_time",task.getTaskCreateTime())
-//                .eq("task_create_by",task.getTaskCreateBy());
-        taskQueryWrapper.eq("task_id",19);
+        taskQueryWrapper.eq("task_create_time",nowDate)
+                .eq("task_create_by",taskCreateBy);
+//        taskQueryWrapper.eq("task_id",2);
         Task task1 = taskMapper.selectOne(taskQueryWrapper);
-        System.out.println("task1"+task1);
 //        任务关联风机
         taskRelevanceTurbine(task1);
         //任务关联维修人员
@@ -131,9 +132,8 @@ public class TaskServiceImpl implements ITaskService
         QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
         sysUserRoleQueryWrapper.eq("role_id",101l);
         List<SysUserRole> students =sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
-        List<Long> studentRoleIds = students.stream().map(SysUserRole::getRoleId).collect(Collectors.toList());
-        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectBatchIds(studentRoleIds);
-        List<Long> studentIds = sysUserRoles.stream().map(SysUserRole::getUserId).collect(Collectors.toList());
+        List<Long> studentIds = students.stream().map(SysUserRole::getUserId).collect(Collectors.toList());
+        System.out.println("studentIds"+studentIds);
         for(Long user_id:studentIds){
             TaskStudent taskStudent = new TaskStudent();
             taskStudent.setUserId(user_id);
