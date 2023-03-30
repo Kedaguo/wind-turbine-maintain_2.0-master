@@ -103,14 +103,14 @@ public class TaskServiceImpl implements ITaskService
     @Override
     public AjaxResult insertTask(Task task, LoginUser loginUser)
     {
-        Date nowDate = DateUtils.getNowDate();
-        task.setTaskCreateTime(nowDate.toString());
+
+//        String nowDate = DateUtils.getTime();
+        task.setTaskCreateTime(DateUtils.getMillsTime());
         task.setTaskCreateBy(loginUser.getUsername());
         int i = taskMapper.insert(task);
-        String taskCreateBy = task.getTaskCreateBy();
         QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
-        taskQueryWrapper.eq("task_create_time",nowDate.toString())
-                .eq("task_create_by",taskCreateBy);
+        taskQueryWrapper.eq("task_create_time",task.getTaskCreateTime())
+                .eq("task_create_by",task.getTaskCreateBy());
         Task task1 = taskMapper.selectOne(taskQueryWrapper);
         System.out.println("task1"+task1);
 //        任务关联风机
@@ -227,6 +227,7 @@ public class TaskServiceImpl implements ITaskService
     @Override
     public int deleteTaskByTaskIds(Long[] taskIds)
     {
+        System.out.println("taskIds"+taskIds);
         for (Long taskId:taskIds){
             deleteTaskBoatByTaskBoatIds(taskId);
             deleteTaskPersonByTaskPersonIds(taskId);
@@ -255,15 +256,13 @@ public class TaskServiceImpl implements ITaskService
         TaskPerson taskPerson = new TaskPerson();
         taskPerson.setTaskId(taskId);
         List<TaskPerson> taskPeople = taskPersonMapper.selectTaskPersonList(taskPerson);
+        System.out.println("taskPeople"+taskPeople);
         for (TaskPerson taskPerson1:taskPeople){
             QueryWrapper<TaskPerson> taskPersonQueryWrapper = new QueryWrapper<>();
             taskPersonQueryWrapper.eq("p_id",taskPerson1.getpId())
                     .eq("task_id",taskPerson1.getTaskId());
             taskPersonMapper.delete(taskPersonQueryWrapper);
         }
-
-//        List<Long> taskPeopleIds = taskPeople.stream().map(TaskPerson::getpId).collect(Collectors.toList());
-//        Long[] taskPeopleIds = taskPeople.stream().map(TaskPerson::getpId).toArray(Long[]::new);
         return 1;
 
 
@@ -272,8 +271,6 @@ public class TaskServiceImpl implements ITaskService
         TaskTurbine taskTurbine = new TaskTurbine();
         taskTurbine.setTaskId(taskId);
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
-//        List<Long> taskTurbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
-//        Long[] taskTurbineIds = taskTurbines.stream().map(TaskTurbine::gettId).toArray(Long[]::new);
         for (TaskTurbine taskTurbine1:taskTurbines){
             QueryWrapper<TaskTurbine> taskTurbineQueryWrapper = new QueryWrapper<>();
             taskTurbineQueryWrapper.eq("t_id",taskTurbine1.gettId())

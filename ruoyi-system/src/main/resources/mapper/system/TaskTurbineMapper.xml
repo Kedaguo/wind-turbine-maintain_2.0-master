@@ -20,7 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTaskTurbineList" parameterType="TaskTurbine" resultMap="TaskTurbineResult">
         <include refid="selectTaskTurbineVo"/>
-        <where>  
+        <where>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="fId != null "> and f_id = #{fId}</if>
             <if test="mId != null "> and m_id = #{mId}</if>
             <if test="fState != null "> and f_state = #{fState}</if>

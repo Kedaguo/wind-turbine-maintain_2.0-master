@@ -21,7 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTaskBoatList" parameterType="TaskBoat" resultMap="TaskBoatResult">
         <include refid="selectTaskBoatVo"/>
-        <where>  
+        <where>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="bState != null "> and b_state = #{bState}</if>
             <if test="bWorkState != null "> and b_work_state = #{bWorkState}</if>
             <if test="bStartTime != null "> and b_start_time = #{bStartTime}</if>

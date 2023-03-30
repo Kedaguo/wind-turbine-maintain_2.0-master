@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTaskPersonList" parameterType="TaskPerson" resultMap="TaskPersonResult">
         <include refid="selectTaskPersonVo"/>
         <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="pWaitNum != null "> and p_wait_num = #{pWaitNum}</if>
             <if test="pWorkNum != null "> and p_work_num = #{pWorkNum}</if>
         </where>

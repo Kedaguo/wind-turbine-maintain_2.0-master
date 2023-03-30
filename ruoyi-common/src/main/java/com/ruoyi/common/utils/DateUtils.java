@@ -3,11 +3,8 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
@@ -27,6 +24,8 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     public static String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
     public static String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+
+    public static String YYYY_MM_DD_HH_MM_SS_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
 
     private static String[] parsePatterns = {
             "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyy-MM", 
@@ -57,6 +56,10 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     {
         return dateTimeNow(YYYY_MM_DD_HH_MM_SS);
     }
+    public static final String getMillsTime()
+    {
+        return dateMillsTimeNow(YYYY_MM_DD_HH_MM_SS_SSS);
+    }
 
     public static final String dateTimeNow()
     {
@@ -68,6 +71,14 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         return parseDateToStr(format, new Date());
     }
 
+    public static final String dateMillsTimeNow(final String format)
+    {
+        long timeMillis = System.currentTimeMillis();
+        LocalDateTime dateTime=LocalDateTime.ofInstant(Instant.ofEpochMilli(timeMillis),ZoneId.systemDefault());
+        DateTimeFormatter formatter=DateTimeFormatter.ofPattern(format);
+        String formattedDateTime =dateTime.format(formatter);
+        return formattedDateTime;
+    }
     public static final String dateTime(final Date date)
     {
         return parseDateToStr(YYYY_MM_DD, date);

@@ -20,7 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectTaskStudentList" parameterType="TaskStudent" resultMap="TaskStudentResult">
         <include refid="selectTaskStudentVo"/>
-        <where>  
+        <where>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="taskCost != null "> and task_cost = #{taskCost}</if>
             <if test="taskCharge != null "> and task_charge = #{taskCharge}</if>
             <if test="taskTime != null  and taskTime != ''"> and task_time = #{taskTime}</if>
