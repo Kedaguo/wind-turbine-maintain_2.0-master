@@ -58,9 +58,9 @@ public class TaskStudentServiceImpl implements ITaskStudentService
         ArrayList<TaskStudentDto> taskStudentDtos = new ArrayList<>();
         for (TaskStudent taskStudent1:taskStudents){
             TaskStudentDto taskStudentDto = new TaskStudentDto();
-            BeanUtils.copyProperties(taskStudentDto,taskStudent1);
-            Task task = taskMapper.selectById(taskStudent1.getTaskId());
-            BeanUtils.copyProperties(taskStudentDto,task);
+            BeanUtils.copyProperties(taskStudent1,taskStudentDto);
+            Task task = taskMapper.selectTaskByTaskId(taskStudent1.getTaskId());
+            BeanUtils.copyProperties(task,taskStudentDto);
             taskStudentDtos.add(taskStudentDto);
         }
         return taskStudentDtos;

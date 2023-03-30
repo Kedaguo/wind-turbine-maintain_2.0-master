@@ -29,17 +29,17 @@ public class Task
 
     /** 任务开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "任务开始时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "任务开始时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date taskStartTime;
 
     /** 任务结束时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "任务结束时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "任务结束时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date taskEndTime;
 
     /** 任务发布时间 */
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:MM:SS")
-    @Excel(name = "任务发布时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @Excel(name = "任务发布时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss.SSS")
     private String taskCreateTime;
 
     /** 发布人 */
