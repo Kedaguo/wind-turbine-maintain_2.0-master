@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.dto.TaskStudentDto;
+import com.ruoyi.system.domain.dto.TaskTeacherDto;
 import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,7 @@ public class TaskStudentController extends BaseController
 
 
     /**
-     * 查询taskStudent列表  学生查询自己的所有任务
+     *  学生查询自己的所有任务
      */
     @PreAuthorize("@ss.hasPermi('system:taskStudent:list')")
     @GetMapping("/list")
@@ -56,6 +58,18 @@ public class TaskStudentController extends BaseController
         startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<TaskStudentDto> list = taskStudentService.selectTaskStudentList(loginUser.getUserId());
+        return getDataTable(list);
+    }
+/*
+查询taskStudent列表
+ */
+//    @PreAuthorize("@ss.hasPermi('system:task:list')")
+    @GetMapping("/taskTeacherList")
+    public TableDataInfo taskList(HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<TaskTeacherDto> list = taskStudentService.selectTaskStudentByTeacher(loginUser.getUsername());
         return getDataTable(list);
     }
 

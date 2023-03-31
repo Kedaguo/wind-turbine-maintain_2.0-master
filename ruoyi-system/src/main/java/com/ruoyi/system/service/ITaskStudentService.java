@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import java.util.List;
 import com.ruoyi.system.domain.TaskStudent;
 import com.ruoyi.system.domain.dto.TaskStudentDto;
+import com.ruoyi.system.domain.dto.TaskTeacherDto;
 
 /**
  * taskStudentService接口
@@ -59,4 +60,6 @@ public interface ITaskStudentService
      * @return 结果
      */
     public int deleteTaskStudentByUserId(Long userId);
+
+    public List<TaskTeacherDto> selectTaskStudentByTeacher (String userName);
 }

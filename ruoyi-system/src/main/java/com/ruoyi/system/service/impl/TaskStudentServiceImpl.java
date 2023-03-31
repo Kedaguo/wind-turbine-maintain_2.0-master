@@ -3,8 +3,12 @@ package com.ruoyi.system.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.dto.TaskStudentDto;
+import com.ruoyi.system.domain.dto.TaskTeacherDto;
+import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.mapper.TaskMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,8 @@ public class TaskStudentServiceImpl implements ITaskStudentService
     @Resource
     private TaskMapper taskMapper;
 
+    @Resource
+    private SysUserMapper sysUserMapper;
     /**
      * 查询taskStudent
      * 
@@ -112,5 +118,45 @@ public class TaskStudentServiceImpl implements ITaskStudentService
     public int deleteTaskStudentByUserId(Long userId)
     {
         return taskStudentMapper.deleteTaskStudentByUserId(userId);
+    }
+
+    @Override
+    public List<TaskTeacherDto> selectTaskStudentByTeacher (String userName) {
+        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
+        taskQueryWrapper.eq("task_create_by",userName);
+        List<Task> tasks = taskMapper.selectList(taskQueryWrapper);
+        List<TaskTeacherDto> list = new ArrayList<>();
+        for (Task task:tasks){
+            TaskTeacherDto taskTeacherDto = selectTaskStudentByTaskId(task);
+            list.add(taskTeacherDto);
+        }
+        return list;
+    }
+    public TaskTeacherDto selectTaskStudentByTaskId(Task task){
+
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(task.getTaskId());
+        //遍历所有任务id相关的学生
+        List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
+        List<TaskTeacherDto> taskTeacherDtos = new ArrayList<>();
+        //遍历所有学生
+        for (TaskStudent taskStudent1:taskStudents){
+            TaskTeacherDto taskTeacherDto = new TaskTeacherDto();
+            BeanUtils.copyProperties(task,taskTeacherDto);
+            BeanUtils.copyProperties(taskStudent1,taskTeacherDto);
+            SysUser sysUser = sysUserMapper.selectUserById(taskStudent1.getUserId());
+            if (sysUser!=null){
+                taskTeacherDto.setUserName(sysUser.getUserName());
+                taskTeacherDto.setNickName(sysUser.getNickName());
+            }
+            taskTeacherDtos.add(taskTeacherDto);
+        }
+        TaskTeacherDto taskTeacherDto = new TaskTeacherDto();
+        if (taskTeacherDtos.size()!=0) {
+            BeanUtils.copyProperties(taskTeacherDtos.get(0), taskTeacherDto);
+            taskTeacherDto.setChildren(taskTeacherDtos);
+        }
+        System.out.println("taskTeacherDto"+taskTeacherDto);
+        return taskTeacherDto;
     }
 }
