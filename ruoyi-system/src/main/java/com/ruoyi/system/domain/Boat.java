@@ -1,9 +1,6 @@
 package com.ruoyi.system.domain;
 
-import java.util.Date;
-
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -12,35 +9,35 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * boat对象 tl_boat
  * 
- * @author 赵建达
- * @date 2023-03-13
+ * @author JianDa
+ * @date 2023-03-31
  */
-@TableName(value = "tl_boat")
+@TableName("tl_boat")
 public class Boat extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 船只编号 */
+    /** 船舶编号 */
     private Long bId;
 
-    /** 船只模型 */
-    @Excel(name = "船只模型")
+    /** 船舶模型 */
+    @Excel(name = "船舶模型")
     private String bModel;
 
-    /** 船只速度 */
-    @Excel(name = "船只速度")
+    /** 船舶速度 */
+    @Excel(name = "船舶速度")
     private String bSpeed;
 
-    /** 船只容量 */
-    @Excel(name = "船只容量")
+    /** 船舶容量 */
+    @Excel(name = "船舶容量")
     private String bCapacity;
 
     /** 风速 */
     @Excel(name = "风速")
     private String bWindSpeed;
 
-    /** 海浪气象 */
-    @Excel(name = "海浪气象")
+    /** 海浪 */
+    @Excel(name = "海浪")
     private String bWaveHeight;
 
     /** 每年成本 */
@@ -51,31 +48,9 @@ public class Boat extends BaseEntity
     @Excel(name = "每小时成本")
     private String bHourCost;
 
-    /** 船只数量 */
-    @Excel(name = "船只数量")
-    private Long bSubshipNum;
-
-    /** 船只类型 */
-    @Excel(name = "船只类型")
-    private Long bType;
-
-    /** 出海作业 */
-    @Excel(name = "出海作业")
-    private Long bState;
-
-    /** 工作类型 */
-    @Excel(name = "工作类型")
-    private Long bWorkState;
-
-    /** 出发时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "出发时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date bStartTime;
-
-    /** 返回时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "返回时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date bEndTime;
+    /** 船舶类型 */
+    @Excel(name = "船舶类型")
+    private Integer bType;
 
     /** 经度 */
     @Excel(name = "经度")
@@ -157,59 +132,14 @@ public class Boat extends BaseEntity
     {
         return bHourCost;
     }
-    public void setbSubshipNum(Long bSubshipNum) 
-    {
-        this.bSubshipNum = bSubshipNum;
-    }
-
-    public Long getbSubshipNum() 
-    {
-        return bSubshipNum;
-    }
-    public void setbType(Long bType) 
+    public void setbType(Integer bType) 
     {
         this.bType = bType;
     }
 
-    public Long getbType() 
+    public Integer getbType() 
     {
         return bType;
-    }
-    public void setbState(Long bState) 
-    {
-        this.bState = bState;
-    }
-
-    public Long getbState() 
-    {
-        return bState;
-    }
-    public void setbWorkState(Long bWorkState) 
-    {
-        this.bWorkState = bWorkState;
-    }
-
-    public Long getbWorkState() 
-    {
-        return bWorkState;
-    }
-    public void setbStartTime(Date bStartTime) 
-    {
-        this.bStartTime = bStartTime;
-    }
-
-    public Date getbStartTime() 
-    {
-        return bStartTime;
-    }
-    public void setbEndTime(Date bEndTime) 
-    {
-        this.bEndTime = bEndTime;
-    }
-
-    public Date getbEndTime() 
-    {
-        return bEndTime;
     }
     public void setbLongitude(String bLongitude) 
     {
@@ -241,12 +171,7 @@ public class Boat extends BaseEntity
             .append("bWaveHeight", getbWaveHeight())
             .append("bAnnualCost", getbAnnualCost())
             .append("bHourCost", getbHourCost())
-            .append("bSubshipNum", getbSubshipNum())
             .append("bType", getbType())
-            .append("bState", getbState())
-            .append("bWorkState", getbWorkState())
-            .append("bStartTime", getbStartTime())
-            .append("bEndTime", getbEndTime())
             .append("bLongitude", getbLongitude())
             .append("bLatitude", getbLatitude())
             .toString();

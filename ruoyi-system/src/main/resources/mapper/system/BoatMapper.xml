@@ -13,18 +13,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bWaveHeight"    column="b_wave_height"    />
         <result property="bAnnualCost"    column="b_annual_cost"    />
         <result property="bHourCost"    column="b_hour_cost"    />
-        <result property="bSubshipNum"    column="b_subship_num"    />
         <result property="bType"    column="b_type"    />
-        <result property="bState"    column="b_state"    />
-        <result property="bWorkState"    column="b_work_state"    />
-        <result property="bStartTime"    column="b_start_time"    />
-        <result property="bEndTime"    column="b_end_time"    />
         <result property="bLongitude"    column="b_longitude"    />
         <result property="bLatitude"    column="b_latitude"    />
     </resultMap>
 
     <sql id="selectBoatVo">
-        select b_id, b_model, b_speed, b_capacity, b_wind_speed, b_wave_height, b_annual_cost, b_hour_cost, b_subship_num, b_type, b_state, b_work_state, b_start_time, b_end_time, b_longitude, b_latitude from tl_boat
+        select b_id, b_model, b_speed, b_capacity, b_wind_speed, b_wave_height, b_annual_cost, b_hour_cost, b_type, b_longitude, b_latitude from tl_boat
     </sql>
 
     <select id="selectBoatList" parameterType="Boat" resultMap="BoatResult">
@@ -33,16 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bModel != null  and bModel != ''"> and b_model = #{bModel}</if>
             <if test="bSpeed != null  and bSpeed != ''"> and b_speed = #{bSpeed}</if>
             <if test="bCapacity != null  and bCapacity != ''"> and b_capacity = #{bCapacity}</if>
-            <if test="bWindSpeed != null  and bWindSpeed != ''"> and b_wind_speed = #{bWindSpeed}</if>
-            <if test="bWaveHeight != null  and bWaveHeight != ''"> and b_wave_height = #{bWaveHeight}</if>
-            <if test="bAnnualCost != null  and bAnnualCost != ''"> and b_annual_cost = #{bAnnualCost}</if>
-            <if test="bHourCost != null  and bHourCost != ''"> and b_hour_cost = #{bHourCost}</if>
-            <if test="bSubshipNum != null "> and b_subship_num = #{bSubshipNum}</if>
             <if test="bType != null "> and b_type = #{bType}</if>
-            <if test="bState != null "> and b_state = #{bState}</if>
-            <if test="bWorkState != null "> and b_work_state = #{bWorkState}</if>
-            <if test="bStartTime != null "> and b_start_time = #{bStartTime}</if>
-            <if test="bEndTime != null "> and b_end_time = #{bEndTime}</if>
             <if test="bLongitude != null  and bLongitude != ''"> and b_longitude = #{bLongitude}</if>
             <if test="bLatitude != null  and bLatitude != ''"> and b_latitude = #{bLatitude}</if>
         </where>
@@ -53,10 +39,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where b_id = #{bId}
     </select>
         
-    <insert id="insertBoat" parameterType="Boat">
+    <insert id="insertBoat" parameterType="Boat" useGeneratedKeys="true" keyProperty="bId">
         insert into tl_boat
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="bId != null">b_id,</if>
             <if test="bModel != null">b_model,</if>
             <if test="bSpeed != null">b_speed,</if>
             <if test="bCapacity != null">b_capacity,</if>
@@ -64,17 +49,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bWaveHeight != null">b_wave_height,</if>
             <if test="bAnnualCost != null">b_annual_cost,</if>
             <if test="bHourCost != null">b_hour_cost,</if>
-            <if test="bSubshipNum != null">b_subship_num,</if>
             <if test="bType != null">b_type,</if>
-            <if test="bState != null">b_state,</if>
-            <if test="bWorkState != null">b_work_state,</if>
-            <if test="bStartTime != null">b_start_time,</if>
-            <if test="bEndTime != null">b_end_time,</if>
             <if test="bLongitude != null">b_longitude,</if>
             <if test="bLatitude != null">b_latitude,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="bId != null">#{bId},</if>
             <if test="bModel != null">#{bModel},</if>
             <if test="bSpeed != null">#{bSpeed},</if>
             <if test="bCapacity != null">#{bCapacity},</if>
@@ -82,12 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bWaveHeight != null">#{bWaveHeight},</if>
             <if test="bAnnualCost != null">#{bAnnualCost},</if>
             <if test="bHourCost != null">#{bHourCost},</if>
-            <if test="bSubshipNum != null">#{bSubshipNum},</if>
             <if test="bType != null">#{bType},</if>
-            <if test="bState != null">#{bState},</if>
-            <if test="bWorkState != null">#{bWorkState},</if>
-            <if test="bStartTime != null">#{bStartTime},</if>
-            <if test="bEndTime != null">#{bEndTime},</if>
             <if test="bLongitude != null">#{bLongitude},</if>
             <if test="bLatitude != null">#{bLatitude},</if>
          </trim>
@@ -103,12 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bWaveHeight != null">b_wave_height = #{bWaveHeight},</if>
             <if test="bAnnualCost != null">b_annual_cost = #{bAnnualCost},</if>
             <if test="bHourCost != null">b_hour_cost = #{bHourCost},</if>
-            <if test="bSubshipNum != null">b_subship_num = #{bSubshipNum},</if>
             <if test="bType != null">b_type = #{bType},</if>
-            <if test="bState != null">b_state = #{bState},</if>
-            <if test="bWorkState != null">b_work_state = #{bWorkState},</if>
-            <if test="bStartTime != null">b_start_time = #{bStartTime},</if>
-            <if test="bEndTime != null">b_end_time = #{bEndTime},</if>
             <if test="bLongitude != null">b_longitude = #{bLongitude},</if>
             <if test="bLatitude != null">b_latitude = #{bLatitude},</if>
         </trim>

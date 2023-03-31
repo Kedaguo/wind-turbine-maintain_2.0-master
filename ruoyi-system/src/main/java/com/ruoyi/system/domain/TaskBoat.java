@@ -35,12 +35,12 @@ public class TaskBoat extends BaseEntity
     private Integer bWorkState;
 
     /** 出发时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "出发时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date bStartTime;
 
     /** 返回时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "返回时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date bEndTime;
 

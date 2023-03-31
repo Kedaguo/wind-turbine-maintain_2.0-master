@@ -25,46 +25,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-<!--      <el-form-item label="风速" prop="bWindSpeed">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.bWindSpeed"-->
-<!--          placeholder="请输入风速"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="海浪气象" prop="bWaveHeight">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.bWaveHeight"-->
-<!--          placeholder="请输入海浪气象"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="每年成本" prop="bAnnualCost">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.bAnnualCost"-->
-<!--          placeholder="请输入每年成本"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="每小时成本" prop="bHourCost">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.bHourCost"-->
-<!--          placeholder="请输入每小时成本"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-      <el-form-item label="船舶数量" prop="bSubshipNum">
-        <el-input
-          v-model="queryParams.bSubshipNum"
-          placeholder="请输入船舶数量"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="船舶类型" prop="bType">
         <el-select v-model="queryParams.bType" placeholder="请选择船舶类型" clearable>
           <el-option
@@ -75,58 +35,22 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="出海作业" prop="bState">
-        <el-select v-model="queryParams.bState" placeholder="请选择出海作业" clearable>
-          <el-option
-            v-for="dict in dict.type.b_state"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+      <el-form-item label="经度" prop="bLongitude">
+        <el-input
+          v-model="queryParams.bLongitude"
+          placeholder="请输入经度"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-      <el-form-item label="工作类型" prop="bWorkState">
-        <el-select v-model="queryParams.bWorkState" placeholder="请选择工作类型" clearable>
-          <el-option
-            v-for="dict in dict.type.b_work_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+      <el-form-item label="纬度" prop="bLatitude">
+        <el-input
+          v-model="queryParams.bLatitude"
+          placeholder="请输入纬度"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-<!--      <el-form-item label="出发时间" prop="bStartTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.bStartTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择出发时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="返回时间" prop="bEndTime">-->
-<!--        <el-date-picker clearable-->
-<!--          v-model="queryParams.bEndTime"-->
-<!--          type="date"-->
-<!--          value-format="yyyy-MM-dd"-->
-<!--          placeholder="请选择返回时间">-->
-<!--        </el-date-picker>-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="经度" prop="bLongitude">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.bLongitude"-->
-<!--          placeholder="请输入经度"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
-<!--      <el-form-item label="纬度" prop="bLatitude">-->
-<!--        <el-input-->
-<!--          v-model="queryParams.bLatitude"-->
-<!--          placeholder="请输入纬度"-->
-<!--          clearable-->
-<!--          @keyup.enter.native="handleQuery"-->
-<!--        />-->
-<!--      </el-form-item>-->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -186,33 +110,12 @@
       <el-table-column label="船舶速度" align="center" prop="bSpeed" />
       <el-table-column label="船舶容量" align="center" prop="bCapacity" />
       <el-table-column label="风速" align="center" prop="bWindSpeed" />
-      <el-table-column label="海浪气象" align="center" prop="bWaveHeight" />
+      <el-table-column label="海浪" align="center" prop="bWaveHeight" />
       <el-table-column label="每年成本" align="center" prop="bAnnualCost" />
       <el-table-column label="每小时成本" align="center" prop="bHourCost" />
-      <el-table-column label="船舶数量" align="center" prop="bSubshipNum" />
       <el-table-column label="船舶类型" align="center" prop="bType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.b_type" :value="scope.row.bType"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="出海作业" align="center" prop="bState">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.b_state" :value="scope.row.bState"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="工作类型" align="center" prop="bWorkState">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.b_work_type" :value="scope.row.bWorkState"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="出发时间" align="center" prop="bStartTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.bStartTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="返回时间" align="center" prop="bEndTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.bEndTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="经度" align="center" prop="bLongitude" />
@@ -236,7 +139,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+    
     <pagination
       v-show="total>0"
       :total="total"
@@ -260,17 +163,14 @@
         <el-form-item label="风速" prop="bWindSpeed">
           <el-input v-model="form.bWindSpeed" placeholder="请输入风速" />
         </el-form-item>
-        <el-form-item label="海浪气象" prop="bWaveHeight">
-          <el-input v-model="form.bWaveHeight" placeholder="请输入海浪气象" />
+        <el-form-item label="海浪" prop="bWaveHeight">
+          <el-input v-model="form.bWaveHeight" placeholder="请输入海浪" />
         </el-form-item>
         <el-form-item label="每年成本" prop="bAnnualCost">
           <el-input v-model="form.bAnnualCost" placeholder="请输入每年成本" />
         </el-form-item>
         <el-form-item label="每小时成本" prop="bHourCost">
           <el-input v-model="form.bHourCost" placeholder="请输入每小时成本" />
-        </el-form-item>
-        <el-form-item label="船舶数量" prop="bSubshipNum">
-          <el-input v-model="form.bSubshipNum" placeholder="请输入船舶数量" />
         </el-form-item>
         <el-form-item label="船舶类型" prop="bType">
           <el-select v-model="form.bType" placeholder="请选择船舶类型">
@@ -281,42 +181,6 @@
               :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="出海作业" prop="bState">
-          <el-select v-model="form.bState" placeholder="请选择出海作业">
-            <el-option
-              v-for="dict in dict.type.b_state"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="工作类型" prop="bWorkState">
-          <el-select v-model="form.bWorkState" placeholder="请选择工作类型">
-            <el-option
-              v-for="dict in dict.type.b_work_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="出发时间" prop="bStartTime">
-          <el-date-picker clearable
-            v-model="form.bStartTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择出发时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="返回时间" prop="bEndTime">
-          <el-date-picker clearable
-            v-model="form.bEndTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择返回时间">
-          </el-date-picker>
         </el-form-item>
         <el-form-item label="经度" prop="bLongitude">
           <el-input v-model="form.bLongitude" placeholder="请输入经度" />
@@ -338,7 +202,7 @@ import { listBoat, getBoat, delBoat, addBoat, updateBoat } from "@/api/system/bo
 
 export default {
   name: "Boat",
-  dicts: ['b_type', 'b_state', 'b_work_type'],
+  dicts: ['b_type'],
   data() {
     return {
       // 遮罩层
@@ -366,16 +230,7 @@ export default {
         bModel: null,
         bSpeed: null,
         bCapacity: null,
-        bWindSpeed: null,
-        bWaveHeight: null,
-        bAnnualCost: null,
-        bHourCost: null,
-        bSubshipNum: null,
         bType: null,
-        bState: null,
-        bWorkState: null,
-        bStartTime: null,
-        bEndTime: null,
         bLongitude: null,
         bLatitude: null
       },
@@ -385,12 +240,6 @@ export default {
       rules: {
         bType: [
           { required: true, message: "船舶类型不能为空", trigger: "change" }
-        ],
-        bState: [
-          { required: true, message: "出海作业不能为空", trigger: "change" }
-        ],
-        bWorkState: [
-          { required: true, message: "工作类型不能为空", trigger: "change" }
         ],
       }
     };
@@ -424,12 +273,7 @@ export default {
         bWaveHeight: null,
         bAnnualCost: null,
         bHourCost: null,
-        bSubshipNum: null,
         bType: null,
-        bState: null,
-        bWorkState: null,
-        bStartTime: null,
-        bEndTime: null,
         bLongitude: null,
         bLatitude: null
       };

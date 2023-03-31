@@ -155,7 +155,14 @@ public class TaskStudentServiceImpl implements ITaskStudentService
         TaskTeacherDto taskTeacherDto = new TaskTeacherDto();
         if (taskTeachers.size()!=0) {
             BeanUtils.copyProperties(taskTeachers.get(0), taskTeacherDto);
-            taskTeacherDto.setChildren(taskTeachers);
+            ArrayList<TaskTeacher> taskTeachers1 = new ArrayList<>();
+            Integer i=0;
+            for (TaskTeacher taskTeacher:taskTeachers){
+                i++;
+                taskTeacher.setTaskId(Long.valueOf(taskTeacher.getTaskId().toString()+i.toString()));
+                taskTeachers1.add(taskTeacher);
+            }
+            taskTeacherDto.setChildren(taskTeachers1);
         }
         System.out.println("taskTeacherDto"+taskTeacherDto);
         return taskTeacherDto;
