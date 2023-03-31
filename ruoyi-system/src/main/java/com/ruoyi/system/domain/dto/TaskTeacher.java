@@ -1,17 +1,9 @@
 package com.ruoyi.system.domain.dto;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.system.domain.Task;
-import com.ruoyi.system.domain.TaskStudent;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 @Data
-public class TaskTeacherDto{
-
+public class TaskTeacher {
     /** 任务编号 */
     private Long taskId;
 
@@ -35,7 +27,4 @@ public class TaskTeacherDto{
 
     /** 任务状态 */
     private Long taskState;
-
-    private List<TaskTeacher> children;
-
 }

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.dto.TaskStudentDto;
+import com.ruoyi.system.domain.dto.TaskTeacher;
 import com.ruoyi.system.domain.dto.TaskTeacherDto;
 import com.ruoyi.system.mapper.SysUserMapper;
 import com.ruoyi.system.mapper.TaskMapper;
@@ -138,23 +139,23 @@ public class TaskStudentServiceImpl implements ITaskStudentService
         taskStudent.setTaskId(task.getTaskId());
         //遍历所有任务id相关的学生
         List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
-        List<TaskTeacherDto> taskTeacherDtos = new ArrayList<>();
+        List<TaskTeacher> taskTeachers = new ArrayList<>();
         //遍历所有学生
         for (TaskStudent taskStudent1:taskStudents){
-            TaskTeacherDto taskTeacherDto = new TaskTeacherDto();
-            BeanUtils.copyProperties(task,taskTeacherDto);
-            BeanUtils.copyProperties(taskStudent1,taskTeacherDto);
+            TaskTeacher taskTeacher = new TaskTeacher();
+            BeanUtils.copyProperties(task,taskTeacher);
+            BeanUtils.copyProperties(taskStudent1,taskTeacher);
             SysUser sysUser = sysUserMapper.selectUserById(taskStudent1.getUserId());
             if (sysUser!=null){
-                taskTeacherDto.setUserName(sysUser.getUserName());
-                taskTeacherDto.setNickName(sysUser.getNickName());
+                taskTeacher.setUserName(sysUser.getUserName());
+                taskTeacher.setNickName(sysUser.getNickName());
             }
-            taskTeacherDtos.add(taskTeacherDto);
+            taskTeachers.add(taskTeacher);
         }
         TaskTeacherDto taskTeacherDto = new TaskTeacherDto();
-        if (taskTeacherDtos.size()!=0) {
-            BeanUtils.copyProperties(taskTeacherDtos.get(0), taskTeacherDto);
-            taskTeacherDto.setChildren(taskTeacherDtos);
+        if (taskTeachers.size()!=0) {
+            BeanUtils.copyProperties(taskTeachers.get(0), taskTeacherDto);
+            taskTeacherDto.setChildren(taskTeachers);
         }
         System.out.println("taskTeacherDto"+taskTeacherDto);
         return taskTeacherDto;
