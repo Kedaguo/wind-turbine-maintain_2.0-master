@@ -53,6 +53,9 @@ public class TaskServiceImpl implements ITaskService
     private BoatMapper boatMapper;
 
     @Resource
+    private PortMapper portMapper;
+
+    @Resource
     private SysUserMapper sysUserMapper;
 
     @Resource
@@ -60,6 +63,9 @@ public class TaskServiceImpl implements ITaskService
 
     @Resource
     private TaskStudentMapper taskStudentMapper;
+
+    @Resource
+    private TaskPortMapper taskPortMapper;
 
 
     /**
@@ -112,7 +118,6 @@ public class TaskServiceImpl implements ITaskService
         taskQueryWrapper.eq("task_create_time",task.getTaskCreateTime())
                 .eq("task_create_by",task.getTaskCreateBy());
         Task task1 = taskMapper.selectOne(taskQueryWrapper);
-        System.out.println("task1"+task1);
 //        任务关联风机
         taskRelevanceTurbine(task1);
         //任务关联维修人员
@@ -121,6 +126,8 @@ public class TaskServiceImpl implements ITaskService
         taskRelevanceBoat(task1);
         //任务关联学生
         taskRelevanceStudent(task1);
+        //任务关联港口
+        taskRelevancePort(task1);
 
         return AjaxResult.success();
 
@@ -150,27 +157,40 @@ public class TaskServiceImpl implements ITaskService
      */
     public void taskRelevanceTurbine(Task task){
         List<TurbineWind> turbineWinds = turbineWindMapper.selectTurbineWindList(null);
-        for (TurbineWind turbineWind:turbineWinds){
-            TaskTurbine taskTurbine = new TaskTurbine();
-            taskTurbine.setTaskId(task.getTaskId());
-            taskTurbine.settId(turbineWind.gettId());
-            taskTurbine.setfState(0);
-            taskTurbine.setmState(0);
-            int i = taskTurbineMapper.insertTaskTurbine(taskTurbine);
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("role_id",101);
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        for (SysUserRole sysUserRole:sysUserRoles){
+            for (TurbineWind turbineWind:turbineWinds){
+                TaskTurbine taskTurbine = new TaskTurbine();
+                taskTurbine.setUserId(sysUserRole.getUserId());
+                taskTurbine.setTaskId(task.getTaskId());
+                taskTurbine.settId(turbineWind.gettId());
+                taskTurbine.setfState(2);
+                taskTurbine.setmState(3);
+                int i = taskTurbineMapper.insertTaskTurbine(taskTurbine);
+            }
         }
+
     }
     /*
     任务关联维修人员
      */
     public void taskRelevancePerson(Task task){
         List<Person> people = personMapper.selectPersonList(null);
-        for (Person person:people){
-            TaskPerson taskPerson = new TaskPerson();
-            taskPerson.setTaskId(task.getTaskId());
-            taskPerson.setpId(person.getId());
-            taskPerson.setpWaitNum(person.getpNum());
-            taskPerson.setpWorkNum(0l);
-            int i = taskPersonMapper.insertTaskPerson(taskPerson);
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("role_id",101);
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        for (SysUserRole sysUserRole:sysUserRoles){
+            for (Person person:people){
+                TaskPerson taskPerson = new TaskPerson();
+                taskPerson.setTaskId(task.getTaskId());
+                taskPerson.setUserId(sysUserRole.getUserId());
+                taskPerson.setpId(person.getId());
+                taskPerson.setpWaitNum(person.getpNum());
+                taskPerson.setpWorkNum(0l);
+                int i = taskPersonMapper.insertTaskPerson(taskPerson);
+            }
         }
 
     }
@@ -179,17 +199,41 @@ public class TaskServiceImpl implements ITaskService
      */
     public void taskRelevanceBoat(Task task){
         List<Boat> boats = boatMapper.selectBoatList(null);
-        for (Boat boat:boats){
-            TaskBoat taskBoat = new TaskBoat();
-            taskBoat.setTaskId(task.getTaskId());
-            taskBoat.setbId(boat.getbId());
-            taskBoat.setbState(0);
-            taskBoat.setbWorkState(0);
-            taskBoat.setbLongitude(boat.getbLongitude());
-            taskBoat.setbLatitude(boat.getbLatitude());
-            int i = taskBoatMapper.insertTaskBoat(taskBoat);
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("role_id",101);
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        for (SysUserRole sysUserRole:sysUserRoles) {
+            for (Boat boat : boats) {
+                TaskBoat taskBoat = new TaskBoat();
+                taskBoat.setTaskId(task.getTaskId());
+                taskBoat.setUserId(sysUserRole.getUserId());
+                taskBoat.setbId(boat.getbId());
+                taskBoat.setbState(0);
+                taskBoat.setbWorkState(0);
+                taskBoat.setbLongitude(boat.getbLongitude());
+                taskBoat.setbLatitude(boat.getbLatitude());
+                int i = taskBoatMapper.insertTaskBoat(taskBoat);
+            }
         }
+    }
+    /*
+        任务关联港口
+         */
 
+    public void taskRelevancePort(Task task){
+        List<Port> ports = portMapper.selectPortList(null);
+        QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
+        sysUserRoleQueryWrapper.eq("role_id",101);
+        List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
+        for (SysUserRole sysUserRole:sysUserRoles){
+            for (Port port:ports){
+                TaskPort taskPort = new TaskPort();
+                taskPort.setTaskId(task.getTaskId());
+                taskPort.setUserId(sysUserRole.getUserId());
+                taskPort.setpId(port.getpId());
+                int i = taskPortMapper.insertTaskPort(taskPort);
+            }
+        }
     }
     /*
     校验学生当且仅当一个未开始的任务，则不可添加未开始的任务
@@ -233,6 +277,7 @@ public class TaskServiceImpl implements ITaskService
             deleteTaskPersonByTaskPersonIds(taskId);
             deleteTaskTurbineByTaskTurbineIds(taskId);
             deleteTaskStudentByTaskStudentIds(taskId);
+            deleteTaskPortByTaskPortIds(taskId);
         }
         return taskMapper.deleteTaskByTaskIds(taskIds);
     }
@@ -246,7 +291,8 @@ public class TaskServiceImpl implements ITaskService
         for (TaskBoat taskBoat1:taskBoats){
             QueryWrapper<TaskBoat> taskBoatQueryWrapper = new QueryWrapper<>();
             taskBoatQueryWrapper.eq("b_id",taskBoat1.getbId())
-                    .eq("task_id",taskBoat1.getTaskId());
+                    .eq("task_id",taskBoat1.getTaskId())
+                    .eq("user_id",taskBoat1.getUserId());
             taskBoatMapper.delete(taskBoatQueryWrapper);
         }
         return 1;
@@ -260,7 +306,8 @@ public class TaskServiceImpl implements ITaskService
         for (TaskPerson taskPerson1:taskPeople){
             QueryWrapper<TaskPerson> taskPersonQueryWrapper = new QueryWrapper<>();
             taskPersonQueryWrapper.eq("p_id",taskPerson1.getpId())
-                    .eq("task_id",taskPerson1.getTaskId());
+                    .eq("task_id",taskPerson1.getTaskId())
+                    .eq("user_id",taskPerson1.getUserId());
             taskPersonMapper.delete(taskPersonQueryWrapper);
         }
         return 1;
@@ -274,12 +321,25 @@ public class TaskServiceImpl implements ITaskService
         for (TaskTurbine taskTurbine1:taskTurbines){
             QueryWrapper<TaskTurbine> taskTurbineQueryWrapper = new QueryWrapper<>();
             taskTurbineQueryWrapper.eq("t_id",taskTurbine1.gettId())
-                    .eq("task_id",taskTurbine1.getTaskId());
+                    .eq("task_id",taskTurbine1.getTaskId())
+                    .eq("user_id",taskTurbine1.getUserId());
             taskTurbineMapper.delete(taskTurbineQueryWrapper);
         }
         return 1;
 
-
+    }
+    public int deleteTaskPortByTaskPortIds(Long taskId){
+        TaskPort taskPort = new TaskPort();
+        taskPort.setTaskId(taskId);
+        List<TaskPort> taskPorts = taskPortMapper.selectTaskPortList(taskPort);
+        for (TaskPort taskPort1:taskPorts){
+            QueryWrapper<TaskPort> taskPortQueryWrapper = new QueryWrapper<>();
+            taskPortQueryWrapper.eq("p_id",taskPort1.getpId())
+                    .eq("task_id",taskPort1.getTaskId())
+                    .eq("user_id",taskPort1.getUserId());
+            taskPortMapper.delete(taskPortQueryWrapper);
+        }
+        return 1;
     }
     public int deleteTaskStudentByTaskStudentIds(Long taskId){
         TaskStudent taskStudent = new TaskStudent();

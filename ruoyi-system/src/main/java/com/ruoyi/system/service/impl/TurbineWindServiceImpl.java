@@ -69,8 +69,8 @@ public class TurbineWindServiceImpl implements ITurbineWindService
     public int insertTurbineWind(TurbineWind turbineWind)
     {
         turbineWind.setCreateTime(DateUtils.getNowDate());
-        turbineWind.settFaultState(0l);
-        turbineWind.settMaintainState(0l);
+//        turbineWind.settFaultState(0l);
+//        turbineWind.settMaintainState(0l);
         return turbineWindMapper.insertTurbineWind(turbineWind);
     }
 

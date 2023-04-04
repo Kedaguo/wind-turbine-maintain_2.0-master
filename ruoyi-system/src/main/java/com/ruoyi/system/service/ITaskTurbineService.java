@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import java.util.List;
 import com.ruoyi.system.domain.TaskTurbine;
 import com.ruoyi.system.domain.TurbineWind;
+import com.ruoyi.system.domain.dto.TaskTurbineDto;
 
 /**
  * taskTurbineService接口
@@ -20,6 +21,8 @@ public interface ITaskTurbineService
      */
     public TaskTurbine selectTaskTurbineByTId(Long tId);
 
+
+    public List<TaskTurbineDto> selectTaskTurbineListByUser(Long taskId,Long userId);
     /**
      * 查询taskTurbine列表
      * 
@@ -28,6 +31,7 @@ public interface ITaskTurbineService
      */
     public List<TurbineWind> selectTaskTurbineList(TaskTurbine taskTurbine);
 
+    public List<TaskTurbine> selectTaskTurbineListSimulation(TaskTurbine taskTurbine);
     /**
      * 新增taskTurbine
      * 

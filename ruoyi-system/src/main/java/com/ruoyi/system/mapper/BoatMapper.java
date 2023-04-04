@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.Boat;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * boatMapper接口
@@ -11,6 +12,7 @@ import com.ruoyi.system.domain.Boat;
  * @author 赵建达
  * @date 2023-03-13
  */
+@Mapper
 public interface BoatMapper extends BaseMapper<Boat>
 {
     /**

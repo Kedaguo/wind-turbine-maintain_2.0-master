@@ -307,8 +307,11 @@ public class SysUserServiceImpl implements ISysUserService
         insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
-        if (user.getRoleId() == 101){
-            insertStudentInfo(user);
+        Long[] roleIds = user.getRoleIds();
+        if (roleIds.length!=0){
+            if (roleIds[0] == 101){
+                insertStudentInfo(user);
+            }
         }
         return rows;
     }

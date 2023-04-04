@@ -7,18 +7,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TaskPerson" id="TaskPersonResult">
         <result property="pId"    column="p_id"    />
         <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
         <result property="pWaitNum"    column="p_wait_num"    />
         <result property="pWorkNum"    column="p_work_num"    />
     </resultMap>
 
     <sql id="selectTaskPersonVo">
-        select p_id, task_id, p_wait_num, p_work_num from tl_task_person
+        select p_id, task_id, user_id, p_wait_num, p_work_num from tl_task_person
     </sql>
 
     <select id="selectTaskPersonList" parameterType="TaskPerson" resultMap="TaskPersonResult">
         <include refid="selectTaskPersonVo"/>
         <where>  
             <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="pWaitNum != null "> and p_wait_num = #{pWaitNum}</if>
             <if test="pWorkNum != null "> and p_work_num = #{pWorkNum}</if>
         </where>
@@ -34,12 +36,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pId != null">p_id,</if>
             <if test="taskId != null">task_id,</if>
+            <if test="userId != null">user_id,</if>
             <if test="pWaitNum != null">p_wait_num,</if>
             <if test="pWorkNum != null">p_work_num,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null">#{pId},</if>
             <if test="taskId != null">#{taskId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="pWaitNum != null">#{pWaitNum},</if>
             <if test="pWorkNum != null">#{pWorkNum},</if>
          </trim>
@@ -49,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update tl_task_person
         <trim prefix="SET" suffixOverrides=",">
             <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="pWaitNum != null">p_wait_num = #{pWaitNum},</if>
             <if test="pWorkNum != null">p_work_num = #{pWorkNum},</if>
         </trim>

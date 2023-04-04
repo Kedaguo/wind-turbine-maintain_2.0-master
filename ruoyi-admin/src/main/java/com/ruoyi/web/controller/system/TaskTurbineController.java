@@ -1,19 +1,18 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.TurbineWind;
+import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -36,6 +35,8 @@ public class TaskTurbineController extends BaseController
     @Autowired
     private ITaskTurbineService taskTurbineService;
 
+    @Resource
+    private TokenService tokenService;
     /**
      * 查询taskTurbine列表    学生传task_id
      */
@@ -47,7 +48,18 @@ public class TaskTurbineController extends BaseController
         List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
         return getDataTable(list);
     }
-
+    /*
+    查询任务所分配的资源-风机
+     */
+//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByUser')")
+    @GetMapping("/listByUser")
+    public TableDataInfo selectTaskTurbineListByUser(@RequestParam Long taskId, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByUser(taskId,loginUser.getUserId());
+        return getDataTable(list);
+    }
     /**
      * 导出taskTurbine列表
      */

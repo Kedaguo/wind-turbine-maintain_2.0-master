@@ -1,9 +1,11 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ruoyi.system.domain.Boat;
+import com.ruoyi.system.domain.dto.TaskBoatDto;
 import com.ruoyi.system.mapper.BoatMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class TaskBoatServiceImpl implements ITaskBoatService
     @Resource
     private BoatMapper boatMapper;
 
+
     /**
      * 查询taskBoat
      * 
@@ -39,6 +42,23 @@ public class TaskBoatServiceImpl implements ITaskBoatService
     public TaskBoat selectTaskBoatByBId(Long bId)
     {
         return taskBoatMapper.selectTaskBoatByBId(bId);
+    }
+
+    @Override
+    public List<TaskBoatDto> selectTaskBoatDtoByUserId (Long taskId,Long userId) {
+        TaskBoat taskBoat = new TaskBoat();
+        taskBoat.setTaskId(taskId);
+        taskBoat.setUserId(userId);
+        List<TaskBoat> taskBoats = taskBoatMapper.selectTaskBoatList(taskBoat);
+        ArrayList<TaskBoatDto> taskBoatDtos = new ArrayList<>();
+        for (TaskBoat taskBoat1:taskBoats){
+            Boat boat = boatMapper.selectBoatByBId(taskBoat1.getbId());
+            TaskBoatDto taskBoatDto = new TaskBoatDto();
+            BeanUtils.copyProperties(boat,taskBoatDto);
+            BeanUtils.copyProperties(taskBoat1,taskBoatDto);
+            taskBoatDtos.add(taskBoatDto);
+        }
+        return taskBoatDtos;
     }
 
     /**

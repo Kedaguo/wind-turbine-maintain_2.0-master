@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.Port;
 
 /**
@@ -9,7 +11,7 @@ import com.ruoyi.system.domain.Port;
  * @author 赵建达
  * @date 2023-03-12
  */
-public interface PortMapper 
+public interface PortMapper extends BaseMapper<Port>
 {
     /**
      * 查询港口信息

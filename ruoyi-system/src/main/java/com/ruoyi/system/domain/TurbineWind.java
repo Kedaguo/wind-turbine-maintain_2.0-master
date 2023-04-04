@@ -63,16 +63,6 @@ public class TurbineWind extends BaseEntity
     @Excel(name = "品牌")
     private String tBrand;
 
-    /** 故障状态 */
-    @Excel(name = "故障状态")
-    private Long tFaultState;
-
-    /** 保养状态 */
-    @Excel(name = "保养状态")
-    private Long tMaintainState;
-
-
-
     public void settId(Long tId)
     {
         this.tId = tId;
@@ -172,24 +162,6 @@ public class TurbineWind extends BaseEntity
     {
         return tBrand;
     }
-    public void settFaultState(Long tFaultState) 
-    {
-        this.tFaultState = tFaultState;
-    }
-
-    public Long gettFaultState() 
-    {
-        return tFaultState;
-    }
-    public void settMaintainState(Long tMaintainState) 
-    {
-        this.tMaintainState = tMaintainState;
-    }
-
-    public Long gettMaintainState() 
-    {
-        return tMaintainState;
-    }
 
 
     @Override
@@ -206,8 +178,6 @@ public class TurbineWind extends BaseEntity
             .append("tLongitude", gettLongitude())
             .append("tLatitude", gettLatitude())
             .append("tBrand", gettBrand())
-            .append("tFaultState", gettFaultState())
-            .append("tMaintainState", gettMaintainState())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

@@ -23,12 +23,24 @@ public class TaskBoat extends BaseEntity
     /** 船舶编号 */
     private Long bId;
 
+    /** 用户编号 */
+    @Excel(name = "用户编号")
+    private Long userId;
+
     /** 任务编号 */
     private Long taskId;
 
     /** 出海状态 */
     @Excel(name = "出海状态")
     private Integer bState;
+
+    public Long getUserId () {
+        return userId;
+    }
+
+    public void setUserId (Long userId) {
+        this.userId = userId;
+    }
 
     /** 工作状态 */
     @Excel(name = "工作状态")

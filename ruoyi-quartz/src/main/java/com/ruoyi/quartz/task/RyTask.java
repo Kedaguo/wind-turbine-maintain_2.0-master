@@ -32,9 +32,9 @@ public class RyTask
     {
         System.out.println("执行无参方法");
     }
-    public void windTurbineSimulation()
+    public void windTurbineSimulation(Long taskId,Long userId)
     {
         System.out.println("风机开始运行");
-        windTurbineSimulation.deviceSimulation();
+        windTurbineSimulation.deviceSimulation(taskId,userId);
     }
 }

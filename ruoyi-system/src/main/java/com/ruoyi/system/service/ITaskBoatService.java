@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.system.domain.Boat;
 import com.ruoyi.system.domain.TaskBoat;
+import com.ruoyi.system.domain.dto.TaskBoatDto;
 
 /**
  * taskBoatService接口
@@ -20,6 +21,9 @@ public interface ITaskBoatService
      * @return taskBoat
      */
     public TaskBoat selectTaskBoatByBId(Long bId);
+
+
+    public List<TaskBoatDto> selectTaskBoatDtoByUserId(Long taskId,Long userId);
 
     /**
      * 查询taskBoat列表

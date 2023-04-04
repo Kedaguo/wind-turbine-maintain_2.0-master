@@ -1,10 +1,13 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ruoyi.system.domain.TurbineWind;
+import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import com.ruoyi.system.mapper.TurbineWindMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskTurbineMapper;
@@ -40,6 +43,25 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
         return taskTurbineMapper.selectTaskTurbineByTId(tId);
     }
 
+    @Override
+    public List<TaskTurbineDto> selectTaskTurbineListByUser (Long taskId,Long userId) {
+        TaskTurbine taskTurbine = new TaskTurbine();
+        taskTurbine.setTaskId(taskId);
+        taskTurbine.setUserId(userId);
+        List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
+        ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
+        for (TaskTurbine taskTurbine1:taskTurbines){
+            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
+            TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
+            BeanUtils.copyProperties(turbineWind,taskTurbineDto);
+            BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
+            taskTurbineDtos.add(taskTurbineDto);
+        }
+        return taskTurbineDtos;
+
+
+    }
+
     /**
      * 查询taskTurbine列表
      * 
@@ -53,6 +75,11 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
         List<Long> turbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
         return turbineWindMapper.selectBatchIds(turbineIds);
 
+    }
+
+    @Override
+    public List<TaskTurbine> selectTaskTurbineListSimulation (TaskTurbine taskTurbine) {
+        return taskTurbineMapper.selectTaskTurbineList(taskTurbine);
     }
 
     /**

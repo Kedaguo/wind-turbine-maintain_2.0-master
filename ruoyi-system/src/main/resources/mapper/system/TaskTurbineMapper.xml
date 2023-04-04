@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TaskTurbine" id="TaskTurbineResult">
         <result property="tId"    column="t_id"    />
         <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
         <result property="fId"    column="f_id"    />
         <result property="mId"    column="m_id"    />
         <result property="fState"    column="f_state"    />
@@ -15,13 +16,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskTurbineVo">
-        select t_id, task_id, f_id, m_id, f_state, m_state, t_charge from tl_task_turbine
+        select t_id, task_id,user_id, f_id, m_id, f_state, m_state, t_charge from tl_task_turbine
     </sql>
 
     <select id="selectTaskTurbineList" parameterType="TaskTurbine" resultMap="TaskTurbineResult">
         <include refid="selectTaskTurbineVo"/>
         <where>
             <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="fId != null "> and f_id = #{fId}</if>
             <if test="mId != null "> and m_id = #{mId}</if>
             <if test="fState != null "> and f_state = #{fState}</if>
@@ -40,6 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tId != null">t_id,</if>
             <if test="taskId != null">task_id,</if>
+            <if test="userId != null">user_id,</if>
             <if test="fId != null">f_id,</if>
             <if test="mId != null">m_id,</if>
             <if test="fState != null">f_state,</if>
@@ -49,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="tId != null">#{tId},</if>
             <if test="taskId != null">#{taskId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="fId != null">#{fId},</if>
             <if test="mId != null">#{mId},</if>
             <if test="fState != null">#{fState},</if>
@@ -61,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update tl_task_turbine
         <trim prefix="SET" suffixOverrides=",">
             <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="fId != null">f_id = #{fId},</if>
             <if test="mId != null">m_id = #{mId},</if>
             <if test="fState != null">f_state = #{fState},</if>

@@ -7,41 +7,26 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * taskPerson对象 tl_task_person
+ * taskPort对象 tl_task_port
  * 
  * @author JianDa
- * @date 2023-03-25
+ * @date 2023-04-03
  */
-@TableName(value = "tl_task_person")
-public class TaskPerson
+@TableName("tl_task_port")
+public class TaskPort extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 维修人员编号 */
+    /** 港口编号 */
     private Long pId;
 
     /** 任务编号 */
+    @Excel(name = "任务编号")
     private Long taskId;
 
     /** 用户编号 */
     @Excel(name = "用户编号")
     private Long userId;
-
-    /** 待命维修人员数量 */
-    @Excel(name = "待命维修人员数量")
-    private Long pWaitNum;
-
-    public Long getUserId () {
-        return userId;
-    }
-
-    public void setUserId (Long userId) {
-        this.userId = userId;
-    }
-
-    /** 出海维修人员数量 */
-    @Excel(name = "出海维修人员数量")
-    private Long pWorkNum;
 
     public void setpId(Long pId) 
     {
@@ -61,23 +46,14 @@ public class TaskPerson
     {
         return taskId;
     }
-    public void setpWaitNum(Long pWaitNum) 
+    public void setUserId(Long userId) 
     {
-        this.pWaitNum = pWaitNum;
+        this.userId = userId;
     }
 
-    public Long getpWaitNum() 
+    public Long getUserId() 
     {
-        return pWaitNum;
-    }
-    public void setpWorkNum(Long pWorkNum) 
-    {
-        this.pWorkNum = pWorkNum;
-    }
-
-    public Long getpWorkNum() 
-    {
-        return pWorkNum;
+        return userId;
     }
 
     @Override
@@ -85,8 +61,7 @@ public class TaskPerson
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("pId", getpId())
             .append("taskId", getTaskId())
-            .append("pWaitNum", getpWaitNum())
-            .append("pWorkNum", getpWorkNum())
+            .append("userId", getUserId())
             .toString();
     }
 }

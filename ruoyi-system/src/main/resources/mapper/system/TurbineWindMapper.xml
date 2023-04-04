@@ -16,8 +16,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="tLongitude"    column="t_longitude"    />
         <result property="tLatitude"    column="t_latitude"    />
         <result property="tBrand"    column="t_brand"    />
-        <result property="tFaultState"    column="t_fault_state"    />
-        <result property="tMaintainState"    column="t_maintain_state"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
@@ -25,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTurbineWindVo">
-        select t_id, t_model, t_price, t_rate_power, t_power_velocity_curve, t_height, t_lifetime, t_cost, t_longitude, t_latitude, t_brand, t_fault_state, t_maintain_state, create_by, create_time, update_by, update_time from tl_turbine_wind
+        select t_id, t_model, t_price, t_rate_power, t_power_velocity_curve, t_height, t_lifetime, t_cost, t_longitude, t_latitude, t_brand, create_by, create_time, update_by, update_time from tl_turbine_wind
     </sql>
 
     <select id="selectTurbineWindList" parameterType="TurbineWind" resultMap="TurbineWindResult">
@@ -37,8 +35,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tLifetime != null "> and t_lifetime = #{tLifetime}</if>
             <if test="tCost != null "> and t_cost = #{tCost}</if>
             <if test="tBrand != null  and tBrand != ''"> and t_brand = #{tBrand}</if>
-            <if test="tFaultState != null "> and t_fault_state = #{tFaultState}</if>
-            <if test="tMaintainState != null "> and t_maintain_state = #{tMaintainState}</if>
         </where>
     </select>
     
@@ -60,8 +56,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tLongitude != null">t_longitude,</if>
             <if test="tLatitude != null">t_latitude,</if>
             <if test="tBrand != null">t_brand,</if>
-            <if test="tFaultState != null">t_fault_state,</if>
-            <if test="tMaintainState != null">t_maintain_state,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
@@ -78,8 +72,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tLongitude != null">#{tLongitude},</if>
             <if test="tLatitude != null">#{tLatitude},</if>
             <if test="tBrand != null">#{tBrand},</if>
-            <if test="tFaultState != null">#{tFaultState},</if>
-            <if test="tMaintainState != null">#{tMaintainState},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
@@ -100,8 +92,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="tLongitude != null">t_longitude = #{tLongitude},</if>
             <if test="tLatitude != null">t_latitude = #{tLatitude},</if>
             <if test="tBrand != null">t_brand = #{tBrand},</if>
-            <if test="tFaultState != null">t_fault_state = #{tFaultState},</if>
-            <if test="tMaintainState != null">t_maintain_state = #{tMaintainState},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>

@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="TaskBoat" id="TaskBoatResult">
         <result property="bId"    column="b_id"    />
         <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
         <result property="bState"    column="b_state"    />
         <result property="bWorkState"    column="b_work_state"    />
         <result property="bStartTime"    column="b_start_time"    />
@@ -16,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskBoatVo">
-        select b_id, task_id, b_state, b_work_state, b_start_time, b_end_time, b_longitude, b_latitude from tl_task_boat
+        select b_id, task_id, user_id, b_state, b_work_state, b_start_time, b_end_time, b_longitude, b_latitude from tl_task_boat
     </sql>
 
     <select id="selectTaskBoatList" parameterType="TaskBoat" resultMap="TaskBoatResult">
@@ -24,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="bState != null "> and b_state = #{bState}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="bWorkState != null "> and b_work_state = #{bWorkState}</if>
             <if test="bStartTime != null "> and b_start_time = #{bStartTime}</if>
             <if test="bEndTime != null "> and b_end_time = #{bEndTime}</if>
@@ -42,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="bId != null">b_id,</if>
             <if test="taskId != null">task_id,</if>
+            <if test="userId != null">user_id,</if>
             <if test="bState != null">b_state,</if>
             <if test="bWorkState != null">b_work_state,</if>
             <if test="bStartTime != null">b_start_time,</if>
@@ -52,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="bId != null">#{bId},</if>
             <if test="taskId != null">#{taskId},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="bState != null">#{bState},</if>
             <if test="bWorkState != null">#{bWorkState},</if>
             <if test="bStartTime != null">#{bStartTime},</if>
@@ -65,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update tl_task_boat
         <trim prefix="SET" suffixOverrides=",">
             <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="bState != null">b_state = #{bState},</if>
             <if test="bWorkState != null">b_work_state = #{bWorkState},</if>
             <if test="bStartTime != null">b_start_time = #{bStartTime},</if>

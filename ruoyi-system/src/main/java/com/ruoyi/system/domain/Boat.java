@@ -13,7 +13,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-03-31
  */
 @TableName("tl_boat")
-public class Boat extends BaseEntity
+public class Boat
 {
     private static final long serialVersionUID = 1L;
 

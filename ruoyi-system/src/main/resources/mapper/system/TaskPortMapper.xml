@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskPortMapper">
+    
+    <resultMap type="TaskPort" id="TaskPortResult">
+        <result property="pId"    column="p_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectTaskPortVo">
+        select p_id, task_id, user_id from tl_task_port
+    </sql>
+
+    <select id="selectTaskPortList" parameterType="TaskPort" resultMap="TaskPortResult">
+        <include refid="selectTaskPortVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskPortByPId" parameterType="Long" resultMap="TaskPortResult">
+        <include refid="selectTaskPortVo"/>
+        where p_id = #{pId}
+    </select>
+        
+    <insert id="insertTaskPort" parameterType="TaskPort">
+        insert into tl_task_port
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null">p_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null">#{pId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaskPort" parameterType="TaskPort">
+        update tl_task_port
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where p_id = #{pId}
+    </update>
+
+    <delete id="deleteTaskPortByPId" parameterType="Long">
+        delete from tl_task_port where p_id = #{pId}
+    </delete>
+
+    <delete id="deleteTaskPortByPIds" parameterType="String">
+        delete from tl_task_port where p_id in 
+        <foreach item="pId" collection="array" open="(" separator="," close=")">
+            #{pId}
+        </foreach>
+    </delete>
+</mapper>

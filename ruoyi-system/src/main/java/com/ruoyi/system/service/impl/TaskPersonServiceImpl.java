@@ -1,10 +1,13 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ruoyi.system.domain.Person;
+import com.ruoyi.system.domain.dto.TaskPersonDto;
 import com.ruoyi.system.mapper.PersonMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskPersonMapper;
@@ -20,7 +23,7 @@ import javax.annotation.Resource;
  * @date 2023-03-25
  */
 @Service
-public class TaskPersonServiceImpl implements ITaskPersonService 
+public class TaskPersonServiceImpl implements ITaskPersonService
 {
     @Autowired
     private TaskPersonMapper taskPersonMapper;
@@ -39,6 +42,25 @@ public class TaskPersonServiceImpl implements ITaskPersonService
     public TaskPerson selectTaskPersonByPId(Long pId)
     {
         return taskPersonMapper.selectTaskPersonByPId(pId);
+    }
+
+    @Override
+    public List<TaskPersonDto> selectTaskPersonByUser (Long taskId,Long userId) {
+        TaskPerson taskPerson = new TaskPerson();
+        taskPerson.setTaskId(taskId);
+        taskPerson.setUserId(userId);
+        List<TaskPerson> taskPeople = taskPersonMapper.selectTaskPersonList(taskPerson);
+        ArrayList<TaskPersonDto> taskPersonDtos = new ArrayList<>();
+        for (TaskPerson taskPerson1:taskPeople){
+            Person person = personMapper.selectPersonById(taskPerson1.getpId());
+            TaskPersonDto taskPersonDto = new TaskPersonDto();
+            BeanUtils.copyProperties(person,taskPersonDto);
+            BeanUtils.copyProperties(taskPerson1,taskPersonDto);
+            taskPersonDtos.add(taskPersonDto);
+
+        }
+
+        return taskPersonDtos;
     }
 
     /**

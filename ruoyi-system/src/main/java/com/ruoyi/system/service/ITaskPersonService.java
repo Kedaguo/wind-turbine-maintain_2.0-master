@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.system.domain.Person;
 import com.ruoyi.system.domain.TaskPerson;
+import com.ruoyi.system.domain.dto.TaskPersonDto;
 
 /**
  * taskPersonService接口
@@ -20,6 +21,8 @@ public interface ITaskPersonService
      * @return taskPerson
      */
     public TaskPerson selectTaskPersonByPId(Long pId);
+
+    public List<TaskPersonDto> selectTaskPersonByUser(Long taskId,Long userId);
 
     /**
      * 查询taskPerson列表
