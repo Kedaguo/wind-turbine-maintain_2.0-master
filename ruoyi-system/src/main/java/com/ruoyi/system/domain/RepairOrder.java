@@ -39,12 +39,24 @@ public class RepairOrder extends BaseEntity
     @Excel(name = "派单状态")
     private Integer rState;
 
+    /** 维修单类型 */
+    @Excel(name = "维修单类型")
+    private Integer rType;
+
     /**  发生时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = " 发生时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rCreateTime;
 
-    public void setrId(Long rId) 
+    public Integer getrType () {
+        return rType;
+    }
+
+    public void setrType (Integer rType) {
+        this.rType = rType;
+    }
+
+    public void setrId(Long rId)
     {
         this.rId = rId;
     }

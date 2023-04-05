@@ -2,7 +2,7 @@
   "name": "windturbine",
   "version": "3.8.5",
   "description": "海上风电维护系统",
-  "author": "张存",
+  "author": "",
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",

@@ -1,17 +1,17 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.dto.RepairOrderFaultDto;
+import com.ruoyi.system.domain.dto.RepairOrderMaintainDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -34,6 +34,9 @@ public class RepairOrderController extends BaseController
     @Autowired
     private IRepairOrderService repairOrderService;
 
+    @Resource
+    private TokenService tokenService;
+
     /**
      * 查询repairOrder列表
      */
@@ -45,7 +48,30 @@ public class RepairOrderController extends BaseController
         List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
         return getDataTable(list);
     }
-
+    /**
+     * 查询repairOrderFault列表  --学生
+     */
+    @PreAuthorize("@ss.hasPermi('system:repairOrder:repairOrderFaultList')")
+    @GetMapping("/repairOrderFaultList")
+    public TableDataInfo selectRepairOrderFaultList(@RequestParam Long taskId, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<RepairOrderFaultDto> list = repairOrderService.selectRepairOrderFaultListByStudent(taskId,loginUser.getUserId());
+        return getDataTable(list);
+    }
+    /**
+     * 查询repairOrder列表  --学生
+     */
+    @PreAuthorize("@ss.hasPermi('system:repairOrder:repairOrderMaintainList')")
+    @GetMapping("/repairOrderMaintainList")
+    public TableDataInfo selectRepairOrderMaintainList(@RequestParam Long taskId, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<RepairOrderMaintainDto> list = repairOrderService.selectRepairOrderMaintainList(taskId,loginUser.getUserId());
+        return getDataTable(list);
+    }
     /**
      * 导出repairOrder列表
      */

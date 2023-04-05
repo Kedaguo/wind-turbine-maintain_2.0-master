@@ -4,7 +4,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.service.*;
-import jdk.tools.jaotc.Main;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.prepost.PreInvocationAuthorizationAdviceVoter;
 import org.springframework.stereotype.Component;
@@ -36,6 +36,9 @@ public class WindTurbineSimulation {
 
     @Resource
     private ITurbineFaultService iTurbineFaultService;
+
+    @Resource
+    private IRepairOrderService repairOrderService;
 
     private Random random = new Random();
 
@@ -88,12 +91,19 @@ public class WindTurbineSimulation {
         }
     }
 
-    public void handleFault(TaskTurbine taskTurbine1,Fault fault){
+    public void handleFault(TaskTurbine taskTurbine,Fault fault){
         System.out.println("Device fault occurred.");
-        taskTurbine1.setfId(fault.getfId());
+        taskTurbine.setfId(fault.getfId());
         //0 未开始工作  1 故障停机  2 正常工作
-        taskTurbine1.setfState(1);
-        int i = iTaskTurbineService.updateTaskTurbine(taskTurbine1);
+        taskTurbine.setfState(1);
+        int i = iTaskTurbineService.updateTaskTurbine(taskTurbine);
+        //生成维修单
+        RepairOrder repairOrder = new RepairOrder();
+        BeanUtils.copyProperties(taskTurbine,repairOrder);
+        repairOrder.setrCreateTime(DateUtils.getNowDate());
+        repairOrder.setrState(0);
+        repairOrder.setrType(1);
+        int flag = repairOrderService.insertRepairOrder(repairOrder);
     }
 
     public void handleMaintain(TaskTurbine taskTurbine, Maintain maintain){
@@ -102,5 +112,11 @@ public class WindTurbineSimulation {
          //0 未开始工作 1需要保养且正常工作  2  保养不工作  3 正常工作
          taskTurbine.setmState(1);
         iTaskTurbineService.updateTaskTurbine(taskTurbine);
+        RepairOrder repairOrder = new RepairOrder();
+        BeanUtils.copyProperties(taskTurbine,repairOrder);
+        repairOrder.setrCreateTime(DateUtils.getNowDate());
+        repairOrder.setrState(0);
+        repairOrder.setrType(2);
+        int i = repairOrderService.insertRepairOrder(repairOrder);
     }
 }

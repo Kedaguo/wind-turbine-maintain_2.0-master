@@ -2,6 +2,8 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.RepairOrder;
+import com.ruoyi.system.domain.dto.RepairOrderFaultDto;
+import com.ruoyi.system.domain.dto.RepairOrderMaintainDto;
 
 /**
  * repairOrderService接口
@@ -19,6 +21,9 @@ public interface IRepairOrderService
      */
     public RepairOrder selectRepairOrderByRId(Long rId);
 
+    public List<RepairOrderMaintainDto> selectRepairOrderMaintainList(Long taskId, Long userId);
+
+    public List<RepairOrderFaultDto> selectRepairOrderFaultListByStudent(Long taskId, Long userId);
     /**
      * 查询repairOrder列表
      * 
