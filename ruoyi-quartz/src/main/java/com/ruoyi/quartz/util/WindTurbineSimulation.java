@@ -58,7 +58,6 @@ public class WindTurbineSimulation {
         TaskTurbine taskTurbine = new TaskTurbine();
         taskTurbine.setTaskId(taskId);
         taskTurbine.setUserId(userId);
-        taskTurbine.setmState(3);
         taskTurbine.setfState(2);
         List<TaskTurbine> taskTurbines = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbine);
         for (TaskTurbine taskTurbine1 :taskTurbines){
@@ -67,7 +66,7 @@ public class WindTurbineSimulation {
                 lambda = Double.parseDouble(fault.getfFrequencyPerYear());
                 double rand = random.nextDouble();
                 //指数分布函数-按每小时发生故障指数分布
-                double probability = (1 - Math.exp(-lambda))/HoursOfYear;
+                double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"lambda"+lambda);
                 if (rand<=probability){
                     handleFault(taskTurbine1,fault);
@@ -75,6 +74,15 @@ public class WindTurbineSimulation {
                     break;
                 }
             }
+
+        }
+        TaskTurbine taskTurbineMaintain = new TaskTurbine();
+        taskTurbineMaintain.setTaskId(taskId);
+        taskTurbineMaintain.setUserId(userId);
+        taskTurbineMaintain.setmState(3);
+        List<TaskTurbine> taskTurbineMaintains = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbineMaintain);
+        for (TaskTurbine taskTurbineMaintain1:taskTurbineMaintains){
+            System.out.println("taskTurbineMaintain"+taskTurbineMaintain1);
             List<Maintain> maintains = iMaintainService.selectMaintainList(null);
             for (Maintain maintain:maintains){
                 lambda = Double.parseDouble(maintain.getmFrequencyPerYear());
@@ -83,7 +91,7 @@ public class WindTurbineSimulation {
                 double probability = (1 - Math.exp(-lambda))/HoursOfYear;
                 System.out.println("rand"+rand+"lambda"+lambda);
                 if (rand<=probability){
-                    handleMaintain(taskTurbine1,maintain);
+                    handleMaintain(taskTurbineMaintain1,maintain);
                     //发生故障后跳出循环
                     break;
                 }
@@ -108,9 +116,9 @@ public class WindTurbineSimulation {
 
     public void handleMaintain(TaskTurbine taskTurbine, Maintain maintain){
         System.out.println("Device fault occurred.");
-         taskTurbine.setmId(maintain.getmId());
+        taskTurbine.setmId(maintain.getmId());
          //0 未开始工作 1需要保养且正常工作  2  保养不工作  3 正常工作
-         taskTurbine.setmState(1);
+        taskTurbine.setmState(1);
         iTaskTurbineService.updateTaskTurbine(taskTurbine);
         RepairOrder repairOrder = new RepairOrder();
         BeanUtils.copyProperties(taskTurbine,repairOrder);

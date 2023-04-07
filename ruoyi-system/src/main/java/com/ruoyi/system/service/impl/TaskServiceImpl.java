@@ -38,16 +38,14 @@ public class TaskServiceImpl implements ITaskService
     private TaskBoatMapper taskBoatMapper;
 
     @Resource
-    private TaskPersonMapper taskPersonMapper;
-
-    @Resource
     private TaskTurbineMapper taskTurbineMapper;
 
     @Resource
     private TurbineWindMapper turbineWindMapper;
 
+
     @Resource
-    private PersonMapper personMapper;
+    private OperatorMapper operatorMapper;
 
     @Resource
     private BoatMapper boatMapper;
@@ -67,6 +65,8 @@ public class TaskServiceImpl implements ITaskService
     @Resource
     private TaskPortMapper taskPortMapper;
 
+    @Resource
+    private TaskOperatorMapper taskOperatorMapper;
 
     /**
      * 查询task
@@ -121,7 +121,7 @@ public class TaskServiceImpl implements ITaskService
 //        任务关联风机
         taskRelevanceTurbine(task1);
         //任务关联维修人员
-        taskRelevancePerson(task1);
+        taskRelevanceOperator(task1);
         //任务关联船舶
         taskRelevanceBoat(task1);
         //任务关联学生
@@ -176,20 +176,19 @@ public class TaskServiceImpl implements ITaskService
     /*
     任务关联维修人员
      */
-    public void taskRelevancePerson(Task task){
-        List<Person> people = personMapper.selectPersonList(null);
+    public void taskRelevanceOperator(Task task){
+        List<Operator> operators = operatorMapper.selectOperatorList(null);
         QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
         sysUserRoleQueryWrapper.eq("role_id",101);
         List<SysUserRole> sysUserRoles = sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
         for (SysUserRole sysUserRole:sysUserRoles){
-            for (Person person:people){
-                TaskPerson taskPerson = new TaskPerson();
-                taskPerson.setTaskId(task.getTaskId());
-                taskPerson.setUserId(sysUserRole.getUserId());
-                taskPerson.setpId(person.getId());
-                taskPerson.setpWaitNum(person.getpNum());
-                taskPerson.setpWorkNum(0l);
-                int i = taskPersonMapper.insertTaskPerson(taskPerson);
+            for (Operator operator:operators){
+                TaskOperator taskOperator = new TaskOperator();
+                taskOperator.setTaskId(task.getTaskId());
+                taskOperator.setUserId(sysUserRole.getUserId());
+                taskOperator.setoId(operator.getoId());
+                taskOperator.setoState(1l);
+                int i = taskOperatorMapper.insertTaskOperator(taskOperator);
             }
         }
 
@@ -274,7 +273,7 @@ public class TaskServiceImpl implements ITaskService
         System.out.println("taskIds"+taskIds);
         for (Long taskId:taskIds){
             deleteTaskBoatByTaskBoatIds(taskId);
-            deleteTaskPersonByTaskPersonIds(taskId);
+            deleteTaskPersonByTaskOperatorIds(taskId);
             deleteTaskTurbineByTaskTurbineIds(taskId);
             deleteTaskStudentByTaskStudentIds(taskId);
             deleteTaskPortByTaskPortIds(taskId);
@@ -297,18 +296,16 @@ public class TaskServiceImpl implements ITaskService
         }
         return 1;
     }
-    public int deleteTaskPersonByTaskPersonIds(Long taskId){
-        System.out.println("taskId"+taskId);
-        TaskPerson taskPerson = new TaskPerson();
-        taskPerson.setTaskId(taskId);
-        List<TaskPerson> taskPeople = taskPersonMapper.selectTaskPersonList(taskPerson);
-        System.out.println("taskPeople"+taskPeople);
-        for (TaskPerson taskPerson1:taskPeople){
-            QueryWrapper<TaskPerson> taskPersonQueryWrapper = new QueryWrapper<>();
-            taskPersonQueryWrapper.eq("p_id",taskPerson1.getpId())
-                    .eq("task_id",taskPerson1.getTaskId())
-                    .eq("user_id",taskPerson1.getUserId());
-            taskPersonMapper.delete(taskPersonQueryWrapper);
+    public int deleteTaskPersonByTaskOperatorIds(Long taskId){
+        TaskOperator taskOperator = new TaskOperator();
+        taskOperator.setTaskId(taskId);
+        List<TaskOperator> taskOperators = taskOperatorMapper.selectTaskOperatorList(taskOperator);
+        for (TaskOperator taskOperator1:taskOperators){
+            QueryWrapper<TaskOperator> taskOperatorQueryWrapper = new QueryWrapper<>();
+            taskOperatorQueryWrapper.eq("o_id",taskOperator1.getoId())
+                    .eq("task_id",taskOperator1.getTaskId())
+                    .eq("user_id",taskOperator1.getUserId());
+            int i = taskOperatorMapper.delete(taskOperatorQueryWrapper);
         }
         return 1;
 

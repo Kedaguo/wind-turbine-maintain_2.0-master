@@ -16,7 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskTurbineVo">
-        select t_id, task_id,user_id, f_id, m_id, f_state, m_state, t_charge from tl_task_turbine
+        select t_id, task_id, user_id, f_id, m_id, f_state, m_state, t_charge from tl_task_turbine
     </sql>
 
     <select id="selectTaskTurbineList" parameterType="TaskTurbine" resultMap="TaskTurbineResult">
@@ -64,15 +64,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTaskTurbine" parameterType="TaskTurbine">
         update tl_task_turbine
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskId != null">task_id = #{taskId},</if>
-            <if test="userId != null">user_id = #{userId},</if>
             <if test="fId != null">f_id = #{fId},</if>
             <if test="mId != null">m_id = #{mId},</if>
             <if test="fState != null">f_state = #{fState},</if>
             <if test="mState != null">m_state = #{mState},</if>
             <if test="tCharge != null">t_charge = #{tCharge},</if>
         </trim>
-        where t_id = #{tId}
+        where t_id = #{tId} and  task_id = #{taskId} and user_id = #{userId}
     </update>
 
     <delete id="deleteTaskTurbineByTId" parameterType="Long">
