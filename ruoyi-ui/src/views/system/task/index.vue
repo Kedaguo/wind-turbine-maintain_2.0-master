@@ -81,7 +81,7 @@
 
     <el-table v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="任务编号" align="center" prop="taskId" />
+      <el-table-column type="index" width="50"></el-table-column>
       <el-table-column label="任务开始时间" align="center" prop="taskStartTime" >
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.taskStartTime, '{y}-{m}-{d}') }}</span>
@@ -126,7 +126,7 @@
     />
     <!-- 添加或修改task对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">  
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="任务开始时间" prop="taskStartTime">
           <el-date-picker clearable
             v-model="form.taskStartTime"
