@@ -20,14 +20,6 @@ public class TaskTurbine extends BaseEntity
     /** 风机编号 */
     private Long tId;
 
-    public Long getUserId () {
-        return userId;
-    }
-
-    public void setUserId (Long userId) {
-        this.userId = userId;
-    }
-
     /** 用户编号 */
     @Excel(name = "用户编号")
     private Long userId;
@@ -56,6 +48,13 @@ public class TaskTurbine extends BaseEntity
     @Excel(name = "发电量")
     private Long tCharge;
 
+    public Long getUserId () {
+        return userId;
+    }
+
+    public void setUserId (Long userId) {
+        this.userId = userId;
+    }
     public void settId(Long tId) 
     {
         this.tId = tId;

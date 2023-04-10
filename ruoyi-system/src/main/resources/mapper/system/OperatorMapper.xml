@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OperatorMapper">
+    
+    <resultMap type="Operator" id="OperatorResult">
+        <result property="oId"    column="o_id"    />
+        <result property="oType"    column="o_type"    />
+        <result property="oAnnualsalar"    column="o_annualSalar"    />
+        <result property="oCommonhourlywage"    column="o_commonHourlyWage"    />
+        <result property="oOvertimehourlywage"    column="o_overtimeHourlyWage"    />
+    </resultMap>
+
+    <sql id="selectOperatorVo">
+        select o_id, o_type, o_annualSalar, o_commonHourlyWage, o_overtimeHourlyWage from tl_operator
+    </sql>
+
+    <select id="selectOperatorList" parameterType="Operator" resultMap="OperatorResult">
+        <include refid="selectOperatorVo"/>
+        <where>  
+            <if test="oType != null "> and o_type = #{oType}</if>
+            <if test="oAnnualsalar != null "> and o_annualSalar = #{oAnnualsalar}</if>
+            <if test="oCommonhourlywage != null "> and o_commonHourlyWage = #{oCommonhourlywage}</if>
+            <if test="oOvertimehourlywage != null "> and o_overtimeHourlyWage = #{oOvertimehourlywage}</if>
+        </where>
+    </select>
+    
+    <select id="selectOperatorByOId" parameterType="Long" resultMap="OperatorResult">
+        <include refid="selectOperatorVo"/>
+        where o_id = #{oId}
+    </select>
+        
+    <insert id="insertOperator" parameterType="Operator" useGeneratedKeys="true" keyProperty="oId">
+        insert into tl_operator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oType != null">o_type,</if>
+            <if test="oAnnualsalar != null">o_annualSalar,</if>
+            <if test="oCommonhourlywage != null">o_commonHourlyWage,</if>
+            <if test="oOvertimehourlywage != null">o_overtimeHourlyWage,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oType != null">#{oType},</if>
+            <if test="oAnnualsalar != null">#{oAnnualsalar},</if>
+            <if test="oCommonhourlywage != null">#{oCommonhourlywage},</if>
+            <if test="oOvertimehourlywage != null">#{oOvertimehourlywage},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOperator" parameterType="Operator">
+        update tl_operator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="oType != null">o_type = #{oType},</if>
+            <if test="oAnnualsalar != null">o_annualSalar = #{oAnnualsalar},</if>
+            <if test="oCommonhourlywage != null">o_commonHourlyWage = #{oCommonhourlywage},</if>
+            <if test="oOvertimehourlywage != null">o_overtimeHourlyWage = #{oOvertimehourlywage},</if>
+        </trim>
+        where o_id = #{oId}
+    </update>
+
+    <delete id="deleteOperatorByOId" parameterType="Long">
+        delete from tl_operator where o_id = #{oId}
+    </delete>
+
+    <delete id="deleteOperatorByOIds" parameterType="String">
+        delete from tl_operator where o_id in 
+        <foreach item="oId" collection="array" open="(" separator="," close=")">
+            #{oId}
+        </foreach>
+    </delete>
+</mapper>

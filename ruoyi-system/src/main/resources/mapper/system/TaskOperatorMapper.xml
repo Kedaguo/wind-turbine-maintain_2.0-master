@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskOperatorMapper">
+    
+    <resultMap type="TaskOperator" id="TaskOperatorResult">
+        <result property="oId"    column="o_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="oState"    column="o_state"    />
+        <result property="oWorkTime"    column="o_work_time"    />
+    </resultMap>
+
+    <sql id="selectTaskOperatorVo">
+        select o_id, task_id, user_id, o_state, o_work_time from tl_task_operator
+    </sql>
+
+    <select id="selectTaskOperatorList" parameterType="TaskOperator" resultMap="TaskOperatorResult">
+        <include refid="selectTaskOperatorVo"/>
+        <where>  
+            <if test="oId != null "> and o_id = #{oId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="oState != null "> and o_state = #{oState}</if>
+            <if test="oWorkTime != null "> and o_work_time = #{oWorkTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskOperatorByOId" parameterType="Long" resultMap="TaskOperatorResult">
+        <include refid="selectTaskOperatorVo"/>
+        where o_id = #{oId}
+    </select>
+        
+    <insert id="insertTaskOperator" parameterType="TaskOperator">
+        insert into tl_task_operator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oId != null">o_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="oState != null">o_state,</if>
+            <if test="oWorkTime != null">o_work_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oId != null">#{oId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="oState != null">#{oState},</if>
+            <if test="oWorkTime != null">#{oWorkTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaskOperator" parameterType="TaskOperator">
+        update tl_task_operator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="oState != null">o_state = #{oState},</if>
+            <if test="oWorkTime != null">o_work_time = #{oWorkTime},</if>
+        </trim>
+        where o_id = #{oId}
+    </update>
+
+    <delete id="deleteTaskOperatorByOId" parameterType="Long">
+        delete from tl_task_operator where o_id = #{oId}
+    </delete>
+
+    <delete id="deleteTaskOperatorByOIds" parameterType="String">
+        delete from tl_task_operator where o_id in 
+        <foreach item="oId" collection="array" open="(" separator="," close=")">
+            #{oId}
+        </foreach>
+    </delete>
+</mapper>

@@ -15,12 +15,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="mFaultType"    column="m_fault_type"    />
         <result property="mFaultDevice"    column="m_fault_device"    />
         <result property="mFaultfre"    column="m_faultfre"    />
-        <result property="mCreateTime"    column="m_create_time"    />
-        <result property="mState"    column="m_state"    />
     </resultMap>
 
     <sql id="selectMaintainVo">
-        select m_id, m_frequency_per_year, m_consumable_cost, m_boat_model, m_prepare_duration, m_maintain_duration, m_people_number, m_fault_type, m_fault_device, m_faultfre, m_create_time, m_state from tl_maintain
+        select m_id, m_frequency_per_year, m_consumable_cost, m_boat_model, m_prepare_duration, m_maintain_duration, m_people_number, m_fault_type, m_fault_device, m_faultfre from tl_maintain
     </sql>
 
     <select id="selectMaintainList" parameterType="Maintain" resultMap="MaintainResult">
@@ -30,8 +28,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mMaintainDuration != null  and mMaintainDuration != ''"> and m_maintain_duration = #{mMaintainDuration}</if>
             <if test="mFaultDevice != null  and mFaultDevice != ''"> and m_fault_device = #{mFaultDevice}</if>
             <if test="mFaultfre != null  and mFaultfre != ''"> and m_faultfre = #{mFaultfre}</if>
-            <if test="mCreateTime != null "> and m_create_time = #{mCreateTime}</if>
-            <if test="mState != null "> and m_state = #{mState}</if>
         </where>
     </select>
     
@@ -53,8 +49,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mFaultType != null">m_fault_type,</if>
             <if test="mFaultDevice != null">m_fault_device,</if>
             <if test="mFaultfre != null">m_faultfre,</if>
-            <if test="mCreateTime != null">m_create_time,</if>
-            <if test="mState != null">m_state,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="mId != null">#{mId},</if>
@@ -67,8 +61,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mFaultType != null">#{mFaultType},</if>
             <if test="mFaultDevice != null">#{mFaultDevice},</if>
             <if test="mFaultfre != null">#{mFaultfre},</if>
-            <if test="mCreateTime != null">#{mCreateTime},</if>
-            <if test="mState != null">#{mState},</if>
          </trim>
     </insert>
 
@@ -84,8 +76,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mFaultType != null">m_fault_type = #{mFaultType},</if>
             <if test="mFaultDevice != null">m_fault_device = #{mFaultDevice},</if>
             <if test="mFaultfre != null">m_faultfre = #{mFaultfre},</if>
-            <if test="mCreateTime != null">m_create_time = #{mCreateTime},</if>
-            <if test="mState != null">m_state = #{mState},</if>
         </trim>
         where m_id = #{mId}
     </update>

@@ -64,10 +64,6 @@ public class Maintain extends BaseEntity
     @Excel(name = "保养单生成时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date mCreateTime;
 
-    /** 保养状态 */
-    @Excel(name = "保养状态")
-    private Long mState;
-
     public void setmId(Long mId) 
     {
         this.mId = mId;
@@ -167,15 +163,6 @@ public class Maintain extends BaseEntity
     {
         return mCreateTime;
     }
-    public void setmState(Long mState) 
-    {
-        this.mState = mState;
-    }
-
-    public Long getmState() 
-    {
-        return mState;
-    }
 
     @Override
     public String toString() {
@@ -191,7 +178,6 @@ public class Maintain extends BaseEntity
             .append("mFaultDevice", getmFaultDevice())
             .append("mFaultfre", getmFaultfre())
             .append("mCreateTime", getmCreateTime())
-            .append("mState", getmState())
             .toString();
     }
 }
