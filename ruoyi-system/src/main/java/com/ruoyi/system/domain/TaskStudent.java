@@ -1,10 +1,13 @@
 package com.ruoyi.system.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * taskStudent对象 tl_task_student
@@ -44,8 +47,32 @@ public class TaskStudent
     /** 任务状态 */
     @Excel(name = "任务状态")
     private Long taskState;
+    /** 任务执行次数 */
+    @Excel(name = "任务执行次数")
+    private Integer taskCount;
 
-    public void setUserId(Long userId) 
+    /** 任务模拟运行时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "任务模拟运行时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
+    private Date taskSimulateTime;
+
+    public Date getTaskSimulateTime () {
+        return taskSimulateTime;
+    }
+
+    public void setTaskSimulateTime (Date taskSimulateTime) {
+        this.taskSimulateTime = taskSimulateTime;
+    }
+
+    public Integer getTaskCount () {
+        return taskCount;
+    }
+
+    public void setTaskCount (Integer taskCount) {
+        this.taskCount = taskCount;
+    }
+
+    public void setUserId(Long userId)
     {
         this.userId = userId;
     }

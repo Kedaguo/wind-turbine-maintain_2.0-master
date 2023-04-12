@@ -3,6 +3,7 @@ package com.ruoyi.system.mapper;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.system.domain.TaskStudent;
 import com.ruoyi.system.domain.TaskTurbine;
 
 /**
@@ -19,7 +20,7 @@ public interface TaskTurbineMapper extends BaseMapper<TaskTurbine>
      * @param tId taskTurbine主键
      * @return taskTurbine
      */
-    public TaskTurbine selectTaskTurbineByTId(Long tId);
+    public TaskTurbine selectTaskTurbineByTId(TaskTurbine taskTurbine);
 
     /**
      * 查询taskTurbine列表

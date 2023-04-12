@@ -51,7 +51,12 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     {
         return dateTimeNow(YYYY_MM_DD);
     }
-
+    public static final LocalDateTime getSimulationChargeTime(Date date){
+        return localDateTime(date);
+    }
+    public static final Date getSimulationTimes(LocalDateTime localDateTime){
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
     public static final String getTime()
     {
         return dateTimeNow(YYYY_MM_DD_HH_MM_SS);
@@ -88,7 +93,12 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
     {
         return new SimpleDateFormat(format).format(date);
     }
-
+    public static LocalDateTime  localDateTime(final Date date){
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
+        return localDateTime;
+    }
     public static final Date dateTime(final String format, final String ts)
     {
         try

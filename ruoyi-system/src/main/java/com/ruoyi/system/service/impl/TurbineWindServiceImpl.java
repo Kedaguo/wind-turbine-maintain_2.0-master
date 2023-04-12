@@ -2,16 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import java.util.List;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.system.domain.TurbineFault;
-import com.ruoyi.system.domain.TurbineMaintain;
-import com.ruoyi.system.domain.vo.TurbineWindVo;
-import com.ruoyi.system.mapper.TurbineFaultMapper;
-import org.aspectj.weaver.loadtime.Aj;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TurbineWindMapper;
@@ -32,8 +23,6 @@ public class TurbineWindServiceImpl implements ITurbineWindService
     @Autowired
     private TurbineWindMapper turbineWindMapper;
 
-    @Resource
-    private TurbineFaultMapper turbineFaultMapper;
 
 
     /**

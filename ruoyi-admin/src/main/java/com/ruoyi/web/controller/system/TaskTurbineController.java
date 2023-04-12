@@ -51,13 +51,27 @@ public class TaskTurbineController extends BaseController
     /*
     查询任务所分配的资源-风机
      */
-//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByUser')")
+    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByUser')")
     @GetMapping("/listByUser")
     public TableDataInfo selectTaskTurbineListByUser(@RequestParam Long taskId, HttpServletRequest request)
     {
         startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByUser(taskId,loginUser.getUserId());
+        return getDataTable(list);
+    }
+
+    /*
+    查询任务所分配的资源-风机
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByState')")
+    @GetMapping("/listByState")
+    public TableDataInfo selectTaskTurbineListByState(TaskTurbine taskTurbine, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskTurbine.setUserId(loginUser.getUserId());
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByState(taskTurbine);
         return getDataTable(list);
     }
     /**
@@ -78,9 +92,9 @@ public class TaskTurbineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:taskTurbine:query')")
     @GetMapping(value = "/{tId}")
-    public AjaxResult getInfo(@PathVariable("tId") Long tId)
+    public AjaxResult getInfo(@PathVariable("tId") Long tId,@PathVariable("taskId") Long taskId,@PathVariable("userId") Long userId)
     {
-        return success(taskTurbineService.selectTaskTurbineByTId(tId));
+        return success(taskTurbineService.selectTaskTurbineByTId(tId,taskId,userId));
     }
 
     /**

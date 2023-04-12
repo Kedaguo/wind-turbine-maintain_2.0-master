@@ -32,9 +32,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectTaskTurbineByTId" parameterType="Long" resultMap="TaskTurbineResult">
+    <select id="selectTaskTurbineByTId" parameterType="TaskTurbine" resultMap="TaskTurbineResult">
         <include refid="selectTaskTurbineVo"/>
-        where t_id = #{tId}
+        where t_id = #{tId} and task_id = #{taskId} and user_id = #{userId}
     </select>
         
     <insert id="insertTaskTurbine" parameterType="TaskTurbine">

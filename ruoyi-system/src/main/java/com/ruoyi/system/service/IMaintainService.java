@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.Maintain;
-import com.ruoyi.system.domain.TurbineFault;
-import com.ruoyi.system.domain.TurbineMaintain;
 
 /**
  * maintainService接口
@@ -62,7 +60,5 @@ public interface IMaintainService
      * @return 结果
      */
     public int deleteMaintainByMId(Long mId);
-    public AjaxResult generateFault(List<TurbineFault> turbineFaults);
-    public AjaxResult generateMaintain(List<TurbineMaintain> maintains);
 
 }

@@ -12,27 +12,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="taskTime"    column="task_time"    />
         <result property="taskPoints"    column="task_points"    />
         <result property="taskState"    column="task_state"    />
+        <result property="taskCount"    column="task_count"    />
+        <result property="taskSimulateTime"    column="task_simulate_time"    />
     </resultMap>
 
     <sql id="selectTaskStudentVo">
-        select user_id, task_id, task_cost, task_charge, task_time, task_points, task_state from tl_task_student
+        select user_id, task_id, task_cost, task_charge, task_time, task_points, task_state, task_count, task_simulate_time from tl_task_student
     </sql>
 
     <select id="selectTaskStudentList" parameterType="TaskStudent" resultMap="TaskStudentResult">
         <include refid="selectTaskStudentVo"/>
         <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="taskCost != null "> and task_cost = #{taskCost}</if>
             <if test="taskCharge != null "> and task_charge = #{taskCharge}</if>
             <if test="taskTime != null  and taskTime != ''"> and task_time = #{taskTime}</if>
             <if test="taskPoints != null "> and task_points = #{taskPoints}</if>
             <if test="taskState != null "> and task_state = #{taskState}</if>
+            <if test="taskCount != null "> and task_count = #{taskCount}</if>
+            <if test="taskSimulateTime != null "> and task_simulate_time = #{taskSimulateTime}</if>
         </where>
     </select>
     
-    <select id="selectTaskStudentByUserId" parameterType="Long" resultMap="TaskStudentResult">
+    <select id="selectTaskStudentByUserId" parameterType="TaskStudent" resultMap="TaskStudentResult">
         <include refid="selectTaskStudentVo"/>
-        where user_id = #{userId}
+        where user_id = #{userId} and task_id =#{taskId}
     </select>
         
     <insert id="insertTaskStudent" parameterType="TaskStudent">
@@ -45,6 +50,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskTime != null">task_time,</if>
             <if test="taskPoints != null">task_points,</if>
             <if test="taskState != null">task_state,</if>
+            <if test="taskCount != null">task_count,</if>
+            <if test="taskSimulateTime != null">task_simulate_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
@@ -54,20 +61,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskTime != null">#{taskTime},</if>
             <if test="taskPoints != null">#{taskPoints},</if>
             <if test="taskState != null">#{taskState},</if>
+            <if test="taskCount != null">#{taskCount},</if>
+            <if test="taskSimulateTime != null">#{taskSimulateTime},</if>
          </trim>
     </insert>
 
     <update id="updateTaskStudent" parameterType="TaskStudent">
         update tl_task_student
         <trim prefix="SET" suffixOverrides=",">
-            <if test="taskId != null">task_id = #{taskId},</if>
             <if test="taskCost != null">task_cost = #{taskCost},</if>
             <if test="taskCharge != null">task_charge = #{taskCharge},</if>
             <if test="taskTime != null">task_time = #{taskTime},</if>
             <if test="taskPoints != null">task_points = #{taskPoints},</if>
             <if test="taskState != null">task_state = #{taskState},</if>
+            <if test="taskCount != null">task_count = #{taskCount},</if>
+            <if test="taskSimulateTime != null">task_simulate_time = #{taskSimulateTime},</if>
         </trim>
-        where user_id = #{userId}
+        where user_id = #{userId} and task_id= #{taskId}
     </update>
 
     <delete id="deleteTaskStudentByUserId" parameterType="Long">

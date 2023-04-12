@@ -91,10 +91,10 @@ public class TaskStudentController extends BaseController
      * 获取taskStudent详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:taskStudent:query')")
-    @GetMapping(value = "/{userId}")
-    public AjaxResult getInfo(@PathVariable("userId") Long userId)
+    @PostMapping(value = "/getInfo")
+    public AjaxResult getInfo(TaskStudent taskStudent)
     {
-        return success(taskStudentService.selectTaskStudentByUserId(userId));
+        return success(taskStudentService.selectTaskStudentByUserId(taskStudent));
     }
 
     /**

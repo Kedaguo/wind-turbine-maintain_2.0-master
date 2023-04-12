@@ -45,9 +45,9 @@ public class TaskStudentServiceImpl implements ITaskStudentService
      * @return taskStudent
      */
     @Override
-    public TaskStudent selectTaskStudentByUserId(Long userId)
+    public TaskStudent selectTaskStudentByUserId(TaskStudent taskStudent)
     {
-        return taskStudentMapper.selectTaskStudentByUserId(userId);
+        return taskStudentMapper.selectTaskStudentByUserId(taskStudent);
     }
 
     /**

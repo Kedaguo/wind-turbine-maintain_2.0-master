@@ -19,10 +19,11 @@ public interface ITaskTurbineService
      * @param tId taskTurbine主键
      * @return taskTurbine
      */
-    public TaskTurbine selectTaskTurbineByTId(Long tId);
+    public TaskTurbine selectTaskTurbineByTId(Long tId,Long taskId,Long userId);
 
 
     public List<TaskTurbineDto> selectTaskTurbineListByUser(Long taskId,Long userId);
+    public List<TaskTurbineDto> selectTaskTurbineListByState(TaskTurbine taskTurbine);
     /**
      * 查询taskTurbine列表
      * 

@@ -19,7 +19,7 @@ public interface ITaskStudentService
      * @param userId taskStudent主键
      * @return taskStudent
      */
-    public TaskStudent selectTaskStudentByUserId(Long userId);
+    public TaskStudent selectTaskStudentByUserId(TaskStudent taskStudent);
 
     /**
      * 查询taskStudent列表

@@ -16,10 +16,9 @@ public interface TaskStudentMapper extends BaseMapper<TaskStudent>
     /**
      * 查询taskStudent
      * 
-     * @param userId taskStudent主键
-     * @return taskStudent
+     * taskStudent
      */
-    public TaskStudent selectTaskStudentByUserId(Long userId);
+    public TaskStudent selectTaskStudentByUserId(TaskStudent taskStudent);
 
     /**
      * 查询taskStudent列表

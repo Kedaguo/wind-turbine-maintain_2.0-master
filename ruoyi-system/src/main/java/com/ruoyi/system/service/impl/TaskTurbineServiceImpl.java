@@ -9,6 +9,7 @@ import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import com.ruoyi.system.mapper.TurbineWindMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskTurbineMapper;
 import com.ruoyi.system.domain.TaskTurbine;
@@ -25,7 +26,7 @@ import javax.annotation.Resource;
 @Service
 public class TaskTurbineServiceImpl implements ITaskTurbineService 
 {
-    @Autowired
+    @Resource
     private TaskTurbineMapper taskTurbineMapper;
 
     @Resource
@@ -38,9 +39,13 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
      * @return taskTurbine
      */
     @Override
-    public TaskTurbine selectTaskTurbineByTId(Long tId)
+    public TaskTurbine selectTaskTurbineByTId(Long tId,Long taskId,Long userId)
     {
-        return taskTurbineMapper.selectTaskTurbineByTId(tId);
+        TaskTurbine taskTurbine = new TaskTurbine();
+        taskTurbine.settId(tId);
+        taskTurbine.setUserId(userId);
+        taskTurbine.setTaskId(taskId);
+        return taskTurbineMapper.selectTaskTurbineByTId(taskTurbine);
     }
 
     @Override
@@ -60,6 +65,20 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
         return taskTurbineDtos;
 
 
+    }
+
+    @Override
+    public List<TaskTurbineDto> selectTaskTurbineListByState (TaskTurbine taskTurbine) {
+        List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
+        ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
+        for (TaskTurbine taskTurbine1:taskTurbines){
+            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
+            TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
+            BeanUtils.copyProperties(turbineWind,taskTurbineDto);
+            BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
+            taskTurbineDtos.add(taskTurbineDto);
+        }
+        return taskTurbineDtos;
     }
 
     /**

@@ -25,16 +25,11 @@ public class MaintainServiceImpl implements IMaintainService
     private MaintainMapper maintainMapper;
 
     @Resource
-    private TurbineFaultMapper turbineFaultMapper;
-
-    @Resource
     private FaultMapper faultMapper;
 
     @Resource
     private TurbineWindMapper turbineWindMapper;
 
-    @Resource
-    private TurbineMaintainMapper turbineMaintainMapper;
     /**
      * 查询maintain
      * 
@@ -107,17 +102,17 @@ public class MaintainServiceImpl implements IMaintainService
         return maintainMapper.deleteMaintainByMId(mId);
     }
 
-    @Override
-    public AjaxResult generateFault (List<TurbineFault> turbineFaults) {
-        TurbineWind turbineWind = new TurbineWind();
-        for (TurbineFault turbineFault:turbineFaults){
-            turbineFaultMapper.insertTurbineFault(turbineFault);
-            turbineWind.settId(turbineFault.gettId());
-//            turbineWind.settFaultState(1l);
-            turbineWindMapper.updateTurbineWind(turbineWind);
-        }
-        return AjaxResult.success();
-    }
+//    @Override
+//    public AjaxResult generateFault (List<TurbineFault> turbineFaults) {
+//        TurbineWind turbineWind = new TurbineWind();
+//        for (TurbineFault turbineFault:turbineFaults){
+//            turbineFaultMapper.insertTurbineFault(turbineFault);
+//            turbineWind.settId(turbineFault.gettId());
+////            turbineWind.settFaultState(1l);
+//            turbineWindMapper.updateTurbineWind(turbineWind);
+//        }
+//        return AjaxResult.success();
+//    }
 
 //    @Override
 //    public AjaxResult generateFault (List<TurbineFault> turbineFaults) {
@@ -142,15 +137,15 @@ public class MaintainServiceImpl implements IMaintainService
 ////        }
 //    }
 
-    @Override
-    public AjaxResult generateMaintain (List<TurbineMaintain> maintains) {
-        TurbineWind turbineWind = new TurbineWind();
-        for (TurbineMaintain turbineMaintain:maintains){
-            turbineMaintainMapper.insertTurbineMaintain(turbineMaintain);
-//            turbineWind.settMaintainState(3l);
-            turbineWind.settId(turbineMaintain.gettId());
-            turbineWindMapper.updateTurbineWind(turbineWind);
-        }
-        return AjaxResult.success();
-    }
+//    @Override
+////    public AjaxResult generateMaintain (List<TurbineMaintain> maintains) {
+//        TurbineWind turbineWind = new TurbineWind();
+//        for (TurbineMaintain turbineMaintain:maintains){
+//            turbineMaintainMapper.insertTurbineMaintain(turbineMaintain);
+////            turbineWind.settMaintainState(3l);
+//            turbineWind.settId(turbineMaintain.gettId());
+//            turbineWindMapper.updateTurbineWind(turbineWind);
+//        }
+//        return AjaxResult.success();
+//    }
 }

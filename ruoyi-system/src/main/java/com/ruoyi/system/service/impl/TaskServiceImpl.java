@@ -147,6 +147,9 @@ public class TaskServiceImpl implements ITaskService
             taskStudent.setUserId(user_id);
             taskStudent.setTaskId(task.getTaskId());
             taskStudent.setTaskState(1l);//任务未开始
+            taskStudent.setTaskSimulateTime(task.getTaskStartTime());
+            taskStudent.setTaskCount(0);
+            taskStudent.setTaskCharge(0L);
             taskStudentMapper.insertTaskStudent(taskStudent);
         }
     }
