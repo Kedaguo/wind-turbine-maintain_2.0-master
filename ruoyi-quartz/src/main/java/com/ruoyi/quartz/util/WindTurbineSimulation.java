@@ -2,6 +2,7 @@ package com.ruoyi.quartz.util;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.quartz.domain.SysJob;
 import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.TaskStudentMapper;
@@ -61,7 +62,7 @@ public class WindTurbineSimulation {
 
     private Integer SecondsOfHour = 3600;
 
-    public void  deviceSimulation(Long taskId,Long userId,Integer runSpeed){
+    public void  deviceSimulation(Long taskId,Long userId,Integer runSpeed) throws Exception{
         System.out.println("taskId"+taskId+"userId"+userId+"runSpeed"+runSpeed);
         //Simulation Time
         Integer taskCount = TaskCounts(taskId,userId);
@@ -112,6 +113,20 @@ public class WindTurbineSimulation {
         taskStudent.setUserId(userId);
         taskStudent.setTaskSimulateTime(date);
         int i = iTaskStudentService.updateTaskStudent(taskStudent);
+
+        //终止仿真模拟
+//        date.compareTo()
+//        if (){
+//            simulationJobFinish(date);
+//        }
+    }
+    //仿真模拟到结束时间终止
+    public void simulationJobFinish(Date date) throws Exception{
+        SysJob sysJob = new SysJob();
+        //need jobId
+        sysJob.setJobId(4l);
+        sysJob.setStatus(String.valueOf(1));
+        int i = iSysJobService.changeStatus(sysJob);
     }
     //风机发电
     public void turbineWindCharge(Long tId,Long taskId,Long userId,Date date){

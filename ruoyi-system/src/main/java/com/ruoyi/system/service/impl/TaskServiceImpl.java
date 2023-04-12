@@ -171,6 +171,7 @@ public class TaskServiceImpl implements ITaskService
                 taskTurbine.settId(turbineWind.gettId());
                 taskTurbine.setfState(2);
                 taskTurbine.setmState(3);
+                taskTurbine.settCharge(0l);
                 int i = taskTurbineMapper.insertTaskTurbine(taskTurbine);
             }
         }

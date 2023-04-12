@@ -64,7 +64,7 @@ public class TaskTurbineController extends BaseController
     /*
     查询任务所分配的资源-风机
      */
-    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByState')")
+//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByState')")
     @GetMapping("/listByState")
     public TableDataInfo selectTaskTurbineListByState(TaskTurbine taskTurbine, HttpServletRequest request)
     {

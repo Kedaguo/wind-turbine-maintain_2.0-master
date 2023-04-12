@@ -146,10 +146,17 @@ public class SysJobController extends BaseController
         return toAjax(jobService.updateJob(job));
     }
 
+    @Log(title = "定时任务", businessType = BusinessType.UPDATE)
+    @PutMapping("/startTaskJob")
+    public AjaxResult startTaskJob(@RequestBody SysJob job) throws SchedulerException, TaskException
+    {
+        job.setUpdateBy(getUsername());
+        return toAjax(jobService.updateJob(job));
+    }
     /**
      * 定时任务状态修改
      */
-    @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
+//    @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysJob job) throws SchedulerException
@@ -158,6 +165,7 @@ public class SysJobController extends BaseController
         newJob.setStatus(job.getStatus());
         return toAjax(jobService.changeStatus(newJob));
     }
+
 
     /**
      * 定时任务立即执行一次
