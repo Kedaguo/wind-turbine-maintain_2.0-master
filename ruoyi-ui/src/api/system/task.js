@@ -42,3 +42,23 @@ export function delTask(taskId) {
     method: 'delete'
   })
 }
+
+// 学生查询task列表
+export function studentListTask(query) {
+  return request({
+    url: '/system/taskStudent/list',
+    method: 'get',
+    params: query
+  })
+}
+
+// 开始当前任务
+export function TaskBegin(data) {
+  return request({
+    url: '/system/taskStudent/begin',
+    method: 'post',
+    data: data
+  })
+}
+
+

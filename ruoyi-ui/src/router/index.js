@@ -51,32 +51,6 @@ export const constantRoutes = [
     component: () => import('@/views/register'),
     hidden: true
   },
-  {
-    path: '/student',
-    component: () => import('@/views/student'),
-    hidden: true,
-    redirect: 'student/echarts',
-    children: [
-      {
-        path: 'echarts',
-        component: () => import('@/views/student/components/echarts'),
-      },
-      {
-        path: 'operate',
-        component: () => import('@/views/student/components/operate'),
-      },
-      {
-        path: 'windturbine',
-        component: () => import('@/views/student/components/windturbine'),
-        children: [
-          {
-            path: 'online',
-            component: () => import('@/views/student/components/windturbine/online'),
-          },
-        ]
-      },
-    ]
-  },
 
   {
     path: '/404',

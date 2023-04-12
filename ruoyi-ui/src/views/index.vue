@@ -1,7 +1,33 @@
 <template>
   <div class="app-container home">
     <el-row>
-      <el-col :span="8">
+      <el-col :span="15">
+        <!-- <div><h3>当前时间：{{ time }}</h3></div> -->
+        <div class="grid-content bg-purple-light">
+          <baidu-map class="bm-view" ak="fE3WYGSDWGkTXsjM0SAxisTysOr4ft5u" :center="center" :zoom="zoom"
+            scroll-wheel-zoom="true">
+            <!-- 风机所在的范围 -->
+            <bm-circle :center="circlePath.center" :radius="circlePath.radius" stroke-color="blue" :stroke-opacity="0.5"
+              :stroke-weight="2"></bm-circle>
+            <!-- 码头点位 -->
+            <bm-marker :position="{ lng: 119.6215439, lat: 25.72599323 }" animation="BMAP_ANIMATION_BOUNCE">
+              <bm-label content="福州松下码头" :labelStyle="{ color: 'red', fontSize: '24px' }"
+                :offset="{ width: -35, height: 30 }" />
+            </bm-marker>
+            <bm-marker :position="{ lng: 119.703598, lat: 25.61707242 }">
+              <bm-label content="大练岛陆岛码头" :labelStyle="{ color: 'red', fontSize: '24px' }"
+                :offset="{ width: -35, height: 30 }" />
+            </bm-marker>
+            <!-- 风机点位 -->
+            <!-- <bm-point-collection :points="points" shape="BMAP_POINT_SHAPE_STAR" color="red" size="BMAP_POINT_SIZE_NORMAL"
+              @click="clickHandler"></bm-point-collection> -->
+            <bm-marker v-for="point in points" :key="point.id" :title="point.id"
+              :position="{ lng: point.lng, lat: point.lat }" @click="clickHandler(point)">
+            </bm-marker>
+          </baidu-map>
+        </div>
+      </el-col>
+      <el-col :span="7">
         <div class="grid-content e-form">
           <el-row :gutter="6"><ve-line :data="chartData" :mark-line="markLine"></ve-line></el-row>
           <el-row :gutter="6">
@@ -47,31 +73,8 @@
           </el-row>
         </div>
       </el-col>
-      <el-col :span="16">
-        <div><h3>当前时间：{{ time }}</h3></div>
-        <div class="grid-content bg-purple-light">
-          <baidu-map class="bm-view" ak="fE3WYGSDWGkTXsjM0SAxisTysOr4ft5u" :center="center" :zoom="zoom"
-            scroll-wheel-zoom="true">
-            <!-- 风机所在的范围 -->
-            <bm-circle :center="circlePath.center" :radius="circlePath.radius" stroke-color="blue" :stroke-opacity="0.5"
-              :stroke-weight="2"></bm-circle>
-            <!-- 码头点位 -->
-            <bm-marker :position="{ lng: 119.6215439, lat: 25.72599323 }" animation="BMAP_ANIMATION_BOUNCE">
-              <bm-label content="福州松下码头" :labelStyle="{ color: 'red', fontSize: '24px' }"
-                :offset="{ width: -35, height: 30 }" />
-            </bm-marker>
-            <bm-marker :position="{ lng: 119.703598, lat: 25.61707242 }">
-              <bm-label content="大练岛陆岛码头" :labelStyle="{ color: 'red', fontSize: '24px' }"
-                :offset="{ width: -35, height: 30 }" />
-            </bm-marker>
-            <!-- 风机点位 -->
-            <!-- <bm-point-collection :points="points" shape="BMAP_POINT_SHAPE_STAR" color="red" size="BMAP_POINT_SIZE_NORMAL"
-              @click="clickHandler"></bm-point-collection> -->
-            <bm-marker v-for="point in points" :key="point.id" :title="point.id" :position="{ lng: point.lng, lat: point.lat }" @click="clickHandler(point)">
-            </bm-marker>
-          </baidu-map>
-        </div>
-      </el-col>
+    </el-row>
+    <el-row>
     </el-row>
     <el-divider />
   </div>
@@ -105,7 +108,7 @@ export default {
       data: [{ name: "平均线", type: "average" }]
     };
     return {
-      time:'',
+      time: '',
       center: {
         lng: 119.9215439, lat: 25.72599323
       },
@@ -116,7 +119,7 @@ export default {
         },
         radius: 5000
       },
-      points: [{id:1, lng: 119.9215439, lat: 25.72599323 }, {id:2, lng: 119.9215439, lat: 25.92599323 }],
+      points: [{ id: 1, lng: 119.9215439, lat: 25.72599323 }, { id: 2, lng: 119.9215439, lat: 25.92599323 }],
       version: "1.0.0",
       chartData: {
         columns: ["时间", "风速", "风机转速", "海浪高度"],
@@ -160,13 +163,13 @@ export default {
   },
   mounted() {
     setInterval(() => {
-      this.time=Date().toLocaleString();
-    }, 1000) 
+      this.time = Date().toLocaleString();
+    }, 1000)
   },
   methods: {
     //获取当前时间
-    getTime(){
-      
+    getTime() {
+
     },
     handleClose(tag) {
       this.formData.linePath.splice(this.formData.linePath.indexOf(tag), 1);
@@ -177,7 +180,7 @@ export default {
     submitForm() {
       this.$refs['elForm'].validate(valid => {
         if (!valid) return
-      }).then(()=>{
+      }).then(() => {
         launchOut(this.formData)
       })
     },
@@ -186,7 +189,7 @@ export default {
     },
 
     clickHandler(e) {
-      this.formData.linePath.push({id:e.id, lng: e.lng, lat: e.lat })
+      this.formData.linePath.push({ id: e.id, lng: e.lng, lat: e.lat })
       //alert(`单击点的坐标为：${e.lng}, ${e.lat}`);
     },
 
@@ -195,8 +198,8 @@ export default {
         //获取到所有添加到出海任务中的风机的经纬度坐标，
       });
     },
-    getChart(){
-      chart().then(response=>{
+    getChart() {
+      chart().then(response => {
 
       })
     }
@@ -213,12 +216,12 @@ export default {
   width: 100%;
   height: 150px;
 }
- 
+
 .bm-view {
   padding: 0px;
   margin: 0px;
   width: 100%;
-  height: 700px;
+  height: 400px;
 }
 
 .el-row {
