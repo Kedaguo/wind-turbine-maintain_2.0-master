@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ArrangementMapper">
+    
+    <resultMap type="Arrangement" id="ArrangementResult">
+        <result property="aId"    column="a_id"    />
+        <result property="aName"    column="a_name"    />
+        <result property="startLocation"    column="start_location"    />
+        <result property="endLocation"    column="end_location"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+    </resultMap>
+
+    <sql id="selectArrangementVo">
+        select a_id, a_name, start_location, end_location, start_time, end_time from tl_arrangement
+    </sql>
+
+    <select id="selectArrangementList" parameterType="Arrangement" resultMap="ArrangementResult">
+        <include refid="selectArrangementVo"/>
+        <where>  
+            <if test="aName != null  and aName != ''"> and a_name like concat('%', #{aName}, '%')</if>
+            <if test="startLocation != null  and startLocation != ''"> and start_location = #{startLocation}</if>
+            <if test="endLocation != null  and endLocation != ''"> and end_location = #{endLocation}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectArrangementByAId" parameterType="Long" resultMap="ArrangementResult">
+        <include refid="selectArrangementVo"/>
+        where a_id = #{aId}
+    </select>
+        
+    <insert id="insertArrangement" parameterType="Arrangement" useGeneratedKeys="true" keyProperty="aId">
+        insert into tl_arrangement
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aName != null">a_name,</if>
+            <if test="startLocation != null">start_location,</if>
+            <if test="endLocation != null">end_location,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aName != null">#{aName},</if>
+            <if test="startLocation != null">#{startLocation},</if>
+            <if test="endLocation != null">#{endLocation},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArrangement" parameterType="Arrangement">
+        update tl_arrangement
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aName != null">a_name = #{aName},</if>
+            <if test="startLocation != null">start_location = #{startLocation},</if>
+            <if test="endLocation != null">end_location = #{endLocation},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+        </trim>
+        where a_id = #{aId}
+    </update>
+
+    <delete id="deleteArrangementByAId" parameterType="Long">
+        delete from tl_arrangement where a_id = #{aId}
+    </delete>
+
+    <delete id="deleteArrangementByAIds" parameterType="String">
+        delete from tl_arrangement where a_id in 
+        <foreach item="aId" collection="array" open="(" separator="," close=")">
+            #{aId}
+        </foreach>
+    </delete>
+</mapper>

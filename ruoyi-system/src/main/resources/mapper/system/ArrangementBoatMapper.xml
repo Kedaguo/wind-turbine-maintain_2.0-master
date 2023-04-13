@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ArrangementBoatMapper">
+    
+    <resultMap type="ArrangementBoat" id="ArrangementBoatResult">
+        <result property="abId"    column="ab_id"    />
+        <result property="aId"    column="a_id"    />
+        <result property="bId"    column="b_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectArrangementBoatVo">
+        select ab_id, a_id, b_id, task_id, user_id from tl_arrangement_boat
+    </sql>
+
+    <select id="selectArrangementBoatList" parameterType="ArrangementBoat" resultMap="ArrangementBoatResult">
+        <include refid="selectArrangementBoatVo"/>
+        <where>  
+            <if test="aId != null "> and a_id = #{aId}</if>
+            <if test="bId != null "> and b_id = #{bId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectArrangementBoatByAbId" parameterType="Long" resultMap="ArrangementBoatResult">
+        <include refid="selectArrangementBoatVo"/>
+        where ab_id = #{abId}
+    </select>
+        
+    <insert id="insertArrangementBoat" parameterType="ArrangementBoat" useGeneratedKeys="true" keyProperty="abId">
+        insert into tl_arrangement_boat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aId != null">a_id,</if>
+            <if test="bId != null">b_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aId != null">#{aId},</if>
+            <if test="bId != null">#{bId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArrangementBoat" parameterType="ArrangementBoat">
+        update tl_arrangement_boat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="aId != null">a_id = #{aId},</if>
+            <if test="bId != null">b_id = #{bId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where ab_id = #{abId}
+    </update>
+
+    <delete id="deleteArrangementBoatByAbId" parameterType="Long">
+        delete from tl_arrangement_boat where ab_id = #{abId}
+    </delete>
+
+    <delete id="deleteArrangementBoatByAbIds" parameterType="String">
+        delete from tl_arrangement_boat where ab_id in 
+        <foreach item="abId" collection="array" open="(" separator="," close=")">
+            #{abId}
+        </foreach>
+    </delete>
+</mapper>

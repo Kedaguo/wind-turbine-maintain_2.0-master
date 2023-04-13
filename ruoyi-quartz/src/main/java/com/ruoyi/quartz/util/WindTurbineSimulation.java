@@ -5,6 +5,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.quartz.domain.SysJob;
 import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import com.ruoyi.system.mapper.TaskStudentMapper;
 import com.ruoyi.system.service.*;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Configuration
 public class WindTurbineSimulation {
@@ -106,28 +108,48 @@ public class WindTurbineSimulation {
                 }
             }
         }
-
-        //模拟时间
+        //终止仿真模拟
+        simulationJobFinish(date,userId,taskId);
+    }
+    //仿真模拟到结束时间终止
+    public void simulationJobFinish(Date date,Long userId,Long taskId) throws Exception{
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setUserId(userId);
+        taskStudent.setTaskId(taskId);
+        TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
+        int result = date.compareTo(taskStudent1.getTaskSimulateTime());
+        if (result < 0){
+            System.out.println("仿真时间:"+taskStudent1.getTaskSimulateTime());
+        }else {
+            //终止任务
+            SysJob sysJob = new SysJob();
+            sysJob.setJobId(4l);
+            sysJob.setStatus(String.valueOf(1));
+            int i = iSysJobService.changeStatus(sysJob);
+            //总发电量
+            taskStudentChargeSum(taskId,userId);
+        }
+        //更新用户模拟时间
+        taskStudent.setTaskSimulateTime(date);
+        iTaskStudentService.updateTaskStudent(taskStudent);
+    }
+    //任务终止时，总发电量
+    public void taskStudentChargeSum(Long taskId,Long userId){
+        //taskStudent总发电量
+        TaskTurbine taskTurbine = new TaskTurbine();
+        taskTurbine.setUserId(userId);
+        taskTurbine.setTaskId(taskId);
+        List<TaskTurbineDto> taskTurbineDtos = iTaskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
+        Long chargeSum = taskTurbineDtos.stream().map(TaskTurbine::gettCharge).collect(Collectors.summingLong(Long::longValue));
         TaskStudent taskStudent = new TaskStudent();
         taskStudent.setTaskId(taskId);
         taskStudent.setUserId(userId);
-        taskStudent.setTaskSimulateTime(date);
+        taskStudent.setTaskCharge(chargeSum);
+        //执行次数修改为 0
+//        taskStudent.setTaskCount(0);
         int i = iTaskStudentService.updateTaskStudent(taskStudent);
+    }
 
-        //终止仿真模拟
-//        date.compareTo()
-//        if (){
-//            simulationJobFinish(date);
-//        }
-    }
-    //仿真模拟到结束时间终止
-    public void simulationJobFinish(Date date) throws Exception{
-        SysJob sysJob = new SysJob();
-        //need jobId
-        sysJob.setJobId(4l);
-        sysJob.setStatus(String.valueOf(1));
-        int i = iSysJobService.changeStatus(sysJob);
-    }
     //风机发电
     public void turbineWindCharge(Long tId,Long taskId,Long userId,Date date){
         TaskTurbine taskTurbine = new TaskTurbine();

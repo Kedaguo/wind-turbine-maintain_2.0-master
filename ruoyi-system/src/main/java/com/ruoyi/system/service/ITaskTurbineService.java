@@ -22,8 +22,8 @@ public interface ITaskTurbineService
     public TaskTurbine selectTaskTurbineByTId(Long tId,Long taskId,Long userId);
 
 
-    public List<TaskTurbineDto> selectTaskTurbineListByUser(Long taskId,Long userId);
-    public List<TaskTurbineDto> selectTaskTurbineListByState(TaskTurbine taskTurbine);
+//    public List<TaskTurbineDto> selectTaskTurbineListByUser(TaskTurbine taskTurbine);
+    public List<TaskTurbineDto> selectTaskTurbineListByStudent(TaskTurbine taskTurbine);
     /**
      * 查询taskTurbine列表
      * 

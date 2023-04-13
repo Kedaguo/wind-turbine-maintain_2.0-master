@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.TurbineWind;
 import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import com.ruoyi.system.mapper.TurbineWindMapper;
@@ -48,27 +49,22 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
         return taskTurbineMapper.selectTaskTurbineByTId(taskTurbine);
     }
 
-    @Override
-    public List<TaskTurbineDto> selectTaskTurbineListByUser (Long taskId,Long userId) {
-        TaskTurbine taskTurbine = new TaskTurbine();
-        taskTurbine.setTaskId(taskId);
-        taskTurbine.setUserId(userId);
-        List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
-        ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
-        for (TaskTurbine taskTurbine1:taskTurbines){
-            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
-            TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
-            BeanUtils.copyProperties(turbineWind,taskTurbineDto);
-            BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
-            taskTurbineDtos.add(taskTurbineDto);
-        }
-        return taskTurbineDtos;
-
-
-    }
+//    @Override
+//    public List<TaskTurbineDto> selectTaskTurbineListByUser (TaskTurbine taskTurbine) {
+//        List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
+//        ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
+//        for (TaskTurbine taskTurbine1:taskTurbines){
+//            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
+//            TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
+//            BeanUtils.copyProperties(turbineWind,taskTurbineDto);
+//            BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
+//            taskTurbineDtos.add(taskTurbineDto);
+//        }
+//        return taskTurbineDtos;
+//    }
 
     @Override
-    public List<TaskTurbineDto> selectTaskTurbineListByState (TaskTurbine taskTurbine) {
+    public List<TaskTurbineDto> selectTaskTurbineListByStudent (TaskTurbine taskTurbine) {
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
         ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
         for (TaskTurbine taskTurbine1:taskTurbines){

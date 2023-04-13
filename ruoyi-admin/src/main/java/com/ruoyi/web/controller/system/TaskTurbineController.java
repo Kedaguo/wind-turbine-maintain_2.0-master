@@ -51,29 +51,72 @@ public class TaskTurbineController extends BaseController
     /*
     查询任务所分配的资源-风机
      */
-    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByUser')")
-    @GetMapping("/listByUser")
-    public TableDataInfo selectTaskTurbineListByUser(@RequestParam Long taskId, HttpServletRequest request)
-    {
-        startPage();
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByUser(taskId,loginUser.getUserId());
-        return getDataTable(list);
-    }
+//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByUser')")
+//    @GetMapping("/listByUser")
+//    public TableDataInfo selectTaskTurbineListByUser(@RequestParam Long taskId, HttpServletRequest request)
+//    {
+//        startPage();
+//        LoginUser loginUser = tokenService.getLoginUser(request);
+//        TaskTurbine taskTurbine = new TaskTurbine();
+//        taskTurbine.setTaskId(taskId);
+//        taskTurbine.setUserId(loginUser.getUserId());
+//        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByUser(taskTurbine);
+//        return getDataTable(list);
+//    }
 
     /*
     查询任务所分配的资源-风机
      */
 //    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByState')")
-    @GetMapping("/listByState")
-    public TableDataInfo selectTaskTurbineListByState(TaskTurbine taskTurbine, HttpServletRequest request)
+
+    //正常工作——不需要保养、故障
+    @PostMapping("/normalTurbineList")
+    public TableDataInfo selectNormalTaskTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
     {
         startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
+        taskTurbine.setfState(2);
+        taskTurbine.setmState(3);
         taskTurbine.setUserId(loginUser.getUserId());
-        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByState(taskTurbine);
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
         return getDataTable(list);
     }
+
+    //故障停机
+    @PostMapping("/fStateTurbineList")
+    public TableDataInfo selectFStateTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskTurbine.setfState(1);
+        taskTurbine.setUserId(loginUser.getUserId());
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
+        return getDataTable(list);
+    }
+
+    //需要保养且停机
+    @PostMapping("/mStateTurbineList")
+    public TableDataInfo selectMStateTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskTurbine.setmState(2);
+        taskTurbine.setUserId(loginUser.getUserId());
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
+        return getDataTable(list);
+    }
+    //需要保养但仍可以工作
+    @PostMapping("/mStateWorkTurbineList")
+    public TableDataInfo selectMStateWorkTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskTurbine.setmState(1);
+        taskTurbine.setUserId(loginUser.getUserId());
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
+        return getDataTable(list);
+    }
+
     /**
      * 导出taskTurbine列表
      */

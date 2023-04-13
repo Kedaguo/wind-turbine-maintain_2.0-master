@@ -146,12 +146,14 @@ public class SysJobController extends BaseController
         return toAjax(jobService.updateJob(job));
     }
 
-    @Log(title = "定时任务", businessType = BusinessType.UPDATE)
+    @Log(title = "开始任务", businessType = BusinessType.UPDATE)
     @PutMapping("/startTaskJob")
     public AjaxResult startTaskJob(@RequestBody SysJob job) throws SchedulerException, TaskException
     {
-        job.setUpdateBy(getUsername());
-        return toAjax(jobService.updateJob(job));
+        SysJob newJob = jobService.selectJobById(job.getJobId());
+        newJob.setStatus(job.getStatus());
+        newJob.setInvokeTarget(job.getInvokeTarget());
+        return toAjax(jobService.updateJob(newJob));
     }
     /**
      * 定时任务状态修改
