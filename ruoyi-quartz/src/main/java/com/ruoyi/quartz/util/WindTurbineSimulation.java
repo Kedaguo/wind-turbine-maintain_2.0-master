@@ -117,7 +117,9 @@ public class WindTurbineSimulation {
         taskStudent.setUserId(userId);
         taskStudent.setTaskId(taskId);
         TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
-        int result = date.compareTo(taskStudent1.getTaskSimulateTime());
+        Task task = new Task();
+        Date taskEndTime = iTaskService.selectTaskByTaskId(taskId).getTaskEndTime();
+        int result = date.compareTo(taskEndTime);
         if (result < 0){
             System.out.println("仿真时间:"+taskStudent1.getTaskSimulateTime());
         }else {

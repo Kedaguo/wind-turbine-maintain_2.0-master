@@ -2,7 +2,12 @@ package com.ruoyi.web.controller.system;
 
 import java.util.List;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.vo.ArrangementVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +31,17 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * arrangementController
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-14
  */
 @RestController
 @RequestMapping("/system/arrangement")
 public class ArrangementController extends BaseController
 {
-    @Resource
+    @Autowired
     private IArrangementService arrangementService;
 
+    @Resource
+    private TokenService tokenService;
     /**
      * 查询arrangement列表
      */
@@ -76,9 +83,11 @@ public class ArrangementController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:arrangement:add')")
     @Log(title = "arrangement", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Arrangement arrangement)
+    public AjaxResult add(@RequestBody ArrangementVo arrangementVo, HttpServletRequest request)
     {
-        return toAjax(arrangementService.insertArrangement(arrangement));
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        arrangementVo.setUserId(loginUser.getUserId());
+        return toAjax(arrangementService.insertArrangement(arrangementVo));
     }
 
     /**

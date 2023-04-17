@@ -1,6 +1,46 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="港口编号" prop="pId">
+        <el-input
+          v-model="queryParams.pId"
+          placeholder="请输入港口编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="维修人员数量" prop="oNum">
+        <el-input
+          v-model="queryParams.oNum"
+          placeholder="请输入维修人员数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="船舶数量" prop="bNum">
+        <el-input
+          v-model="queryParams.bNum"
+          placeholder="请输入船舶数量"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="用户编号" prop="userId">
+        <el-input
+          v-model="queryParams.userId"
+          placeholder="请输入用户编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="任务编号" prop="taskId">
+        <el-input
+          v-model="queryParams.taskId"
+          placeholder="请输入任务编号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="规划名称" prop="aName">
         <el-input
           v-model="queryParams.aName"
@@ -40,6 +80,14 @@
           value-format="yyyy-MM-dd"
           placeholder="请选择结束仿真模拟时间">
         </el-date-picker>
+      </el-form-item>
+      <el-form-item label="发布时间" prop="aCreateTime">
+        <el-input
+          v-model="queryParams.aCreateTime"
+          placeholder="请输入发布时间"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -96,6 +144,12 @@
     <el-table v-loading="loading" :data="arrangementList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="规划编号" align="center" prop="aId" />
+      <el-table-column label="港口编号" align="center" prop="pId" />
+      <el-table-column label="维修人员数量" align="center" prop="oNum" />
+      <el-table-column label="船舶数量" align="center" prop="bNum" />
+      <el-table-column label="船舶类型" align="center" prop="bType" />
+      <el-table-column label="用户编号" align="center" prop="userId" />
+      <el-table-column label="任务编号" align="center" prop="taskId" />
       <el-table-column label="规划名称" align="center" prop="aName" />
       <el-table-column label="始点" align="center" prop="startLocation" />
       <el-table-column label="终点" align="center" prop="endLocation" />
@@ -109,6 +163,7 @@
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="发布时间" align="center" prop="aCreateTime" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -140,6 +195,21 @@
     <!-- 添加或修改arrangement对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="港口编号" prop="pId">
+          <el-input v-model="form.pId" placeholder="请输入港口编号" />
+        </el-form-item>
+        <el-form-item label="维修人员数量" prop="oNum">
+          <el-input v-model="form.oNum" placeholder="请输入维修人员数量" />
+        </el-form-item>
+        <el-form-item label="船舶数量" prop="bNum">
+          <el-input v-model="form.bNum" placeholder="请输入船舶数量" />
+        </el-form-item>
+        <el-form-item label="用户编号" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户编号" />
+        </el-form-item>
+        <el-form-item label="任务编号" prop="taskId">
+          <el-input v-model="form.taskId" placeholder="请输入任务编号" />
+        </el-form-item>
         <el-form-item label="规划名称" prop="aName">
           <el-input v-model="form.aName" placeholder="请输入规划名称" />
         </el-form-item>
@@ -164,6 +234,9 @@
             value-format="yyyy-MM-dd"
             placeholder="请选择结束仿真模拟时间">
           </el-date-picker>
+        </el-form-item>
+        <el-form-item label="发布时间" prop="aCreateTime">
+          <el-input v-model="form.aCreateTime" placeholder="请输入发布时间" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -203,11 +276,18 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        pId: null,
+        oNum: null,
+        bNum: null,
+        bType: null,
+        userId: null,
+        taskId: null,
         aName: null,
         startLocation: null,
         endLocation: null,
         startTime: null,
-        endTime: null
+        endTime: null,
+        aCreateTime: null
       },
       // 表单参数
       form: {},
@@ -238,11 +318,18 @@ export default {
     reset() {
       this.form = {
         aId: null,
+        pId: null,
+        oNum: null,
+        bNum: null,
+        bType: null,
+        userId: null,
+        taskId: null,
         aName: null,
         startLocation: null,
         endLocation: null,
         startTime: null,
-        endTime: null
+        endTime: null,
+        aCreateTime: null
       };
       this.resetForm("form");
     },

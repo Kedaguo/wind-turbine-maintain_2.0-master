@@ -11,7 +11,7 @@ import com.ruoyi.system.service.IArrangementBoatService;
  * arrangementBoatService业务层处理
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-14
  */
 @Service
 public class ArrangementBoatServiceImpl implements IArrangementBoatService 
@@ -22,13 +22,13 @@ public class ArrangementBoatServiceImpl implements IArrangementBoatService
     /**
      * 查询arrangementBoat
      * 
-     * @param abId arrangementBoat主键
+     * @param aId arrangementBoat主键
      * @return arrangementBoat
      */
     @Override
-    public ArrangementBoat selectArrangementBoatByAbId(Long abId)
+    public ArrangementBoat selectArrangementBoatByAId(Long aId)
     {
-        return arrangementBoatMapper.selectArrangementBoatByAbId(abId);
+        return arrangementBoatMapper.selectArrangementBoatByAId(aId);
     }
 
     /**
@@ -70,24 +70,24 @@ public class ArrangementBoatServiceImpl implements IArrangementBoatService
     /**
      * 批量删除arrangementBoat
      * 
-     * @param abIds 需要删除的arrangementBoat主键
+     * @param aIds 需要删除的arrangementBoat主键
      * @return 结果
      */
     @Override
-    public int deleteArrangementBoatByAbIds(Long[] abIds)
+    public int deleteArrangementBoatByAIds(Long[] aIds)
     {
-        return arrangementBoatMapper.deleteArrangementBoatByAbIds(abIds);
+        return arrangementBoatMapper.deleteArrangementBoatByAIds(aIds);
     }
 
     /**
      * 删除arrangementBoat信息
      * 
-     * @param abId arrangementBoat主键
+     * @param aId arrangementBoat主键
      * @return 结果
      */
     @Override
-    public int deleteArrangementBoatByAbId(Long abId)
+    public int deleteArrangementBoatByAId(Long aId)
     {
-        return arrangementBoatMapper.deleteArrangementBoatByAbId(abId);
+        return arrangementBoatMapper.deleteArrangementBoatByAId(aId);
     }
 }

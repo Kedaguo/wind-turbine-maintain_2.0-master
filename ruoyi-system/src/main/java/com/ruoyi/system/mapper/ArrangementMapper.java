@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.Arrangement;
  * arrangementMapper接口
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-14
  */
 public interface ArrangementMapper 
 {

@@ -71,50 +71,46 @@ public class TaskTurbineController extends BaseController
 
     //正常工作——不需要保养、故障
     @PostMapping("/normalTurbineList")
-    public TableDataInfo selectNormalTaskTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    public AjaxResult selectNormalTaskTurbineList(@RequestBody  TaskTurbine taskTurbine, HttpServletRequest request)
     {
-        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskTurbine.setfState(2);
         taskTurbine.setmState(3);
         taskTurbine.setUserId(loginUser.getUserId());
         List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     //故障停机
     @PostMapping("/fStateTurbineList")
-    public TableDataInfo selectFStateTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    public AjaxResult selectFStateTurbineList(@RequestBody TaskTurbine taskTurbine, HttpServletRequest request)
     {
-        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskTurbine.setfState(1);
         taskTurbine.setUserId(loginUser.getUserId());
         List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     //需要保养且停机
     @PostMapping("/mStateTurbineList")
-    public TableDataInfo selectMStateTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    public AjaxResult selectMStateTurbineList(@RequestBody TaskTurbine taskTurbine, HttpServletRequest request)
     {
-        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskTurbine.setmState(2);
         taskTurbine.setUserId(loginUser.getUserId());
         List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
     //需要保养但仍可以工作
     @PostMapping("/mStateWorkTurbineList")
-    public TableDataInfo selectMStateWorkTurbineList(TaskTurbine taskTurbine, HttpServletRequest request)
+    public AjaxResult selectMStateWorkTurbineList(@RequestBody TaskTurbine taskTurbine, HttpServletRequest request)
     {
-        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskTurbine.setmState(1);
         taskTurbine.setUserId(loginUser.getUserId());
         List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     /**

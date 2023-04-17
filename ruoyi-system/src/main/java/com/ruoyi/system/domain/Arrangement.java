@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * arrangement对象 tl_arrangement
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-14
  */
 public class Arrangement extends BaseEntity
 {
@@ -19,6 +19,30 @@ public class Arrangement extends BaseEntity
 
     /** 规划编号 */
     private Long aId;
+
+    /** 港口编号 */
+    @Excel(name = "港口编号")
+    private Long pId;
+
+    /** 维修人员数量 */
+    @Excel(name = "维修人员数量")
+    private Long oNum;
+
+    /** 船舶数量 */
+    @Excel(name = "船舶数量")
+    private Long bNum;
+
+    /** 船舶类型 */
+    @Excel(name = "船舶类型")
+    private Integer bType;
+
+    /** 用户编号 */
+    @Excel(name = "用户编号")
+    private Long userId;
+
+    /** 任务编号 */
+    @Excel(name = "任务编号")
+    private Long taskId;
 
     /** 规划名称 */
     @Excel(name = "规划名称")
@@ -42,6 +66,10 @@ public class Arrangement extends BaseEntity
     @Excel(name = "结束仿真模拟时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endTime;
 
+    /** 发布时间 */
+    @Excel(name = "发布时间")
+    private String aCreateTime;
+
     public void setaId(Long aId) 
     {
         this.aId = aId;
@@ -50,6 +78,60 @@ public class Arrangement extends BaseEntity
     public Long getaId() 
     {
         return aId;
+    }
+    public void setpId(Long pId) 
+    {
+        this.pId = pId;
+    }
+
+    public Long getpId() 
+    {
+        return pId;
+    }
+    public void setoNum(Long oNum) 
+    {
+        this.oNum = oNum;
+    }
+
+    public Long getoNum() 
+    {
+        return oNum;
+    }
+    public void setbNum(Long bNum) 
+    {
+        this.bNum = bNum;
+    }
+
+    public Long getbNum() 
+    {
+        return bNum;
+    }
+    public void setbType(Integer bType) 
+    {
+        this.bType = bType;
+    }
+
+    public Integer getbType() 
+    {
+        return bType;
+    }
+    public void setUserId(Long userId) 
+    {
+        this.userId = userId;
+    }
+
+    public Long getUserId() 
+    {
+        return userId;
+    }
+    public void setTaskId(Long taskId) 
+    {
+        this.taskId = taskId;
+    }
+
+    public Long getTaskId() 
+    {
+        return taskId;
     }
     public void setaName(String aName) 
     {
@@ -96,16 +178,32 @@ public class Arrangement extends BaseEntity
     {
         return endTime;
     }
+    public void setaCreateTime(String aCreateTime) 
+    {
+        this.aCreateTime = aCreateTime;
+    }
+
+    public String getaCreateTime() 
+    {
+        return aCreateTime;
+    }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("aId", getaId())
+            .append("pId", getpId())
+            .append("oNum", getoNum())
+            .append("bNum", getbNum())
+            .append("bType", getbType())
+            .append("userId", getUserId())
+            .append("taskId", getTaskId())
             .append("aName", getaName())
             .append("startLocation", getStartLocation())
             .append("endLocation", getEndLocation())
             .append("startTime", getStartTime())
             .append("endTime", getEndTime())
+            .append("aCreateTime", getaCreateTime())
             .toString();
     }
 }

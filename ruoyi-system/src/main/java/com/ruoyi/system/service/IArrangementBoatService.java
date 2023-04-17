@@ -7,17 +7,17 @@ import com.ruoyi.system.domain.ArrangementBoat;
  * arrangementBoatService接口
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-14
  */
 public interface IArrangementBoatService 
 {
     /**
      * 查询arrangementBoat
      * 
-     * @param abId arrangementBoat主键
+     * @param aId arrangementBoat主键
      * @return arrangementBoat
      */
-    public ArrangementBoat selectArrangementBoatByAbId(Long abId);
+    public ArrangementBoat selectArrangementBoatByAId(Long aId);
 
     /**
      * 查询arrangementBoat列表
@@ -46,16 +46,16 @@ public interface IArrangementBoatService
     /**
      * 批量删除arrangementBoat
      * 
-     * @param abIds 需要删除的arrangementBoat主键集合
+     * @param aIds 需要删除的arrangementBoat主键集合
      * @return 结果
      */
-    public int deleteArrangementBoatByAbIds(Long[] abIds);
+    public int deleteArrangementBoatByAIds(Long[] aIds);
 
     /**
      * 删除arrangementBoat信息
      * 
-     * @param abId arrangementBoat主键
+     * @param aId arrangementBoat主键
      * @return 结果
      */
-    public int deleteArrangementBoatByAbId(Long abId);
+    public int deleteArrangementBoatByAId(Long aId);
 }

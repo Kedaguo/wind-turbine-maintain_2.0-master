@@ -6,25 +6,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Arrangement" id="ArrangementResult">
         <result property="aId"    column="a_id"    />
+        <result property="pId"    column="p_id"    />
+        <result property="oNum"    column="o_num"    />
+        <result property="bNum"    column="b_num"    />
+        <result property="bType"    column="b_type"    />
+        <result property="userId"    column="user_id"    />
+        <result property="taskId"    column="task_id"    />
         <result property="aName"    column="a_name"    />
         <result property="startLocation"    column="start_location"    />
         <result property="endLocation"    column="end_location"    />
         <result property="startTime"    column="start_time"    />
         <result property="endTime"    column="end_time"    />
+        <result property="aCreateTime"    column="a_create_time"    />
     </resultMap>
 
     <sql id="selectArrangementVo">
-        select a_id, a_name, start_location, end_location, start_time, end_time from tl_arrangement
+        select a_id, p_id, o_num, b_num, b_type, user_id, task_id, a_name, start_location, end_location, start_time, end_time, a_create_time from tl_arrangement
     </sql>
 
     <select id="selectArrangementList" parameterType="Arrangement" resultMap="ArrangementResult">
         <include refid="selectArrangementVo"/>
         <where>  
+            <if test="pId != null "> and p_id = #{pId}</if>
+            <if test="oNum != null "> and o_num = #{oNum}</if>
+            <if test="bNum != null "> and b_num = #{bNum}</if>
+            <if test="bType != null "> and b_type = #{bType}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
             <if test="aName != null  and aName != ''"> and a_name like concat('%', #{aName}, '%')</if>
             <if test="startLocation != null  and startLocation != ''"> and start_location = #{startLocation}</if>
             <if test="endLocation != null  and endLocation != ''"> and end_location = #{endLocation}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="aCreateTime != null  and aCreateTime != ''"> and a_create_time = #{aCreateTime}</if>
         </where>
     </select>
     
@@ -36,29 +50,50 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertArrangement" parameterType="Arrangement" useGeneratedKeys="true" keyProperty="aId">
         insert into tl_arrangement
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pId != null">p_id,</if>
+            <if test="oNum != null">o_num,</if>
+            <if test="bNum != null">b_num,</if>
+            <if test="bType != null">b_type,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="taskId != null">task_id,</if>
             <if test="aName != null">a_name,</if>
             <if test="startLocation != null">start_location,</if>
             <if test="endLocation != null">end_location,</if>
             <if test="startTime != null">start_time,</if>
             <if test="endTime != null">end_time,</if>
+            <if test="aCreateTime != null">a_create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pId != null">#{pId},</if>
+            <if test="oNum != null">#{oNum},</if>
+            <if test="bNum != null">#{bNum},</if>
+            <if test="bType != null">#{bType},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="taskId != null">#{taskId},</if>
             <if test="aName != null">#{aName},</if>
             <if test="startLocation != null">#{startLocation},</if>
             <if test="endLocation != null">#{endLocation},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="endTime != null">#{endTime},</if>
+            <if test="aCreateTime != null">#{aCreateTime},</if>
          </trim>
     </insert>
 
     <update id="updateArrangement" parameterType="Arrangement">
         update tl_arrangement
         <trim prefix="SET" suffixOverrides=",">
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="oNum != null">o_num = #{oNum},</if>
+            <if test="bNum != null">b_num = #{bNum},</if>
+            <if test="bType != null">b_type = #{bType},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
             <if test="aName != null">a_name = #{aName},</if>
             <if test="startLocation != null">start_location = #{startLocation},</if>
             <if test="endLocation != null">end_location = #{endLocation},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="aCreateTime != null">a_create_time = #{aCreateTime},</if>
         </trim>
         where a_id = #{aId}
     </update>

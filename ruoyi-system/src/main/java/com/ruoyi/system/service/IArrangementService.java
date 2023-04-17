@@ -2,12 +2,13 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.Arrangement;
+import com.ruoyi.system.domain.vo.ArrangementVo;
 
 /**
  * arrangementService接口
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-14
  */
 public interface IArrangementService 
 {
@@ -33,7 +34,7 @@ public interface IArrangementService
      * @param arrangement arrangement
      * @return 结果
      */
-    public int insertArrangement(Arrangement arrangement);
+    public int insertArrangement(ArrangementVo arrangementVo);
 
     /**
      * 修改arrangement

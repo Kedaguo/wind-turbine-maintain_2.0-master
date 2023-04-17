@@ -58,11 +58,11 @@ public class TaskBoat extends BaseEntity
 
     /** 经度 */
     @Excel(name = "经度")
-    private String bLongitude;
+    private Double bLongitude;
 
     /** 纬度 */
     @Excel(name = "纬度")
-    private String bLatitude;
+    private Double bLatitude;
 
     public void setbId(Long bId) 
     {
@@ -118,23 +118,21 @@ public class TaskBoat extends BaseEntity
     {
         return bEndTime;
     }
-    public void setbLongitude(String bLongitude) 
-    {
+
+    public Double getbLongitude () {
+        return bLongitude;
+    }
+
+    public void setbLongitude (Double bLongitude) {
         this.bLongitude = bLongitude;
     }
 
-    public String getbLongitude() 
-    {
-        return bLongitude;
-    }
-    public void setbLatitude(String bLatitude) 
-    {
-        this.bLatitude = bLatitude;
+    public Double getbLatitude () {
+        return bLatitude;
     }
 
-    public String getbLatitude() 
-    {
-        return bLatitude;
+    public void setbLatitude (Double bLatitude) {
+        this.bLatitude = bLatitude;
     }
 
     @Override

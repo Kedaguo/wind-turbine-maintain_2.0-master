@@ -26,11 +26,11 @@ public class Port extends BaseEntity
 
     /** 经度 */
     @Excel(name = "经度")
-    private String pLongitude;
+    private Double pLongitude;
 
     /** 纬度 */
     @Excel(name = "纬度")
-    private String pLatitude;
+    private Double pLatitude;
 
     /** 每天成本 */
     @Excel(name = "每天成本")
@@ -74,25 +74,24 @@ public class Port extends BaseEntity
     {
         return pPortname;
     }
-    public void setpLongitude(String pLongitude) 
-    {
+
+    public Double getpLongitude () {
+        return pLongitude;
+    }
+
+    public void setpLongitude (Double pLongitude) {
         this.pLongitude = pLongitude;
     }
 
-    public String getpLongitude() 
-    {
-        return pLongitude;
+    public Double getpLatitude () {
+        return pLatitude;
     }
-    public void setpLatitude(String pLatitude) 
-    {
+
+    public void setpLatitude (Double pLatitude) {
         this.pLatitude = pLatitude;
     }
 
-    public String getpLatitude() 
-    {
-        return pLatitude;
-    }
-    public void setpCostperday(Long pCostperday) 
+    public void setpCostperday(Long pCostperday)
     {
         this.pCostperday = pCostperday;
     }
