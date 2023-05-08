@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ruoyi.system.domain.Boat;
+import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.dto.TaskBoatDto;
 import com.ruoyi.system.mapper.BoatMapper;
 import org.springframework.beans.BeanUtils;
@@ -39,9 +40,9 @@ public class TaskBoatServiceImpl implements ITaskBoatService
      * @return taskBoat
      */
     @Override
-    public TaskBoat selectTaskBoatByBId(Long bId)
+    public TaskBoat selectOneTaskBoat(TaskBoat taskBoat)
     {
-        return taskBoatMapper.selectTaskBoatByBId(bId);
+        return taskBoatMapper.selectOneTaskBoat(taskBoat);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ import javax.annotation.Resource;
 @Service
 public class TaskPortServiceImpl implements ITaskPortService 
 {
-    @Autowired
+    @Resource
     private TaskPortMapper taskPortMapper;
 
     @Resource
@@ -46,8 +47,14 @@ public class TaskPortServiceImpl implements ITaskPortService
         taskPort.setTaskId(taskId);
         taskPort.setUserId(userId);
         List<TaskPort> taskPorts = taskPortMapper.selectTaskPortList(taskPort);
-        List<Long> pIds = taskPorts.stream().map(TaskPort::getpId).collect(Collectors.toList());
-        return portMapper.selectBatchIds(pIds);
+//        List<Long> pIds = taskPorts.stream().map(TaskPort::getpId).collect(Collectors.toList());
+//        portMapper.selectBatchIds(pIds);
+        ArrayList<Port> ports = new ArrayList<>();
+        for (TaskPort taskPort1:taskPorts){
+            Port port = portMapper.selectPortByPId(taskPort1.getpId());
+            ports.add(port);
+        }
+        return ports;
     }
 
     /**

@@ -11,7 +11,7 @@ import com.ruoyi.system.service.IArrangementRepairService;
  * arrangementRepairService业务层处理
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-18
  */
 @Service
 public class ArrangementRepairServiceImpl implements IArrangementRepairService 
@@ -22,13 +22,13 @@ public class ArrangementRepairServiceImpl implements IArrangementRepairService
     /**
      * 查询arrangementRepair
      * 
-     * @param arId arrangementRepair主键
+     * @param aId arrangementRepair主键
      * @return arrangementRepair
      */
     @Override
-    public ArrangementRepair selectArrangementRepairByArId(Long arId)
+    public ArrangementRepair selectArrangementRepairByAId(Long aId)
     {
-        return arrangementRepairMapper.selectArrangementRepairByArId(arId);
+        return arrangementRepairMapper.selectArrangementRepairByAId(aId);
     }
 
     /**
@@ -70,24 +70,24 @@ public class ArrangementRepairServiceImpl implements IArrangementRepairService
     /**
      * 批量删除arrangementRepair
      * 
-     * @param arIds 需要删除的arrangementRepair主键
+     * @param aIds 需要删除的arrangementRepair主键
      * @return 结果
      */
     @Override
-    public int deleteArrangementRepairByArIds(Long[] arIds)
+    public int deleteArrangementRepairByAIds(Long[] aIds)
     {
-        return arrangementRepairMapper.deleteArrangementRepairByArIds(arIds);
+        return arrangementRepairMapper.deleteArrangementRepairByAIds(aIds);
     }
 
     /**
      * 删除arrangementRepair信息
      * 
-     * @param arId arrangementRepair主键
+     * @param aId arrangementRepair主键
      * @return 结果
      */
     @Override
-    public int deleteArrangementRepairByArId(Long arId)
+    public int deleteArrangementRepairByAId(Long aId)
     {
-        return arrangementRepairMapper.deleteArrangementRepairByArId(arId);
+        return arrangementRepairMapper.deleteArrangementRepairByAId(aId);
     }
 }

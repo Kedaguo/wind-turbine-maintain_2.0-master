@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="userId"    column="user_id"    />
         <result property="taskId"    column="task_id"    />
         <result property="aName"    column="a_name"    />
+        <result property="aState"    column="a_state"    />
         <result property="startLocation"    column="start_location"    />
         <result property="endLocation"    column="end_location"    />
         <result property="startTime"    column="start_time"    />
@@ -33,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bType != null "> and b_type = #{bType}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="aState != null "> and a_state = #{aState}</if>
             <if test="aName != null  and aName != ''"> and a_name like concat('%', #{aName}, '%')</if>
             <if test="startLocation != null  and startLocation != ''"> and start_location = #{startLocation}</if>
             <if test="endLocation != null  and endLocation != ''"> and end_location = #{endLocation}</if>
@@ -57,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">user_id,</if>
             <if test="taskId != null">task_id,</if>
             <if test="aName != null">a_name,</if>
+            <if test="aState != null">a_state,</if>
             <if test="startLocation != null">start_location,</if>
             <if test="endLocation != null">end_location,</if>
             <if test="startTime != null">start_time,</if>
@@ -71,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">#{userId},</if>
             <if test="taskId != null">#{taskId},</if>
             <if test="aName != null">#{aName},</if>
+            <if test="aState != null">#{aState},</if>
             <if test="startLocation != null">#{startLocation},</if>
             <if test="endLocation != null">#{endLocation},</if>
             <if test="startTime != null">#{startTime},</if>
@@ -89,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">user_id = #{userId},</if>
             <if test="taskId != null">task_id = #{taskId},</if>
             <if test="aName != null">a_name = #{aName},</if>
+            <if test="aState != null">a_state = #{aState},</if>
             <if test="startLocation != null">start_location = #{startLocation},</if>
             <if test="endLocation != null">end_location = #{endLocation},</if>
             <if test="startTime != null">start_time = #{startTime},</if>

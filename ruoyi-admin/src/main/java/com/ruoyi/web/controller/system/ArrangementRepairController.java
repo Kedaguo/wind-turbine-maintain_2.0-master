@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * arrangementRepairController
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-04-18
  */
 @RestController
 @RequestMapping("/system/arrangementRepair")
@@ -63,10 +63,10 @@ public class ArrangementRepairController extends BaseController
      * 获取arrangementRepair详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:arrangementRepair:query')")
-    @GetMapping(value = "/{arId}")
-    public AjaxResult getInfo(@PathVariable("arId") Long arId)
+    @GetMapping(value = "/{aId}")
+    public AjaxResult getInfo(@PathVariable("aId") Long aId)
     {
-        return success(arrangementRepairService.selectArrangementRepairByArId(arId));
+        return success(arrangementRepairService.selectArrangementRepairByAId(aId));
     }
 
     /**
@@ -96,9 +96,9 @@ public class ArrangementRepairController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:arrangementRepair:remove')")
     @Log(title = "arrangementRepair", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{arIds}")
-    public AjaxResult remove(@PathVariable Long[] arIds)
+	@DeleteMapping("/{aIds}")
+    public AjaxResult remove(@PathVariable Long[] aIds)
     {
-        return toAjax(arrangementRepairService.deleteArrangementRepairByArIds(arIds));
+        return toAjax(arrangementRepairService.deleteArrangementRepairByAIds(aIds));
     }
 }

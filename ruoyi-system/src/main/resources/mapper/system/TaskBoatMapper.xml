@@ -34,9 +34,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectTaskBoatByBId" parameterType="Long" resultMap="TaskBoatResult">
+    <select id="selectOneTaskBoat" parameterType="TaskBoat" resultMap="TaskBoatResult">
         <include refid="selectTaskBoatVo"/>
-        where b_id = #{bId}
+        <where>
+            <if test="bId != null "> and b_id = #{bId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="bState != null "> and b_state = #{bState}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="bWorkState != null "> and b_work_state = #{bWorkState}</if>
+            <if test="bStartTime != null "> and b_start_time = #{bStartTime}</if>
+            <if test="bEndTime != null "> and b_end_time = #{bEndTime}</if>
+            <if test="bLongitude != null  and bLongitude != ''"> and b_longitude = #{bLongitude}</if>
+            <if test="bLatitude != null  and bLatitude != ''"> and b_latitude = #{bLatitude}</if>
+        </where>
     </select>
         
     <insert id="insertTaskBoat" parameterType="TaskBoat">

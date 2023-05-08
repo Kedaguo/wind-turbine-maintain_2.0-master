@@ -34,7 +34,7 @@ public interface IArrangementService
      * @param arrangement arrangement
      * @return 结果
      */
-    public int insertArrangement(ArrangementVo arrangementVo);
+    public int insertArrangement(ArrangementVo arrangementVo) throws Exception;
 
     /**
      * 修改arrangement

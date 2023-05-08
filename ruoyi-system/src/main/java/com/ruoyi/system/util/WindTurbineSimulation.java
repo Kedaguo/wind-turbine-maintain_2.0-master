@@ -1,12 +1,8 @@
-package com.ruoyi.quartz.util;
+package com.ruoyi.system.util;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.quartz.domain.SysJob;
-import com.ruoyi.quartz.service.ISysJobService;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.TaskTurbineDto;
-import com.ruoyi.system.mapper.TaskStudentMapper;
 import com.ruoyi.system.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +44,9 @@ public class WindTurbineSimulation {
     @Resource
     private ITaskStudentService iTaskStudentService;
 
+    @Resource
+    private IRandService iRandService;
+
     private Random random = new Random();
 
     private double lambda = 0;
@@ -68,6 +67,7 @@ public class WindTurbineSimulation {
         System.out.println("taskId"+taskId+"userId"+userId+"runSpeed"+runSpeed);
         //Simulation Time
         Integer taskCount = TaskCounts(taskId,userId);
+        Integer randCount = 1;
         //模拟仿真时间已经修改-taskStudent
         Date date = simulationTimes(taskCount, runSpeed, taskId, userId);
         List<TaskTurbine> taskTurbineFaults = selectTaskTurbineFault(taskId, userId);
@@ -77,9 +77,9 @@ public class WindTurbineSimulation {
             List<Fault> faults = iFaultService.selectFaultList(null);
             for (Fault fault:faults){
                 lambda = Double.parseDouble(fault.getfFrequencyPerYear());
-                double rand = random.nextDouble();
+                double rand = taskRandFaultPlus(taskId, userId);
                 //指数分布函数-按每小时发生故障指数分布
-                double probability = (1 - Math.exp(-lambda))/DayOfYear;
+                double probability = (1 - Math.exp(-lambda))/HoursOfYear;
                 System.out.println("rand"+rand+"lambda"+lambda);
                 if (rand<=probability){
                     handleFault(taskTurbineFault,fault);
@@ -97,10 +97,11 @@ public class WindTurbineSimulation {
             List<Maintain> maintains = iMaintainService.selectMaintainList(null);
             for (Maintain maintain:maintains){
                 lambda = Double.parseDouble(maintain.getmFrequencyPerYear());
-                double rand = random.nextDouble();
+//                double rand = random.nextDouble();
+                double rand = taskRandMaintainPlus(taskId,userId);
                 //指数分布函数-按每年发生保养指数分布
                 double probability = (1 - Math.exp(-lambda))/HoursOfYear;
-                System.out.println("rand"+rand+"lambda"+lambda);
+                System.out.println("rand"+rand+"probability"+probability);
                 if (rand<=probability){
                     handleMaintain(taskTurbineMaintain,maintain);
                     //发生故障后跳出循环
@@ -111,6 +112,39 @@ public class WindTurbineSimulation {
         //终止仿真模拟
         simulationJobFinish(date,userId,taskId);
     }
+    //task_rand_fault次数++
+    public double taskRandFaultPlus(Long taskId,Long userId){
+        //task_rand_fault 次数
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(taskId);
+        taskStudent.setUserId(userId);
+        TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
+        Integer taskRandFault = taskStudent1.getTaskRandFault();
+        if(taskRandFault == 10000){
+            taskRandFault=0;
+        }
+        taskStudent1.setTaskRandFault(taskRandFault+1);
+        int flag= iTaskStudentService.updateTaskStudent(taskStudent1);
+        Rand rand = iRandService.selectRandByRandId(taskRandFault.longValue());
+        return Double.parseDouble(rand.getRand());
+    }
+    //task_rand_maintain次数++
+    public double taskRandMaintainPlus(Long taskId,Long userId){
+        //task_rand_fault 次数
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(taskId);
+        taskStudent.setUserId(userId);
+        TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
+        Integer taskRandMaintain = taskStudent1.getTaskRandMaintain();
+        if(taskRandMaintain == 10000){
+            taskRandMaintain=0;
+        }
+        taskStudent1.setTaskRandMaintain(taskRandMaintain+1);
+        int flag= iTaskStudentService.updateTaskStudent(taskStudent1);
+        Rand rand = iRandService.selectRandByRandId(taskRandMaintain.longValue());
+        return Double.parseDouble(rand.getRand());
+    }
+
     //仿真模拟到结束时间终止
     public void simulationJobFinish(Date date,Long userId,Long taskId) throws Exception{
         TaskStudent taskStudent = new TaskStudent();
@@ -125,7 +159,7 @@ public class WindTurbineSimulation {
         }else {
             //终止任务
             SysJob sysJob = new SysJob();
-            sysJob.setJobId(4l);
+            sysJob.setJobId(taskStudent1.getJobId());
             sysJob.setStatus(String.valueOf(1));
             int i = iSysJobService.changeStatus(sysJob);
             //总发电量
@@ -148,7 +182,7 @@ public class WindTurbineSimulation {
         taskStudent.setUserId(userId);
         taskStudent.setTaskCharge(chargeSum);
         //执行次数修改为 0
-//        taskStudent.setTaskCount(0);
+        //taskStudent.setTaskCount(0);
         int i = iTaskStudentService.updateTaskStudent(taskStudent);
     }
 
@@ -228,7 +262,12 @@ public class WindTurbineSimulation {
         iTaskTurbineService.updateTaskTurbine(taskTurbine);
         RepairOrder repairOrder = new RepairOrder();
         BeanUtils.copyProperties(taskTurbine,repairOrder);
-        repairOrder.setrCreateTime(DateUtils.getNowDate());
+
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(taskTurbine.getTaskId());
+        taskStudent.setUserId(taskTurbine.getUserId());
+        TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
+        repairOrder.setrCreateTime(taskStudent1.getTaskSimulateTime());
         repairOrder.setrState(0);
         repairOrder.setrType(2);
         //生成保养维修单

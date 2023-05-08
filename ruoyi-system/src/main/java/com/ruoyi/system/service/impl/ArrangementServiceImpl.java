@@ -2,11 +2,16 @@ package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.vo.ArrangementVo;
 import com.ruoyi.system.mapper.*;
+import com.ruoyi.system.service.IArrangementRepairService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +52,15 @@ public class ArrangementServiceImpl implements IArrangementService
     @Resource
     private TaskOperatorMapper taskOperatorMapper;
 
+    @Resource
+    private TaskStudentMapper taskStudentMapper;
+    
+    @Resource
+    private ArrangementRepairMapper arrangementRepairMapper;
+    
+//    @Resource
+//    private RyTask ryTask;
+
     /**
      * 查询arrangement
      * 
@@ -78,7 +92,7 @@ public class ArrangementServiceImpl implements IArrangementService
      * @return 结果
      */
     @Override
-    public int insertArrangement(ArrangementVo arrangementVo)
+    public int insertArrangement(ArrangementVo arrangementVo) throws Exception
     {
 
         Port port = portMapper.selectPortByPId(arrangementVo.getpId());
@@ -91,20 +105,57 @@ public class ArrangementServiceImpl implements IArrangementService
         BeanUtils.copyProperties(arrangementVo,arrangement);
         arrangement.setStartLocation(startLocation);
         arrangement.setEndLocation(endLocation);
-        int i = arrangementMapper.insertArrangement(arrangement);
+        arrangement.setaState(0);
+        arrangement.setaCreateTime(DateUtils.getMillsTime());
+        //添加路径规划
+        int flag = arrangementMapper.insertArrangement(arrangement);
+//        TaskStudent taskStudent = new TaskStudent();
+//        taskStudent.setTaskId(arrangementVo.getTaskId());
+//        taskStudent.setUserId(arrangementVo.getUserId());
+//        TaskStudent taskStudent1 = taskStudentMapper.selectTaskStudentByUserId(taskStudent);
+//        int arrangementStartFlag = arrangement.getStartTime().compareTo(taskStudent1.getTaskSimulateTime());
+        //修改定时任务
+//        SysJob sysJob = jobService.selectJobById(5l);
+//        sysJob.setStatus("0");
+//        String invokeTarget = "ryTask.arrangementRunSimulation('"+arrangement.toString()+"')";
+//        sysJob.setInvokeTarget(invokeTarget);
+//        int jobFlag = jobService.updateJob(sysJob);
+        QueryWrapper<Arrangement> arrangementQueryWrapper = new QueryWrapper<>();
+        arrangementQueryWrapper.eq("task_id",arrangement.getTaskId())
+                .eq("user_id",arrangement.getUserId())
+                .eq("a_create_time",arrangement.getaCreateTime());
+        Arrangement arrangement1 = arrangementMapper.selectOne(arrangementQueryWrapper);
+        arrangementVo.setaId(arrangement1.getaId());
         //规划关联船舶
         arrangementRelevanceBoat(arrangementVo);
         //路径规划关联维修工
         arrangementRelevanceOperator(arrangementVo);
         //路径规划关联维修单
-//        arrangementRelevanceRepairOrder(arrangementVo);
-        return 1;
+        arrangementRelevanceRepairOrder(arrangementVo);
+        return flag;
     }
-//    //路径规划关联维修单
-//    public AjaxResult arrangementRelevanceRepairOrder(ArrangementVo arrangementVo){
-//
-//
-//    }
+    //路径规划关联维修单
+    public void arrangementRelevanceRepairOrder(ArrangementVo arrangementVo){
+        List<Long> arrangementRepairIds = arrangementVo.getArrangementRepairIds();
+        Long count = 1l;
+        //缺少相同的风机的故障单保养单合并的情况
+//        ArrayList<RepairOrder> repairOrders = new ArrayList<>();
+        for (Long arrangementRepairId:arrangementRepairIds){
+//            RepairOrder repairOrder = repairOrderMapper.selectRepairOrderByRId(arrangementRepairId);
+//            repairOrders.add(repairOrder);
+            ArrangementRepair arrangementRepair = new ArrangementRepair();
+            arrangementRepair.setaId(arrangementVo.getaId());
+            arrangementRepair.setrId(arrangementRepairId);
+            arrangementRepair.setSequence(count++);
+            int insertFlag = arrangementRepairMapper.insertArrangementRepair(arrangementRepair);
+        }
+        //tIds提出来
+//        List<Long> tIds = repairOrders.stream().map(RepairOrder::gettId).collect(Collectors.toList());
+//        //进行分组  示例：{1=[1, 1], 2=[2, 2], 3=[3, 3], 4=[4], 5=[5]}
+//        Map<Long, List<Long>> tIdsGroups = tIds.stream().collect(Collectors.groupingBy(Long::valueOf));
+//        List<Long> longs = tIdsGroups.get(1l);
+
+    }
     //路径规划关联维修人员
     public AjaxResult arrangementRelevanceOperator(ArrangementVo arrangementVo){
         TaskOperator taskOperator = new TaskOperator();

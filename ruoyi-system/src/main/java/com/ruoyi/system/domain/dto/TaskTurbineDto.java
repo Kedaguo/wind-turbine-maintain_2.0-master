@@ -7,6 +7,8 @@ import lombok.Data;
 @Data
 public class TaskTurbineDto extends TaskTurbine {
 
+    private String fMaintainDuration;
+    private String mMaintainDuration;
     /** 模型 */
     @Excel(name = "模型")
     private Long tModel;

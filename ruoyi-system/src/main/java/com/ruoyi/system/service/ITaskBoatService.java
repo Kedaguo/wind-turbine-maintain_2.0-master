@@ -17,10 +17,10 @@ public interface ITaskBoatService
     /**
      * 查询taskBoat
      * 
-     * @param bId taskBoat主键
+     * @param
      * @return taskBoat
      */
-    public TaskBoat selectTaskBoatByBId(Long bId);
+    public TaskBoat selectOneTaskBoat(TaskBoat taskBoat);
 
 
     public List<TaskBoatDto> selectTaskBoatDtoByUserId(Long taskId,Long userId);

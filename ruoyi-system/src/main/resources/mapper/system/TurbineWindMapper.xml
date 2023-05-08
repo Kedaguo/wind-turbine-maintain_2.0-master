@@ -29,11 +29,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTurbineWindList" parameterType="TurbineWind" resultMap="TurbineWindResult">
         <include refid="selectTurbineWindVo"/>
         <where>  
+            <if test="tModel != null "> and t_model = #{tModel}</if>
             <if test="tPrice != null "> and t_price = #{tPrice}</if>
             <if test="tRatePower != null  and tRatePower != ''"> and t_rate_power = #{tRatePower}</if>
+            <if test="tPowerVelocityCurve != null "> and t_power_velocity_curve = #{tPowerVelocityCurve}</if>
             <if test="tHeight != null "> and t_height = #{tHeight}</if>
             <if test="tLifetime != null "> and t_lifetime = #{tLifetime}</if>
             <if test="tCost != null "> and t_cost = #{tCost}</if>
+            <if test="tLongitude != null "> and t_longitude = #{tLongitude}</if>
+            <if test="tLatitude != null "> and t_latitude = #{tLatitude}</if>
             <if test="tBrand != null  and tBrand != ''"> and t_brand = #{tBrand}</if>
         </where>
     </select>

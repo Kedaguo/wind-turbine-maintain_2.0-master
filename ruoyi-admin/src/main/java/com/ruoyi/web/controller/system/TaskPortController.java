@@ -49,7 +49,7 @@ public class TaskPortController extends BaseController
 
     @PreAuthorize("@ss.hasPermi('system:taskPort:listByUser')")
     @GetMapping("/listByUser")
-    public TableDataInfo listByUser(@RequestParam Long taskId, HttpServletRequest request)
+    public TableDataInfo listByUser(@PathVariable("taskId") Long taskId, HttpServletRequest request)
     {
         startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);

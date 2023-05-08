@@ -83,7 +83,7 @@ public class ArrangementController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:arrangement:add')")
     @Log(title = "arrangement", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ArrangementVo arrangementVo, HttpServletRequest request)
+    public AjaxResult add(@RequestBody ArrangementVo arrangementVo, HttpServletRequest request) throws Exception
     {
         LoginUser loginUser = tokenService.getLoginUser(request);
         arrangementVo.setUserId(loginUser.getUserId());

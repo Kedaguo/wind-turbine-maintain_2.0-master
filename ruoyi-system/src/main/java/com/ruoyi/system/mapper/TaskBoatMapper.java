@@ -18,10 +18,10 @@ public interface TaskBoatMapper extends BaseMapper<TaskBoat>
     /**
      * 查询taskBoat
      * 
-     * @param bId taskBoat主键
+     * @param  taskBoat
      * @return taskBoat
      */
-    public TaskBoat selectTaskBoatByBId(Long bId);
+    public TaskBoat selectOneTaskBoat(TaskBoat taskBoat);
 
     /**
      * 查询taskBoat列表

@@ -12,6 +12,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.DateUtils;
+
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.mapper.*;
 import org.springframework.beans.BeanUtils;
@@ -43,7 +44,6 @@ public class TaskServiceImpl implements ITaskService
     @Resource
     private TurbineWindMapper turbineWindMapper;
 
-
     @Resource
     private OperatorMapper operatorMapper;
 
@@ -67,6 +67,9 @@ public class TaskServiceImpl implements ITaskService
 
     @Resource
     private TaskOperatorMapper taskOperatorMapper;
+
+    @Resource
+    private SysJobMapper sysJobMapper;
 
     /**
      * 查询task
@@ -109,7 +112,6 @@ public class TaskServiceImpl implements ITaskService
     @Override
     public AjaxResult insertTask(Task task, LoginUser loginUser)
     {
-
 //        String nowDate = DateUtils.getTime();
         task.setTaskCreateTime(DateUtils.getMillsTime());
         task.setTaskCreateBy(loginUser.getUsername());
@@ -118,7 +120,7 @@ public class TaskServiceImpl implements ITaskService
         taskQueryWrapper.eq("task_create_time",task.getTaskCreateTime())
                 .eq("task_create_by",task.getTaskCreateBy());
         Task task1 = taskMapper.selectOne(taskQueryWrapper);
-//        任务关联风机
+        //任务关联风机
         taskRelevanceTurbine(task1);
         //任务关联维修人员
         taskRelevanceOperator(task1);
@@ -142,23 +144,50 @@ public class TaskServiceImpl implements ITaskService
         List<SysUserRole> students =sysUserRoleMapper.selectList(sysUserRoleQueryWrapper);
         List<Long> studentIds = students.stream().map(SysUserRole::getUserId).collect(Collectors.toList());
         System.out.println("studentIds"+studentIds);
-        for(Long user_id:studentIds){
-            TaskStudent taskStudent = new TaskStudent();
-            taskStudent.setUserId(user_id);
-            taskStudent.setTaskId(task.getTaskId());
-            taskStudent.setTaskState(1l);//任务未开始
-            taskStudent.setTaskSimulateTime(task.getTaskStartTime());
-            taskStudent.setTaskCount(0);
-            taskStudent.setTaskCharge(0L);
-            taskStudentMapper.insertTaskStudent(taskStudent);
+        for(Long userId:studentIds){
+            insertTaskStudent(task,userId);
+            insertJob(task,userId);
         }
-    }
 
+    }
+    public void insertTaskStudent(Task task,Long userId){
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setUserId(userId);
+        taskStudent.setTaskId(task.getTaskId());
+        taskStudent.setTaskState(1l);//任务未开始
+        taskStudent.setTaskSimulateTime(task.getTaskStartTime());
+        taskStudent.setTaskCount(0);
+        taskStudent.setTaskCharge(0L);
+        taskStudentMapper.insertTaskStudent(taskStudent);
+    }
+    public void insertJob(Task task,Long userId){
+        SysJob sysJob = new SysJob();
+        sysJob.setJobName("仿真时钟");
+        sysJob.setJobGroup("DEFAULT");
+        //默认runSpeed是 1000
+        String invokeTarget = "ryTask.windTurbineSimulation("+task.getTaskId()+"L,"+userId+"L,"+"1000"+")";
+        sysJob.setInvokeTarget(invokeTarget);
+        sysJob.setCronExpression("* * * * * ?");
+        sysJob.setMisfirePolicy("3");
+        sysJob.setConcurrent("1");
+        sysJob.setStatus("1");
+        sysJob.setCreateBy(task.getTaskCreateBy());
+        sysJob.setCreateJobTime(DateUtils.getMillsTime());
+        sysJobMapper.insertJob(sysJob);
+        //用户、任务和仿真进行关联
+        SysJob sysJob1 = sysJobMapper.selectJobByCreateJobTime(sysJob.getCreateJobTime());
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(task.getTaskId());
+        taskStudent.setUserId(userId);
+        taskStudent.setJobId(sysJob1.getJobId());
+        int flag = taskStudentMapper.updateTaskStudent(taskStudent);
+    }
 
     /*
     任务关联风机
      */
     public void taskRelevanceTurbine(Task task){
+        //学生分配风机
         List<TurbineWind> turbineWinds = turbineWindMapper.selectTurbineWindList(null);
         QueryWrapper<SysUserRole> sysUserRoleQueryWrapper = new QueryWrapper<>();
         sysUserRoleQueryWrapper.eq("role_id",101);
@@ -175,7 +204,6 @@ public class TaskServiceImpl implements ITaskService
                 int i = taskTurbineMapper.insertTaskTurbine(taskTurbine);
             }
         }
-
     }
     /*
     任务关联维修人员
@@ -238,18 +266,6 @@ public class TaskServiceImpl implements ITaskService
             }
         }
     }
-    /*
-    校验学生当且仅当一个未开始的任务，则不可添加未开始的任务
-    0 当前学生未开始的任务为0   1 当前学生未开始的任务为1   other 当前学生未开始的任务错误
-
-     */
-//    public Task checkOnLyOneTask(Task task){
-//        QueryWrapper<Task> taskQueryWrapper = new QueryWrapper<>();
-//        taskQueryWrapper.eq("user_id",task.getUserId())
-//                .eq("task_state",1l);
-//        Task task1 = taskMapper.selectOne(taskQueryWrapper);
-//        return task1;
-//    }
 
 
 
@@ -352,7 +368,9 @@ public class TaskServiceImpl implements ITaskService
             QueryWrapper<TaskStudent> taskStudentQueryWrapper = new QueryWrapper<>();
             taskStudentQueryWrapper.eq("user_id",taskStudent1.getUserId())
                     .eq("task_id",taskStudent1.getTaskId());
+            //delete quartz sysJob
             taskStudentMapper.delete(taskStudentQueryWrapper);
+            int flag = sysJobMapper.deleteJobById(taskStudent1.getJobId());
         }
         return 1;
     }

@@ -1,21 +1,18 @@
 package com.ruoyi.system.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
-import java.util.Date;
-
 /**
  * windTurbine对象 tl_turbine_wind
  * 
- * @author 赵建达
- * @date 2023-03-15
+ * @author JianDa
+ * @date 2023-04-21
  */
-@TableName(value = "tl_turbine_wind")
+@TableName("tl_turbine_wind")
 public class TurbineWind extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -53,17 +50,17 @@ public class TurbineWind extends BaseEntity
 
     /** 经度 */
     @Excel(name = "经度")
-    private Double tLongitude;
+    private Long tLongitude;
 
     /** 纬度 */
     @Excel(name = "纬度")
-    private Double tLatitude;
+    private Long tLatitude;
 
     /** 品牌 */
     @Excel(name = "品牌")
     private String tBrand;
 
-    public void settId(Long tId)
+    public void settId(Long tId) 
     {
         this.tId = tId;
     }
@@ -126,7 +123,8 @@ public class TurbineWind extends BaseEntity
     {
         return tLifetime;
     }
-    public void settCost(Long tCost) 
+
+    public void settCost(Long tCost)
     {
         this.tCost = tCost;
     }
@@ -135,24 +133,25 @@ public class TurbineWind extends BaseEntity
     {
         return tCost;
     }
-
-    public Double gettLongitude () {
-        return tLongitude;
-    }
-
-    public void settLongitude (Double tLongitude) {
+    public void settLongitude(Long tLongitude) 
+    {
         this.tLongitude = tLongitude;
     }
 
-    public Double gettLatitude () {
-        return tLatitude;
+    public Long gettLongitude() 
+    {
+        return tLongitude;
     }
-
-    public void settLatitude (Double tLatitude) {
+    public void settLatitude(Long tLatitude) 
+    {
         this.tLatitude = tLatitude;
     }
 
-    public void settBrand(String tBrand)
+    public Long gettLatitude() 
+    {
+        return tLatitude;
+    }
+    public void settBrand(String tBrand) 
     {
         this.tBrand = tBrand;
     }
@@ -161,7 +160,6 @@ public class TurbineWind extends BaseEntity
     {
         return tBrand;
     }
-
 
     @Override
     public String toString() {

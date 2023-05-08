@@ -48,6 +48,10 @@ public class Arrangement extends BaseEntity
     @Excel(name = "规划名称")
     private String aName;
 
+    /** 规划状态(0 未开始  1进行中  2结束) */
+    @Excel(name = "规划状态")
+    private Integer aState;
+
     /** 始点 */
     @Excel(name = "始点")
     private String startLocation;
@@ -70,7 +74,15 @@ public class Arrangement extends BaseEntity
     @Excel(name = "发布时间")
     private String aCreateTime;
 
-    public void setaId(Long aId) 
+    public Integer getaState () {
+        return aState;
+    }
+
+    public void setaState (Integer aState) {
+        this.aState = aState;
+    }
+
+    public void setaId(Long aId)
     {
         this.aId = aId;
     }

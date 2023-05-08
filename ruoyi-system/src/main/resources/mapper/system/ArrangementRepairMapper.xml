@@ -5,14 +5,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.system.mapper.ArrangementRepairMapper">
     
     <resultMap type="ArrangementRepair" id="ArrangementRepairResult">
-        <result property="arId"    column="ar_id"    />
         <result property="aId"    column="a_id"    />
         <result property="rId"    column="r_id"    />
         <result property="sequence"    column="sequence"    />
     </resultMap>
 
     <sql id="selectArrangementRepairVo">
-        select ar_id, a_id, r_id, sequence from tl_arrangement_repair
+        select a_id, r_id, sequence from tl_arrangement_repair
     </sql>
 
     <select id="selectArrangementRepairList" parameterType="ArrangementRepair" resultMap="ArrangementRepairResult">
@@ -24,12 +23,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
     
-    <select id="selectArrangementRepairByArId" parameterType="Long" resultMap="ArrangementRepairResult">
+    <select id="selectArrangementRepairByAId" parameterType="Long" resultMap="ArrangementRepairResult">
         <include refid="selectArrangementRepairVo"/>
-        where ar_id = #{arId}
+        where a_id = #{aId}
     </select>
         
-    <insert id="insertArrangementRepair" parameterType="ArrangementRepair" useGeneratedKeys="true" keyProperty="arId">
+    <insert id="insertArrangementRepair" parameterType="ArrangementRepair">
         insert into tl_arrangement_repair
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="aId != null">a_id,</if>
@@ -46,21 +45,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateArrangementRepair" parameterType="ArrangementRepair">
         update tl_arrangement_repair
         <trim prefix="SET" suffixOverrides=",">
-            <if test="aId != null">a_id = #{aId},</if>
             <if test="rId != null">r_id = #{rId},</if>
             <if test="sequence != null">sequence = #{sequence},</if>
         </trim>
-        where ar_id = #{arId}
+        where a_id = #{aId}
     </update>
 
-    <delete id="deleteArrangementRepairByArId" parameterType="Long">
-        delete from tl_arrangement_repair where ar_id = #{arId}
+    <delete id="deleteArrangementRepairByAId" parameterType="Long">
+        delete from tl_arrangement_repair where a_id = #{aId}
     </delete>
 
-    <delete id="deleteArrangementRepairByArIds" parameterType="String">
-        delete from tl_arrangement_repair where ar_id in 
-        <foreach item="arId" collection="array" open="(" separator="," close=")">
-            #{arId}
+    <delete id="deleteArrangementRepairByAIds" parameterType="String">
+        delete from tl_arrangement_repair where a_id in 
+        <foreach item="aId" collection="array" open="(" separator="," close=")">
+            #{aId}
         </foreach>
     </delete>
 </mapper>

@@ -51,10 +51,46 @@ public class TaskStudent
     @Excel(name = "任务执行次数")
     private Integer taskCount;
 
+    /** 任务执行次数 */
+    @Excel(name = "任务执行次数")
+    private Long jobId;
+
+    /** 任务执行次数 */
+    @Excel(name = "任务执行次数")
+    private Integer taskRandFault;
+
+    /** 任务执行次数 */
+    @Excel(name = "任务执行次数")
+    private Integer taskRandMaintain;
+
     /** 任务模拟运行时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "任务模拟运行时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date taskSimulateTime;
+
+    public Long getJobId () {
+        return jobId;
+    }
+
+    public void setJobId (Long jobId) {
+        this.jobId = jobId;
+    }
+
+    public Integer getTaskRandFault () {
+        return taskRandFault;
+    }
+
+    public void setTaskRandFault (Integer taskRandFault) {
+        this.taskRandFault = taskRandFault;
+    }
+
+    public Integer getTaskRandMaintain () {
+        return taskRandMaintain;
+    }
+
+    public void setTaskRandMaintain (Integer taskRandMaintain) {
+        this.taskRandMaintain = taskRandMaintain;
+    }
 
     public Date getTaskSimulateTime () {
         return taskSimulateTime;

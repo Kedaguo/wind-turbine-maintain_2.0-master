@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ruoyi.system.domain.Task;
-import com.ruoyi.system.domain.TurbineWind;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.TaskTurbineDto;
+import com.ruoyi.system.mapper.FaultMapper;
+import com.ruoyi.system.mapper.MaintainMapper;
 import com.ruoyi.system.mapper.TurbineWindMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskTurbineMapper;
-import com.ruoyi.system.domain.TaskTurbine;
 import com.ruoyi.system.service.ITaskTurbineService;
 
 import javax.annotation.Resource;
@@ -32,6 +32,12 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
 
     @Resource
     private TurbineWindMapper turbineWindMapper;
+
+    @Resource
+    private FaultMapper faultMapper;
+
+    @Resource
+    private MaintainMapper maintainMapper;
 
     /**
      * 查询taskTurbine
@@ -70,6 +76,14 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
         for (TaskTurbine taskTurbine1:taskTurbines){
             TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
             TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
+            if (taskTurbine1.getmState()== 2 || taskTurbine1.getmState() == 1){
+                Maintain maintain = maintainMapper.selectMaintainByMId(taskTurbine1.getmId());
+                taskTurbineDto.setMMaintainDuration(maintain.getmMaintainDuration());
+            }
+            if (taskTurbine1.getfState() == 1){
+                Fault fault = faultMapper.selectFaultByFId(taskTurbine1.getfId());
+                taskTurbineDto.setFMaintainDuration(fault.getfMaintainDuration());
+            }
             BeanUtils.copyProperties(turbineWind,taskTurbineDto);
             BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
             taskTurbineDtos.add(taskTurbineDto);

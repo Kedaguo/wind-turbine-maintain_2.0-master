@@ -77,12 +77,12 @@ public class TaskBoatController extends BaseController
     /**
      * 获取taskBoat详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:taskBoat:query')")
-    @GetMapping(value = "/{bId}")
-    public AjaxResult getInfo(@PathVariable("bId") Long bId)
-    {
-        return success(taskBoatService.selectTaskBoatByBId(bId));
-    }
+//    @PreAuthorize("@ss.hasPermi('system:taskBoat:query')")
+//    @GetMapping(value = "/{bId}")
+//    public AjaxResult getInfo(@PathVariable("bId") Long bId)
+//    {
+//        return success(taskBoatService.selectTaskBoatByBId(bId));
+//    }
 
     /**
      * 新增taskBoat

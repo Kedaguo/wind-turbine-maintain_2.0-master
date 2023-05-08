@@ -1,3 +1,4 @@
+/*
 package com.ruoyi.quartz.controller;
 
 import java.util.List;
@@ -24,14 +25,14 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.quartz.domain.SysJob;
 import com.ruoyi.quartz.service.ISysJobService;
-import com.ruoyi.quartz.util.CronUtils;
-import com.ruoyi.quartz.util.ScheduleUtils;
 
+*/
 /**
  * 调度任务信息操作处理
  * 
  * @author ruoyi
- */
+ *//*
+
 @RestController
 @RequestMapping("/monitor/job")
 public class SysJobController extends BaseController
@@ -39,9 +40,11 @@ public class SysJobController extends BaseController
     @Autowired
     private ISysJobService jobService;
 
-    /**
+    */
+/**
      * 查询定时任务列表
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:list')")
     @GetMapping("/list")
     public TableDataInfo list(SysJob sysJob)
@@ -51,9 +54,11 @@ public class SysJobController extends BaseController
         return getDataTable(list);
     }
 
-    /**
+    */
+/**
      * 导出定时任务列表
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:export')")
     @Log(title = "定时任务", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -64,9 +69,11 @@ public class SysJobController extends BaseController
         util.exportExcel(response, list, "定时任务");
     }
 
-    /**
+    */
+/**
      * 获取定时任务详细信息
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:query')")
     @GetMapping(value = "/{jobId}")
     public AjaxResult getInfo(@PathVariable("jobId") Long jobId)
@@ -74,9 +81,11 @@ public class SysJobController extends BaseController
         return success(jobService.selectJobById(jobId));
     }
 
-    /**
+    */
+/**
      * 新增定时任务
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:add')")
     @Log(title = "定时任务", businessType = BusinessType.INSERT)
     @PostMapping
@@ -110,9 +119,11 @@ public class SysJobController extends BaseController
         return toAjax(jobService.insertJob(job));
     }
 
-    /**
+    */
+/**
      * 修改定时任务
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:edit')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -155,9 +166,11 @@ public class SysJobController extends BaseController
         newJob.setInvokeTarget(job.getInvokeTarget());
         return toAjax(jobService.updateJob(newJob));
     }
-    /**
+    */
+/**
      * 定时任务状态修改
-     */
+     *//*
+
 //    @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
@@ -169,9 +182,11 @@ public class SysJobController extends BaseController
     }
 
 
-    /**
+    */
+/**
      * 定时任务立即执行一次
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
     @PutMapping("/run")
@@ -181,9 +196,11 @@ public class SysJobController extends BaseController
         return result ? success() : error("任务不存在或已过期！");
     }
 
-    /**
+    */
+/**
      * 删除定时任务
-     */
+     *//*
+
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "定时任务", businessType = BusinessType.DELETE)
     @DeleteMapping("/{jobIds}")
@@ -193,3 +210,4 @@ public class SysJobController extends BaseController
         return success();
     }
 }
+*/

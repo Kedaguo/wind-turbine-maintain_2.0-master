@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.SeaWaveMapper">
+    
+    <resultMap type="SeaWave" id="SeaWaveResult">
+        <result property="sId"    column="s_id"    />
+        <result property="stSimulationTime"    column="st_simulation_time"    />
+        <result property="stTime"    column="st_time"    />
+        <result property="stWindSpeed"    column="st_wind_speed"    />
+        <result property="stWindSpeedTurbine"    column="st_wind_speed_turbine"    />
+        <result property="stWaveHeight"    column="st_wave_height"    />
+    </resultMap>
+
+    <sql id="selectSeaWaveVo">
+        select s_id, st_simulation_time, st_time, st_wind_speed, st_wind_speed_turbine, st_wave_height from tl_sea_wave
+    </sql>
+
+    <select id="selectSeaWaveList" parameterType="SeaWave" resultMap="SeaWaveResult">
+        <include refid="selectSeaWaveVo"/>
+        <where>  
+            <if test="stSimulationTime != null "> and st_simulation_time = #{stSimulationTime}</if>
+            <if test="stTime != null "> and st_time = #{stTime}</if>
+            <if test="stWindSpeed != null  and stWindSpeed != ''"> and st_wind_speed = #{stWindSpeed}</if>
+            <if test="stWindSpeedTurbine != null  and stWindSpeedTurbine != ''"> and st_wind_speed_turbine = #{stWindSpeedTurbine}</if>
+            <if test="stWaveHeight != null  and stWaveHeight != ''"> and st_wave_height = #{stWaveHeight}</if>
+        </where>
+    </select>
+    
+    <select id="selectSeaWaveBySId" parameterType="Long" resultMap="SeaWaveResult">
+        <include refid="selectSeaWaveVo"/>
+        where s_id = #{sId}
+    </select>
+        
+    <insert id="insertSeaWave" parameterType="SeaWave">
+        insert into tl_sea_wave
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sId != null">s_id,</if>
+            <if test="stSimulationTime != null">st_simulation_time,</if>
+            <if test="stTime != null">st_time,</if>
+            <if test="stWindSpeed != null">st_wind_speed,</if>
+            <if test="stWindSpeedTurbine != null">st_wind_speed_turbine,</if>
+            <if test="stWaveHeight != null">st_wave_height,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sId != null">#{sId},</if>
+            <if test="stSimulationTime != null">#{stSimulationTime},</if>
+            <if test="stTime != null">#{stTime},</if>
+            <if test="stWindSpeed != null">#{stWindSpeed},</if>
+            <if test="stWindSpeedTurbine != null">#{stWindSpeedTurbine},</if>
+            <if test="stWaveHeight != null">#{stWaveHeight},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSeaWave" parameterType="SeaWave">
+        update tl_sea_wave
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stSimulationTime != null">st_simulation_time = #{stSimulationTime},</if>
+            <if test="stTime != null">st_time = #{stTime},</if>
+            <if test="stWindSpeed != null">st_wind_speed = #{stWindSpeed},</if>
+            <if test="stWindSpeedTurbine != null">st_wind_speed_turbine = #{stWindSpeedTurbine},</if>
+            <if test="stWaveHeight != null">st_wave_height = #{stWaveHeight},</if>
+        </trim>
+        where s_id = #{sId}
+    </update>
+
+    <delete id="deleteSeaWaveBySId" parameterType="Long">
+        delete from tl_sea_wave where s_id = #{sId}
+    </delete>
+
+    <delete id="deleteSeaWaveBySIds" parameterType="String">
+        delete from tl_sea_wave where s_id in 
+        <foreach item="sId" collection="array" open="(" separator="," close=")">
+            #{sId}
+        </foreach>
+    </delete>
+</mapper>

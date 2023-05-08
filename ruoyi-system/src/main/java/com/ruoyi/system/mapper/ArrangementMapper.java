@@ -1,6 +1,8 @@
 package com.ruoyi.system.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.Arrangement;
 
 /**
@@ -9,7 +11,7 @@ import com.ruoyi.system.domain.Arrangement;
  * @author JianDa
  * @date 2023-04-14
  */
-public interface ArrangementMapper 
+public interface ArrangementMapper extends BaseMapper<Arrangement>
 {
     /**
      * 查询arrangement

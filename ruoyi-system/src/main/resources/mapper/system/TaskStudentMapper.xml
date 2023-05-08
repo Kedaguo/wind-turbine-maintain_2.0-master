@@ -12,12 +12,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="taskTime"    column="task_time"    />
         <result property="taskPoints"    column="task_points"    />
         <result property="taskState"    column="task_state"    />
+        <result property="jobId"    column="job_id"    />
         <result property="taskCount"    column="task_count"    />
+        <result property="taskRandFault"    column="task_rand_fault"    />
+        <result property="taskRandMaintain"    column="task_rand_maintain"    />
         <result property="taskSimulateTime"    column="task_simulate_time"    />
     </resultMap>
 
     <sql id="selectTaskStudentVo">
-        select user_id, task_id, task_cost, task_charge, task_time, task_points, task_state, task_count, task_simulate_time from tl_task_student
+        select user_id, task_id, task_cost, task_charge, task_time, task_points, task_state, task_count, job_id, task_simulate_time, task_rand_fault, task_rand_maintain from tl_task_student
     </sql>
 
     <select id="selectTaskStudentList" parameterType="TaskStudent" resultMap="TaskStudentResult">
@@ -30,7 +33,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskTime != null  and taskTime != ''"> and task_time = #{taskTime}</if>
             <if test="taskPoints != null "> and task_points = #{taskPoints}</if>
             <if test="taskState != null "> and task_state = #{taskState}</if>
+            <if test="jobId != null "> and job_id = #{jobId}</if>
             <if test="taskCount != null "> and task_count = #{taskCount}</if>
+            <if test="taskRandMaintain != null "> and task_rand_maintain = #{taskRandMaintain}</if>
+            <if test="taskRandFault != null "> and task_rand_fault = #{taskRandFault}</if>
             <if test="taskSimulateTime != null "> and task_simulate_time = #{taskSimulateTime}</if>
         </where>
     </select>
@@ -50,7 +56,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskTime != null">task_time,</if>
             <if test="taskPoints != null">task_points,</if>
             <if test="taskState != null">task_state,</if>
+            <if test="jobId != null">job_id,</if>
             <if test="taskCount != null">task_count,</if>
+            <if test="taskRandMaintain != null">task_rand_maintain,</if>
+            <if test="taskRandFault != null">task_rand_fault,</if>
             <if test="taskSimulateTime != null">task_simulate_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -61,7 +70,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskTime != null">#{taskTime},</if>
             <if test="taskPoints != null">#{taskPoints},</if>
             <if test="taskState != null">#{taskState},</if>
+            <if test="jobId != null">#{jobId},</if>
             <if test="taskCount != null">#{taskCount},</if>
+            <if test="taskRandMaintain != null">#{taskRandMaintain},</if>
+            <if test="taskRandFault != null">#{taskRandFault},</if>
             <if test="taskSimulateTime != null">#{taskSimulateTime},</if>
          </trim>
     </insert>
@@ -74,7 +86,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="taskTime != null">task_time = #{taskTime},</if>
             <if test="taskPoints != null">task_points = #{taskPoints},</if>
             <if test="taskState != null">task_state = #{taskState},</if>
+            <if test="jobId != null">job_id = #{jobId},</if>
             <if test="taskCount != null">task_count = #{taskCount},</if>
+            <if test="taskRandFault != null">task_rand_fault = #{taskRandFault},</if>
+            <if test="taskRandMaintain != null">task_rand_maintain = #{taskRandMaintain},</if>
             <if test="taskSimulateTime != null">task_simulate_time = #{taskSimulateTime},</if>
         </trim>
         where user_id = #{userId} and task_id= #{taskId}
