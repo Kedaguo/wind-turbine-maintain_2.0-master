@@ -12,6 +12,6 @@ public class ArrangementVo extends Arrangement {
     //维修单顺序
     private List<Long> arrangementRepairIds;
 
-    private Long oId;
+//    private Long oId;
 
 }

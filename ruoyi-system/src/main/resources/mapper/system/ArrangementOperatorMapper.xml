@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ArrangementOperatorMapper">
+    
+    <resultMap type="ArrangementOperator" id="ArrangementOperatorResult">
+        <result property="aId"    column="a_id"    />
+        <result property="oId"    column="o_id"    />
+    </resultMap>
+
+    <sql id="selectArrangementOperatorVo">
+        select a_id, o_id from tl_arrangement_operator
+    </sql>
+
+    <select id="selectArrangementOperatorList" parameterType="ArrangementOperator" resultMap="ArrangementOperatorResult">
+        <include refid="selectArrangementOperatorVo"/>
+        <where>  
+        </where>
+    </select>
+    
+    <select id="selectArrangementOperatorByAId" parameterType="Long" resultMap="ArrangementOperatorResult">
+        <include refid="selectArrangementOperatorVo"/>
+        where a_id = #{aId}
+    </select>
+        
+    <insert id="insertArrangementOperator" parameterType="ArrangementOperator">
+        insert into tl_arrangement_operator
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="aId != null">a_id,</if>
+            <if test="oId != null">o_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="aId != null">#{aId},</if>
+            <if test="oId != null">#{oId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateArrangementOperator" parameterType="ArrangementOperator">
+        update tl_arrangement_operator
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="oId != null">o_id = #{oId},</if>
+        </trim>
+        where a_id = #{aId}
+    </update>
+
+    <delete id="deleteArrangementOperatorByAId" parameterType="Long">
+        delete from tl_arrangement_operator where a_id = #{aId}
+    </delete>
+
+    <delete id="deleteArrangementOperatorByAIds" parameterType="String">
+        delete from tl_arrangement_operator where a_id in 
+        <foreach item="aId" collection="array" open="(" separator="," close=")">
+            #{aId}
+        </foreach>
+    </delete>
+</mapper>

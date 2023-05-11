@@ -7,27 +7,21 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * arrangementRepair对象 tl_arrangement_repair
+ * arrangementOperator对象 tl_arrangement_operator
  * 
  * @author JianDa
- * @date 2023-04-18
+ * @date 2023-05-09
  */
-@TableName(value = "tl_arrangement_repair")
-public class ArrangementRepair extends BaseEntity
+@TableName(value = "tl_arrangement_operator")
+public class ArrangementOperator extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 规划编号 */
-    @Excel(name = "规划编号")
     private Long aId;
 
-    /** 维修单编号 */
-    @Excel(name = "维修单编号")
-    private Long rId;
-
-    /** 路径维修顺序 */
-    @Excel(name = "路径维修顺序")
-    private Long sequence;
+    /** 维修工编号 */
+    private Long oId;
 
     public void setaId(Long aId) 
     {
@@ -38,31 +32,21 @@ public class ArrangementRepair extends BaseEntity
     {
         return aId;
     }
-    public void setrId(Long rId) 
+    public void setoId(Long oId) 
     {
-        this.rId = rId;
+        this.oId = oId;
     }
 
-    public Long getrId() 
+    public Long getoId() 
     {
-        return rId;
-    }
-    public void setSequence(Long sequence) 
-    {
-        this.sequence = sequence;
-    }
-
-    public Long getSequence() 
-    {
-        return sequence;
+        return oId;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("aId", getaId())
-            .append("rId", getrId())
-            .append("sequence", getSequence())
+            .append("oId", getoId())
             .toString();
     }
 }
