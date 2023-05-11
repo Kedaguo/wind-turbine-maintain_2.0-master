@@ -11,7 +11,7 @@ import com.ruoyi.system.service.IArrangementOperatorService;
  * arrangementOperatorService业务层处理
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-05-09
  */
 @Service
 public class ArrangementOperatorServiceImpl implements IArrangementOperatorService 
@@ -22,13 +22,13 @@ public class ArrangementOperatorServiceImpl implements IArrangementOperatorServi
     /**
      * 查询arrangementOperator
      * 
-     * @param aoId arrangementOperator主键
+     * @param aId arrangementOperator主键
      * @return arrangementOperator
      */
     @Override
-    public ArrangementOperator selectArrangementOperatorByAoId(Long aoId)
+    public ArrangementOperator selectArrangementOperatorByAId(Long aId)
     {
-        return arrangementOperatorMapper.selectArrangementOperatorByAoId(aoId);
+        return arrangementOperatorMapper.selectArrangementOperatorByAId(aId);
     }
 
     /**
@@ -70,24 +70,24 @@ public class ArrangementOperatorServiceImpl implements IArrangementOperatorServi
     /**
      * 批量删除arrangementOperator
      * 
-     * @param aoIds 需要删除的arrangementOperator主键
+     * @param aIds 需要删除的arrangementOperator主键
      * @return 结果
      */
     @Override
-    public int deleteArrangementOperatorByAoIds(Long[] aoIds)
+    public int deleteArrangementOperatorByAIds(Long[] aIds)
     {
-        return arrangementOperatorMapper.deleteArrangementOperatorByAoIds(aoIds);
+        return arrangementOperatorMapper.deleteArrangementOperatorByAIds(aIds);
     }
 
     /**
      * 删除arrangementOperator信息
      * 
-     * @param aoId arrangementOperator主键
+     * @param aId arrangementOperator主键
      * @return 结果
      */
     @Override
-    public int deleteArrangementOperatorByAoId(Long aoId)
+    public int deleteArrangementOperatorByAId(Long aId)
     {
-        return arrangementOperatorMapper.deleteArrangementOperatorByAoId(aoId);
+        return arrangementOperatorMapper.deleteArrangementOperatorByAId(aId);
     }
 }

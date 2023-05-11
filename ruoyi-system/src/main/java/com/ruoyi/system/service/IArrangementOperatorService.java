@@ -7,17 +7,17 @@ import com.ruoyi.system.domain.ArrangementOperator;
  * arrangementOperatorService接口
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-05-09
  */
 public interface IArrangementOperatorService 
 {
     /**
      * 查询arrangementOperator
      * 
-     * @param aoId arrangementOperator主键
+     * @param aId arrangementOperator主键
      * @return arrangementOperator
      */
-    public ArrangementOperator selectArrangementOperatorByAoId(Long aoId);
+    public ArrangementOperator selectArrangementOperatorByAId(Long aId);
 
     /**
      * 查询arrangementOperator列表
@@ -46,16 +46,16 @@ public interface IArrangementOperatorService
     /**
      * 批量删除arrangementOperator
      * 
-     * @param aoIds 需要删除的arrangementOperator主键集合
+     * @param aIds 需要删除的arrangementOperator主键集合
      * @return 结果
      */
-    public int deleteArrangementOperatorByAoIds(Long[] aoIds);
+    public int deleteArrangementOperatorByAIds(Long[] aIds);
 
     /**
      * 删除arrangementOperator信息
      * 
-     * @param aoId arrangementOperator主键
+     * @param aId arrangementOperator主键
      * @return 结果
      */
-    public int deleteArrangementOperatorByAoId(Long aoId);
+    public int deleteArrangementOperatorByAId(Long aId);
 }

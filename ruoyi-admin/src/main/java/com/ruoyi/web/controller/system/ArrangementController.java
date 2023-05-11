@@ -96,9 +96,9 @@ public class ArrangementController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:arrangement:edit')")
     @Log(title = "arrangement", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody Arrangement arrangement)
+    public AjaxResult edit(@RequestBody ArrangementVo arrangementVo)
     {
-        return toAjax(arrangementService.updateArrangement(arrangement));
+        return toAjax(arrangementService.updateArrangement(arrangementVo));
     }
 
     /**

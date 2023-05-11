@@ -18,6 +18,7 @@ public interface IArrangementService
      * @param aId arrangement主键
      * @return arrangement
      */
+
     public Arrangement selectArrangementByAId(Long aId);
 
     /**
@@ -30,8 +31,7 @@ public interface IArrangementService
 
     /**
      * 新增arrangement
-     * 
-     * @param arrangement arrangement
+     *
      * @return 结果
      */
     public int insertArrangement(ArrangementVo arrangementVo) throws Exception;
@@ -39,10 +39,10 @@ public interface IArrangementService
     /**
      * 修改arrangement
      * 
-     * @param arrangement arrangement
+     * @param
      * @return 结果
      */
-    public int updateArrangement(Arrangement arrangement);
+    public int updateArrangement(ArrangementVo arrangementVo);
 
     /**
      * 批量删除arrangement

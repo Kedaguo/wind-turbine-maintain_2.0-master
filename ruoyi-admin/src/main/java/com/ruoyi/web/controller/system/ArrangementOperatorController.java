@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * arrangementOperatorController
  * 
  * @author JianDa
- * @date 2023-04-13
+ * @date 2023-05-09
  */
 @RestController
 @RequestMapping("/system/arrangementOperator")
@@ -63,10 +63,10 @@ public class ArrangementOperatorController extends BaseController
      * 获取arrangementOperator详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:arrangementOperator:query')")
-    @GetMapping(value = "/{aoId}")
-    public AjaxResult getInfo(@PathVariable("aoId") Long aoId)
+    @GetMapping(value = "/{aId}")
+    public AjaxResult getInfo(@PathVariable("aId") Long aId)
     {
-        return success(arrangementOperatorService.selectArrangementOperatorByAoId(aoId));
+        return success(arrangementOperatorService.selectArrangementOperatorByAId(aId));
     }
 
     /**
@@ -96,9 +96,9 @@ public class ArrangementOperatorController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:arrangementOperator:remove')")
     @Log(title = "arrangementOperator", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{aoIds}")
-    public AjaxResult remove(@PathVariable Long[] aoIds)
+	@DeleteMapping("/{aIds}")
+    public AjaxResult remove(@PathVariable Long[] aIds)
     {
-        return toAjax(arrangementOperatorService.deleteArrangementOperatorByAoIds(aoIds));
+        return toAjax(arrangementOperatorService.deleteArrangementOperatorByAIds(aIds));
     }
 }

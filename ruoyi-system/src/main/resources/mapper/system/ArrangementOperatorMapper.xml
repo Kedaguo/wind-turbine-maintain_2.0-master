@@ -5,69 +5,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.ruoyi.system.mapper.ArrangementOperatorMapper">
     
     <resultMap type="ArrangementOperator" id="ArrangementOperatorResult">
-        <result property="aoId"    column="ao_id"    />
-        <result property="rId"    column="r_id"    />
+        <result property="aId"    column="a_id"    />
         <result property="oId"    column="o_id"    />
-        <result property="taskId"    column="task_id"    />
-        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectArrangementOperatorVo">
-        select ao_id, r_id, o_id, task_id, user_id from tl_arrangement_operator
+        select a_id, o_id from tl_arrangement_operator
     </sql>
 
     <select id="selectArrangementOperatorList" parameterType="ArrangementOperator" resultMap="ArrangementOperatorResult">
         <include refid="selectArrangementOperatorVo"/>
         <where>  
-            <if test="rId != null "> and r_id = #{rId}</if>
-            <if test="oId != null "> and o_id = #{oId}</if>
-            <if test="taskId != null "> and task_id = #{taskId}</if>
-            <if test="userId != null "> and user_id = #{userId}</if>
         </where>
     </select>
     
-    <select id="selectArrangementOperatorByAoId" parameterType="Long" resultMap="ArrangementOperatorResult">
+    <select id="selectArrangementOperatorByAId" parameterType="Long" resultMap="ArrangementOperatorResult">
         <include refid="selectArrangementOperatorVo"/>
-        where ao_id = #{aoId}
+        where a_id = #{aId}
     </select>
         
     <insert id="insertArrangementOperator" parameterType="ArrangementOperator">
         insert into tl_arrangement_operator
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="aoId != null">ao_id,</if>
-            <if test="rId != null">r_id,</if>
+            <if test="aId != null">a_id,</if>
             <if test="oId != null">o_id,</if>
-            <if test="taskId != null">task_id,</if>
-            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="aoId != null">#{aoId},</if>
-            <if test="rId != null">#{rId},</if>
+            <if test="aId != null">#{aId},</if>
             <if test="oId != null">#{oId},</if>
-            <if test="taskId != null">#{taskId},</if>
-            <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
 
     <update id="updateArrangementOperator" parameterType="ArrangementOperator">
         update tl_arrangement_operator
         <trim prefix="SET" suffixOverrides=",">
-            <if test="rId != null">r_id = #{rId},</if>
             <if test="oId != null">o_id = #{oId},</if>
-            <if test="taskId != null">task_id = #{taskId},</if>
-            <if test="userId != null">user_id = #{userId},</if>
         </trim>
-        where ao_id = #{aoId}
+        where a_id = #{aId}
     </update>
 
-    <delete id="deleteArrangementOperatorByAoId" parameterType="Long">
-        delete from tl_arrangement_operator where ao_id = #{aoId}
+    <delete id="deleteArrangementOperatorByAId" parameterType="Long">
+        delete from tl_arrangement_operator where a_id = #{aId}
     </delete>
 
-    <delete id="deleteArrangementOperatorByAoIds" parameterType="String">
-        delete from tl_arrangement_operator where ao_id in 
-        <foreach item="aoId" collection="array" open="(" separator="," close=")">
-            #{aoId}
+    <delete id="deleteArrangementOperatorByAIds" parameterType="String">
+        delete from tl_arrangement_operator where a_id in 
+        <foreach item="aId" collection="array" open="(" separator="," close=")">
+            #{aId}
         </foreach>
     </delete>
 </mapper>

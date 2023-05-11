@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author JianDa
  * @date 2023-04-18
  */
+@TableName(value = "tl_arrangement_repair")
 public class ArrangementRepair extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
