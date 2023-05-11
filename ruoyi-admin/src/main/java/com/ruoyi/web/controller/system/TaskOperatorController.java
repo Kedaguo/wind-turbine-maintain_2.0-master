@@ -48,6 +48,45 @@ public class TaskOperatorController extends BaseController
         List<TaskOperator> list = taskOperatorService.selectTaskOperatorList(taskOperator);
         return getDataTable(list);
     }
+    /**
+     * 查询taskOperator总数
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskOperator:getONumber')")
+    @GetMapping("/getONumber")
+    public AjaxResult getONumber(TaskOperator taskOperator)
+    {
+        Integer size = taskOperatorService.selectTaskOperatorList(taskOperator).size();
+        return AjaxResult.success(size);
+    }
+    /**
+     * 查询taskOperator  待命数量
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskOperator:getStandbyONumber')")
+    @GetMapping("/getStandbyONumber")
+    public AjaxResult getStandbyONumber(TaskOperator taskOperator)
+    {
+        taskOperator.setTaskId(1l);
+        Integer size = taskOperatorService.selectTaskOperatorList(taskOperator).size();
+        return AjaxResult.success(size);
+    }
+    //等待条件出海作业的维修工数量
+    @PreAuthorize("@ss.hasPermi('system:taskOperator:getWaitONumber')")
+    @GetMapping("/getWaitONumber")
+    public AjaxResult getWaitONumber(TaskOperator taskOperator)
+    {
+        taskOperator.setTaskId(2l);
+        Integer size = taskOperatorService.selectTaskOperatorList(taskOperator).size();
+        return AjaxResult.success(size);
+    }
+    //等待条件出海作业的维修工数量
+    @PreAuthorize("@ss.hasPermi('system:taskOperator:getWorkONumber')")
+    @GetMapping("/getWorkONumber")
+    public AjaxResult getWorkONumber(TaskOperator taskOperator)
+    {
+        taskOperator.setTaskId(3l);
+        Integer size = taskOperatorService.selectTaskOperatorList(taskOperator).size();
+        return AjaxResult.success(size);
+    }
     @PreAuthorize("@ss.hasPermi('system:taskOperator:listByUser')")
     @GetMapping("/listByUser")
     public TableDataInfo selectTaskOperatorByUser(@RequestParam Long taskId, HttpServletRequest request)

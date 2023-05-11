@@ -47,6 +47,49 @@ public class TaskBoatController extends BaseController
         List<Boat> list = taskBoatService.selectTaskBoatList(taskBoat);
         return getDataTable(list);
     }
+    /**
+     * 查询taskBoat 总数
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskBoat:getBoatNumber')")
+    @GetMapping("/getBoatNumber")
+    public AjaxResult getBoatNumber(TaskBoat taskBoat)
+    {
+        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
+        return success(size);
+    }
+    /**
+     * 查询taskBoat 待命数量
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskBoat:getStandbyBoatNumber')")
+    @GetMapping("/getStandbyBoatNumber")
+    public AjaxResult getStandbyBoatNumber(TaskBoat taskBoat)
+    {
+        taskBoat.setbState(1);
+        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
+        return success(size);
+    }
+    /**
+     * 查询taskBoat 待命数量
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWaitBoatNumber')")
+    @GetMapping("/getWaitBoatNumber")
+    public AjaxResult getWaitBoatNumber(TaskBoat taskBoat)
+    {
+        taskBoat.setbState(2);
+        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
+        return success(size);
+    }
+    /**
+     * 查询taskBoat 工作数量
+     */
+    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWorkBoatNumber')")
+    @GetMapping("/getWorkBoatNumber")
+    public AjaxResult getWorkBoatNumber(TaskBoat taskBoat)
+    {
+        taskBoat.setbState(3);
+        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
+        return success(size);
+    }
 
     /**
      * 查询taskBoat列表  根据task_id 查询当前学生的已分配船舶
