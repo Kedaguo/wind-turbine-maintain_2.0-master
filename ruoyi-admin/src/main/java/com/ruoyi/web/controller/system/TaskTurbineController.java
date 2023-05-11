@@ -48,21 +48,7 @@ public class TaskTurbineController extends BaseController
         List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
         return getDataTable(list);
     }
-    /*
-    查询任务所分配的资源-风机
-     */
-//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:listByUser')")
-//    @GetMapping("/listByUser")
-//    public TableDataInfo selectTaskTurbineListByUser(@RequestParam Long taskId, HttpServletRequest request)
-//    {
-//        startPage();
-//        LoginUser loginUser = tokenService.getLoginUser(request);
-//        TaskTurbine taskTurbine = new TaskTurbine();
-//        taskTurbine.setTaskId(taskId);
-//        taskTurbine.setUserId(loginUser.getUserId());
-//        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByUser(taskTurbine);
-//        return getDataTable(list);
-//    }
+
 
     /*
     查询任务所分配的资源-风机
