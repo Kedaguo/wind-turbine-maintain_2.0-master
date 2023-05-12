@@ -50,11 +50,11 @@ public class TurbineWind extends BaseEntity
 
     /** 经度 */
     @Excel(name = "经度")
-    private Long tLongitude;
+    private String tLongitude;
 
     /** 纬度 */
     @Excel(name = "纬度")
-    private Long tLatitude;
+    private String tLatitude;
 
     /** 品牌 */
     @Excel(name = "品牌")
@@ -133,25 +133,24 @@ public class TurbineWind extends BaseEntity
     {
         return tCost;
     }
-    public void settLongitude(Long tLongitude) 
-    {
+
+    public String gettLongitude () {
+        return tLongitude;
+    }
+
+    public void settLongitude (String tLongitude) {
         this.tLongitude = tLongitude;
     }
 
-    public Long gettLongitude() 
-    {
-        return tLongitude;
+    public String gettLatitude () {
+        return tLatitude;
     }
-    public void settLatitude(Long tLatitude) 
-    {
+
+    public void settLatitude (String tLatitude) {
         this.tLatitude = tLatitude;
     }
 
-    public Long gettLatitude() 
-    {
-        return tLatitude;
-    }
-    public void settBrand(String tBrand) 
+    public void settBrand(String tBrand)
     {
         this.tBrand = tBrand;
     }
