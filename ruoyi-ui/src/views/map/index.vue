@@ -269,7 +269,7 @@ export default {
             let taskId = this.$route.params && this.$route.params.taskId;
             // let taskId = sessionStorage.getItem('taskId');
             listOnlineTurbine(taskId).then(response => {
-                this.onlineList = response.rows
+                this.onlineList = response.data
                 console.log("所有的风机" + response.data[0].taskId)
             })
         },
@@ -277,14 +277,14 @@ export default {
         getOffline() {
             let taskId = this.$route.params && this.$route.params.taskId;
             listOfflineTurbine(taskId).then(response => {
-                this.offlineList = response.rows
+                this.offlineList = response.data
             })
         },
         //查询保养的风机
         getMaintain() {
             let taskId = this.$route.params && this.$route.params.taskId;
             listMaintainTurbine(taskId).then(response => {
-                this.maintainList = response.rows
+                this.maintainList = response.data
                 // console.log(this.maintainList)
             })
         },
