@@ -90,10 +90,30 @@ export const constantRoutes = [
     ]
   },
 
+  {
+    path: '/map',
+    hidden: true,
+    component: () => import('@/views/map/index'),
+  },
+
 ]
 
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [
+  {
+    path: '/task-map',
+    component: Layout,
+    hidden: true,
+    permissions: ['system:taskStudent:list'],
+    children: [
+      {
+        path: 'index/:taskId',
+        component: () => import('@/views/map/index'),
+        name: 'AuthRole',
+        meta: { title: '出海维修', activeMenu: '/task' }
+      }
+    ]
+  },
   {
     path: '/system/user-auth',
     component: Layout,

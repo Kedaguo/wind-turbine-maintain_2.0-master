@@ -270,7 +270,7 @@ export default {
             // let taskId = sessionStorage.getItem('taskId');
             listOnlineTurbine(taskId).then(response => {
                 this.onlineList = response.rows
-                console.log(response.rows)
+                console.log("所有的风机" + response.data[0].taskId)
             })
         },
         //查询故障的风机

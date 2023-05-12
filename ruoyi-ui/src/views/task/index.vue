@@ -1,10 +1,6 @@
 <template>
     <div class="app-container">
         <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-            <el-form-item label="任务成绩" prop="taskPoints">
-                <el-input v-model="queryParams.taskPoints" placeholder="请输入任务成绩" clearable
-                    @keyup.enter.native="handleQuery" />
-            </el-form-item>
             <el-form-item label="任务状态" prop="taskState">
                 <el-select v-model="queryParams.taskState" placeholder="请选择任务状态" clearable>
                     <el-option v-for="dict in dict.type.tl_task_state" :key="dict.value" :label="dict.label"
@@ -16,21 +12,17 @@
                     placeholder="请选择任务发布时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="发布人" prop="taskCreateBy">
-                <el-input v-model="queryParams.taskCreateBy" placeholder="请输入发布人" clearable
-                    @keyup.enter.native="handleQuery" />
-            </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
                 <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
         </el-form>
 
-        <el-row :gutter="10" class="mb8">
+        <el-row class="mb8">
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="taskList">    
+        <el-table v-loading="loading" :data="taskList">
             <el-table-column type="index" width="50"></el-table-column>
             <el-table-column label="发布时间" align="center" prop="taskCreateTime" width="180">
                 <template slot-scope="scope">
@@ -38,23 +30,24 @@
                 </template>
             </el-table-column>
             <el-table-column label="发布人" align="center" prop="taskCreateBy" />
-            <el-table-column label="任务花费" align="center" prop="taskCost" />
-            <el-table-column label="时间消耗" align="center" prop="taskTime" />
-            <el-table-column label="任务成绩" align="center" prop="taskPoints" />
             <el-table-column label="任务状态" align="center" prop="taskState">
                 <template slot-scope="scope">
-                    <el-tag v-if="scope.row.taskState === 1"><dict-tag :options="dict.type.tl_task_state"
-                            :value="scope.row.taskState" /></el-tag>
-                    <el-tag v-else-if="scope.row.taskState === 2" type="success"><dict-tag :options="dict.type.tl_task_state"
-                            :value="scope.row.taskState" /></el-tag>
+                    <el-tag v-if="scope.row.taskState === 1">
+                        <dict-tag :options="dict.type.tl_task_state" :value="scope.row.taskState" /></el-tag>
+                    <el-tag v-else-if="scope.row.taskState === 2" type="success"><dict-tag
+                            :options="dict.type.tl_task_state" :value="scope.row.taskState" /></el-tag>
                     <el-tag v-else type="info"><dict-tag :options="dict.type.tl_task_state"
                             :value="scope.row.taskState" /></el-tag>
                 </template>
             </el-table-column>
+            <el-table-column label="任务花费" align="center" prop="taskCost" />
+            <el-table-column label="时间消耗" align="center" prop="taskTime" />
+            <el-table-column label="任务成绩" align="center" prop="taskPoints" />
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
+                    <el-button size="mini" type="text"><router-link :to="'task-map/index/' + scope.row.taskId" class="link-type">开始任务</router-link></el-button>
                     <el-button v-if="scope.row.taskState === 1" size="mini" type="text" icon="el-icon-edit"
-                        @click="handleTask(scope.row)" v-hasPermi="['system:task:start']">开始任务</el-button>
+                        @click="handleTask(scope.row)">开始任务</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -65,7 +58,7 @@
 </template>
 
 <script>
-import { studentListTask,taskBegin } from "@/api/system/task";
+import { studentListTask, taskBegin } from "@/api/system/task";
 
 export default {
     name: "Task",
@@ -114,6 +107,7 @@ export default {
         getList() {
             this.loading = true;
             studentListTask(this.queryParams).then(response => {
+                console.log(response)
                 this.taskList = response.rows;
                 this.total = response.total;
                 this.loading = false;
@@ -150,15 +144,29 @@ export default {
             this.resetForm("queryForm");
             this.handleQuery();
         },
-       
-        handleTask(row){
-            console.log(row)
-            // this.$modal.confirm('开始当前任务？').then(
-                
-            // )
-            taskBegin().then({})
+
+        handleTask(row) {
+            this.$confirm('开始执行当前任务', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                //将当前开始的任务存储到session中
+                sessionStorage.setItem('taskId', row.taskId);
+                let invokeTarget = `ryTask.windTurbineSimulation(${row.taskId}L,${row.userId}L,1000)`
+                let data = {
+                    invokeTarget: invokeTarget,
+                    jobId: 4,
+                    status: 0
+                }
+                taskBegin(data).then(() => {
+                    this.$router.push('/map');
+                })
+            }).catch(() => {
+
+            });
         },
-        
+
     }
 };
 </script>

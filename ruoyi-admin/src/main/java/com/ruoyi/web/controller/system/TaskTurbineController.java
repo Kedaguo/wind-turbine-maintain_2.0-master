@@ -57,14 +57,16 @@ public class TaskTurbineController extends BaseController
 
     //正常工作——不需要保养、故障
     @PostMapping("/normalTurbineList")
-    public AjaxResult selectNormalTaskTurbineList(@RequestBody  TaskTurbine taskTurbine, HttpServletRequest request)
+    public AjaxResult selectNormalTaskTurbineList(@RequestBody TaskTurbine taskTurbine, HttpServletRequest request)
     {
+        System.out.println("任务编号" + taskTurbine);
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskTurbine.setfState(2);
         taskTurbine.setmState(3);
         taskTurbine.setUserId(loginUser.getUserId());
         List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineListByStudent(taskTurbine);
-        return AjaxResult.success(list);
+        System.out.println(list);
+        return success(list);
     }
 
     //故障停机
