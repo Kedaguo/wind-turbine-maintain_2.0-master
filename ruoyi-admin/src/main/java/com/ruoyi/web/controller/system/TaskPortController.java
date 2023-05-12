@@ -47,7 +47,7 @@ public class TaskPortController extends BaseController
         return getDataTable(list);
     }
 
-    @PreAuthorize("@ss.hasPermi('system:taskPort:listByUser')")
+//    @PreAuthorize("@ss.hasPermi('system:taskPort:listByUser')")
     @GetMapping("/listByUser")
     public TableDataInfo listByUser(@RequestParam Long taskId, HttpServletRequest request)
     {
