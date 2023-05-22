@@ -144,6 +144,7 @@ public class SysJobController extends BaseController
     @PutMapping("/startTaskJob")
     public AjaxResult startTaskJob(@RequestBody SysJob job) throws SchedulerException, TaskException
     {
+        System.out.println("开始的当前任务" + job);
         SysJob newJob = jobService.selectJobById(job.getJobId());
         newJob.setStatus(job.getStatus());
         newJob.setInvokeTarget(job.getInvokeTarget());

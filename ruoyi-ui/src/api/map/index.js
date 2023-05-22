@@ -1,5 +1,16 @@
 import request from '@/utils/request'
 
+//查询所有的风机
+export function listAllTurbine(data) {
+    return request({
+        url: '/system/taskTurbine/list',
+        method: 'post',
+        data: {
+            taskId: data
+        }
+    })
+}
+
 //正常风机
 export function listOnlineTurbine(data) {
     return request({
