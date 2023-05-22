@@ -36,11 +36,11 @@ public class TaskTurbine extends BaseEntity
     @Excel(name = "保养编号")
     private Long mId;
 
-    /** 故障状态 */
+    /** 故障状态  0 未开始工作 1 保养正常工作  2 保养不工作   3正常工作 4 维修中 */
     @Excel(name = "故障状态")
     private Integer fState;
 
-    /** 保养状态 */
+    /** 保养状态 0 未开始工作 1 故障停机  2 正常工作  4 维修中 */
     @Excel(name = "保养状态")
     private Integer mState;
 

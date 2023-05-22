@@ -39,54 +39,63 @@ public class TaskBoatController extends BaseController
     /**
      * 查询taskBoat列表  根据task_id 查询当前学生的已分配船舶
      */
-    @PreAuthorize("@ss.hasPermi('system:taskBoat:list')")
+//    @PreAuthorize("@ss.hasPermi('system:taskBoat:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TaskBoat taskBoat)
+    public TableDataInfo list(TaskBoat taskBoat,HttpServletRequest request)
     {
         startPage();
-        List<Boat> list = taskBoatService.selectTaskBoatList(taskBoat);
-        return getDataTable(list);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        List<TaskBoatDto> taskBoatDtos = taskBoatService.selectTaskBoatDtoByUserId(taskBoat.getTaskId(), loginUser.getUserId());
+        return getDataTable(taskBoatDtos);
     }
     /**
      * 查询taskBoat 总数
      */
-    @PreAuthorize("@ss.hasPermi('system:taskBoat:getBoatNumber')")
+//    @PreAuthorize("@ss.hasPermi('system:taskBoat:getBoatNumber')")
     @GetMapping("/getBoatNumber")
-    public AjaxResult getBoatNumber(TaskBoat taskBoat)
+    public AjaxResult getBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskBoat.setUserId(loginUser.getUserId());
         Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
         return success(size);
     }
     /**
      * 查询taskBoat 待命数量
      */
-    @PreAuthorize("@ss.hasPermi('system:taskBoat:getStandbyBoatNumber')")
+//    @PreAuthorize("@ss.hasPermi('system:taskBoat:getStandbyBoatNumber')")
     @GetMapping("/getStandbyBoatNumber")
-    public AjaxResult getStandbyBoatNumber(TaskBoat taskBoat)
+    public AjaxResult getStandbyBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
         taskBoat.setbState(1);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskBoat.setUserId(loginUser.getUserId());
         Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
         return success(size);
     }
     /**
      * 查询taskBoat 待命数量
      */
-    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWaitBoatNumber')")
+//    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWaitBoatNumber')")
     @GetMapping("/getWaitBoatNumber")
-    public AjaxResult getWaitBoatNumber(TaskBoat taskBoat)
+    public AjaxResult getWaitBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
         taskBoat.setbState(2);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskBoat.setUserId(loginUser.getUserId());
         Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
         return success(size);
     }
     /**
      * 查询taskBoat 工作数量
      */
-    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWorkBoatNumber')")
+//    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWorkBoatNumber')")
     @GetMapping("/getWorkBoatNumber")
-    public AjaxResult getWorkBoatNumber(TaskBoat taskBoat)
+    public AjaxResult getWorkBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
         taskBoat.setbState(3);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskBoat.setUserId(loginUser.getUserId());
         Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
         return success(size);
     }

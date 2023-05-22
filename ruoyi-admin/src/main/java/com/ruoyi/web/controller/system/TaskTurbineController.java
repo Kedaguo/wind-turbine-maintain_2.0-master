@@ -42,11 +42,12 @@ public class TaskTurbineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:taskTurbine:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TaskTurbine taskTurbine)
+    public AjaxResult list(TaskTurbine taskTurbine,HttpServletRequest request)
     {
-        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskTurbine.setUserId(loginUser.getUserId());
         List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
-        return getDataTable(list);
+        return success(list);
     }
 
 

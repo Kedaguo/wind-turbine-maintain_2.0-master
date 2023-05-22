@@ -102,7 +102,13 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
     {
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
         List<Long> turbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
-        return turbineWindMapper.selectBatchIds(turbineIds);
+        ArrayList<TurbineWind> turbineWinds = new ArrayList<>();
+        for (Long id:turbineIds){
+            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(id);
+            turbineWinds.add(turbineWind);
+
+        }
+        return turbineWinds;
 
     }
 
