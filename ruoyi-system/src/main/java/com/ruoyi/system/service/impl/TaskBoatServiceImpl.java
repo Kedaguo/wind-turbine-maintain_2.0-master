@@ -73,8 +73,17 @@ public class TaskBoatServiceImpl implements ITaskBoatService
     {
         List<TaskBoat> taskBoats = taskBoatMapper.selectTaskBoatList(taskBoat);
         List<Long> boatIds = taskBoats.stream().map(TaskBoat::getbId).collect(Collectors.toList());
-        return boatMapper.selectBatchIds(boatIds);
+        ArrayList<Boat> boats = new ArrayList<>();
+        for (Long id:boatIds){
+            Boat boat = boatMapper.selectBoatByBId(id);
+            boats.add(boat);
+        }
+        return boats;
 
+    }
+
+    public Integer selectTaskBoatListSize(TaskBoat taskBoat){
+        return taskBoatMapper.selectTaskBoatList(taskBoat).size();
     }
 
     /**

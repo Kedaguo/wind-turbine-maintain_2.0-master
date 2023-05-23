@@ -6,8 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.exception.job.TaskException;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.SysJob;
 import com.ruoyi.system.domain.Task;
+import com.ruoyi.system.domain.TaskStudent;
+import com.ruoyi.system.domain.vo.SysJobVo;
+import com.ruoyi.system.service.ISysJobService;
+import com.ruoyi.system.service.ITaskStudentService;
+import org.quartz.SchedulerException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,8 +51,26 @@ public class TaskController extends BaseController
     @Resource
     private TokenService tokenService;
 
+    @Resource
+    private ISysJobService iSysJobService;
 
+    @Resource
+    private ITaskStudentService iTaskStudentService;
 
+    @Log(title = "开始任务", businessType = BusinessType.UPDATE)
+    @PutMapping("/startTaskJob")
+    public AjaxResult startTaskJob(@RequestBody SysJobVo job, HttpServletRequest request) throws SchedulerException, TaskException
+    {
+        SysJob newJob = iSysJobService.selectJobById(job.getJobId());
+        newJob.setStatus(job.getStatus());
+        newJob.setInvokeTarget(job.getInvokeTarget());
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setUserId(tokenService.getLoginUser(request).getUserId());
+        taskStudent.setTaskId(job.getTaskId());
+        taskStudent.setTaskState(2l);
+        iTaskStudentService.updateTaskStudent(taskStudent);
+        return toAjax(iSysJobService.updateJob(newJob));
+    }
     /**
      *老师查看  task_create_by  username
      */

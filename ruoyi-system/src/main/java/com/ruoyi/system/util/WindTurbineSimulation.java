@@ -371,7 +371,7 @@ public class WindTurbineSimulation {
         System.out.println("Device fault occurred.");
         taskTurbine.setmId(maintain.getmId());
          //0 未开始工作 1需要保养且正常工作  2  保养不工作  3 正常工作
-        taskTurbine.setmState(1);
+        taskTurbine.setmState(2);
         iTaskTurbineService.updateTaskTurbine(taskTurbine);
         RepairOrder repairOrder = new RepairOrder();
         BeanUtils.copyProperties(taskTurbine,repairOrder);

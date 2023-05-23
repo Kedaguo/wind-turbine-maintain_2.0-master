@@ -11,7 +11,6 @@ import com.ruoyi.system.domain.TurbineWind;
 import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -20,7 +19,6 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.system.domain.TaskTurbine;
 import com.ruoyi.system.service.ITaskTurbineService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * taskTurbineController

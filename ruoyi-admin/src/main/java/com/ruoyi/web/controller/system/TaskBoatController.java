@@ -57,8 +57,7 @@ public class TaskBoatController extends BaseController
     {
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
-        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
-        return success(size);
+        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
     }
     /**
      * 查询taskBoat 待命数量
@@ -67,24 +66,22 @@ public class TaskBoatController extends BaseController
     @GetMapping("/getStandbyBoatNumber")
     public AjaxResult getStandbyBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
-        taskBoat.setbState(1);
+        taskBoat.setbState(0);
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
-        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
-        return success(size);
+        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
     }
     /**
-     * 查询taskBoat 待命数量
+     * 查询taskBoat 等待条件出海作业
      */
 //    @PreAuthorize("@ss.hasPermi('system:taskBoat:getWaitBoatNumber')")
     @GetMapping("/getWaitBoatNumber")
     public AjaxResult getWaitBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
-        taskBoat.setbState(2);
+        taskBoat.setbState(1);
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
-        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
-        return success(size);
+        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
     }
     /**
      * 查询taskBoat 工作数量
@@ -93,11 +90,11 @@ public class TaskBoatController extends BaseController
     @GetMapping("/getWorkBoatNumber")
     public AjaxResult getWorkBoatNumber(TaskBoat taskBoat,HttpServletRequest request)
     {
-        taskBoat.setbState(3);
+        taskBoat.setbState(2);
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
-        Integer size = taskBoatService.selectTaskBoatList(taskBoat).size();
-        return success(size);
+        System.out.println("bbbbbbooooooaaaatttt"+taskBoat);
+        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
     }
 
     /**

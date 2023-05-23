@@ -141,6 +141,7 @@ public class TaskBoat extends BaseEntity
             .append("bId", getbId())
             .append("taskId", getTaskId())
             .append("bState", getbState())
+            .append("userId", getUserId())
             .append("bWorkState", getbWorkState())
             .append("bStartTime", getbStartTime())
             .append("bEndTime", getbEndTime())

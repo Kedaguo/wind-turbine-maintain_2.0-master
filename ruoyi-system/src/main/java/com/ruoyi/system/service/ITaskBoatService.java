@@ -32,7 +32,7 @@ public interface ITaskBoatService
      * @return taskBoat集合
      */
     public List<Boat> selectTaskBoatList(TaskBoat taskBoat);
-
+    public Integer selectTaskBoatListSize(TaskBoat taskBoat);
     /**
      * 新增taskBoat
      * 
