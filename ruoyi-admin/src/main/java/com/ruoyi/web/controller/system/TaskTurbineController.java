@@ -38,8 +38,7 @@ public class TaskTurbineController extends BaseController
     /**
      * 查询taskTurbine列表    学生传task_id
      */
-    @PreAuthorize("@ss.hasPermi('system:taskTurbine:list')")
-    @GetMapping("/list")
+    @PostMapping("/list")
     public AjaxResult list(TaskTurbine taskTurbine,HttpServletRequest request)
     {
         LoginUser loginUser = tokenService.getLoginUser(request);

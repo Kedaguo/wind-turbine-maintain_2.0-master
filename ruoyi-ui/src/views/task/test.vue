@@ -159,7 +159,7 @@ export default {
                 taskBegin(data).then(() => {
                     this.$router.push(`task-map/index/${row.taskId}`)
                 })
-            }).catch(() => {
+            }).catch(() => {    
             });
         },
         //继续任务
@@ -168,7 +168,7 @@ export default {
         },
         //查看任务的详细信息
         showTaskDetails(row){
-
+            
         }
     }
 };

@@ -54,6 +54,7 @@ export function studentListTask(query) {
 
 // 开始当前任务
 export function TaskBegin(data) {
+  console.log(shjkadhsdjkah)
   return request({
     url: '/monitor/job/startTaskJob',
     method: 'post',

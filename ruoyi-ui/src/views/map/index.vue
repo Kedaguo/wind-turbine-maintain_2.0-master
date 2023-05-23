@@ -18,18 +18,28 @@
                                 :offset="{ width: -35, height: 30 }" />
                         </bm-marker>
                         <!-- 正常的风机点位 -->
-                        <bm-marker v-for="point in onlineList" :key="point.tId" :title="'风机编号：' + point.tId"
+                        <bm-marker v-for="point in onlineList" :key="point.id" :title="'风机编号：' + point.tId"
                             :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="onlineIcon"
                             @click="clickHandler(point)">
                         </bm-marker>
                         <!-- 故障的风机点位 -->
-                        <bm-marker v-for="point in offlineList" :key="point.tId" :title="'风机编号：' + point.tId.toString()"
+                        <bm-marker v-for="point in offlineList" :key="point.id" :title="'风机编号：' + point.tId.toString()"
                             :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="offlineIcon"
                             @click="clickHandler(point)">
                         </bm-marker>
-                        <!-- 维修风机的点位 -->
-                        <bm-marker v-for="point in maintainList" :key="point.tId" :title="'风机编号：' + point.tId.toString()"
+                        <!-- 保养风机的点位 -->
+                        <bm-marker v-for="point in maintainList" :key="point.id" :title="'风机编号：' + point.tId.toString()"
                             :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="maintainIcon"
+                            @click="clickHandler(point)">
+                        </bm-marker>
+                        <!-- 保养停机的点位 -->
+                        <bm-marker v-for="point in maintain2List" :key="point.id" :title="'风机编号：' + point.tId.toString()"
+                            :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="maintain2Icon"
+                            @click="clickHandler(point)">
+                        </bm-marker>
+                        <!-- 正在维修中的风机点位 -->
+                        <bm-marker v-for="point in onRepairList" :key="point.id" :title="'风机编号：' + point.tId.toString()"
+                            :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="onRepairIcon"
                             @click="clickHandler(point)">
                         </bm-marker>
                         <!-- 维修的路线 -->
@@ -96,7 +106,7 @@
         <el-divider />
     </div>
 </template>
-  
+
 <script>
 import BaiduMap from 'vue-baidu-map/components/map/Map.vue'
 import BmCircle from 'vue-baidu-map/components/overlays/Circle.vue'
@@ -108,7 +118,7 @@ import { BmlCurveLine } from 'vue-baidu-map'
 import { BmlLushu } from 'vue-baidu-map'
 import VeLine from 'v-charts/lib/line.common'
 import { time } from 'console'
-import { listOnlineTurbine, listOfflineTurbine, listMaintainTurbine, listPort, } from "@/api/map/index";
+import { listOnlineTurbine, listOfflineTurbine, listMaintainTurbine, listPort, listAllTurbine } from "@/api/map/index";
 
 export default {
     name: "TaskStart",
@@ -129,7 +139,7 @@ export default {
         };
         return {
             //海上路书
-            play: false,
+            play: true,
             path: [
                 { tId: 5, lng: 119.9215439, lat: 25.72599323 },
                 { tId: 5, lng: 119.9207479, lat: 25.71059923 },
@@ -160,6 +170,18 @@ export default {
             //保养风机的图标
             maintainIcon: {
                 url: require('../../assets/turbine/maintain.png'),
+                imageSize: { width: 50, height: 50 },
+                size: { width: 50, height: 50 },
+            },
+             //保养风机的图标
+             maintainIcon2: {
+                url: require('../../assets/turbine/maintain.png'),
+                imageSize: { width: 50, height: 50 },
+                size: { width: 50, height: 50 },
+            },
+            //正在维修的风机图标
+            maintainIcon: {
+                url: require('../../assets/turbine/onRepair.png'),
                 imageSize: { width: 50, height: 50 },
                 size: { width: 50, height: 50 },
             },
@@ -194,6 +216,10 @@ export default {
             offlineList: [],
             //保养风机
             maintainList: [],
+            //保养停机
+            maintain2List: [],
+            // 维修中
+            onRepairList: [],
             //港口列表
             harbourList: [],
             chartData: {
@@ -240,6 +266,7 @@ export default {
         this.onlineIntervalId = setInterval(() => { this.getOnline() }, 2000)
         this.offlineIntervalId = setInterval(() => { this.getOffline() }, 2000)
         this.maintainIntervalId = setInterval(() => { this.getMaintain() }, 2000)
+        this.onRepairIntervalId = setInterval(() => { this.getOnRepair() }, 2000)
         this.getHarbour()
     },
     beforeDestroy() {
@@ -247,6 +274,7 @@ export default {
         clearInterval(this.offlineIntervalId)
         clearInterval(this.maintainIntervalId)
         clearInterval(this.timeIntervalId)
+        clearInterval(this.onRepairIntervalId)
     },
     destroyed() {
         //this.$refs.lushu.destroy()
@@ -270,7 +298,7 @@ export default {
             // let taskId = sessionStorage.getItem('taskId');
             listOnlineTurbine(taskId).then(response => {
                 this.onlineList = response.data
-                console.log("所有的风机" + response.data[0].taskId)
+                // console.log("所有的风机" + response.data[0].taskId)
             })
         },
         //查询故障的风机
@@ -286,6 +314,19 @@ export default {
             listMaintainTurbine(taskId).then(response => {
                 this.maintainList = response.data
                 // console.log(this.maintainList)
+            })
+        },
+        //查询处于正在维修状态的风机,遍历列表将处于维修状态的风机添加到维修列表中
+        getOnRepair() {
+            let taskId = this.$route.params && this.$route.params.taskId;
+            listAllTurbine(taskId).then(response => {
+                this.turbineList = response.data
+                this.turbineList.forEach((item) => {
+                    if(item.fState === 4 || item.mState === 4){
+                        this.onRepairList.push(item)
+                    }
+                });
+                // console.log("所有的风机" + this.turbineList)
             })
         },
         //返回主页面
@@ -313,6 +354,7 @@ export default {
             this.$refs['elForm'].validate(valid => {
                 if (!valid) return
                 else {
+                    //检验合格 
                     this.path = this.formData.linePath
                     this.play = true
                     console.log(this.path)
@@ -328,15 +370,20 @@ export default {
         resetForm() {
             this.$refs['elForm'].resetFields()
         },
-        // 点击风机图标将风机添加到维修列表中
+        // 只能维修处于保养或者故障状态的风机
         clickHandler(e) {
-            console.log(e)
+            //  console.log(e)
             if (e.fState === 2 && e.mState === 3) {
                 this.$message({
                     message: '风机正常工作',
                     type: 'warning'
                 });
-            } else {
+            } else if (e.fState === 4 && e.mState === 4) {
+                this.$message({
+                    message: '正在维修中',
+                    type: 'warning'
+                });
+            }else{
                 let mark = 0
                 this.formData.linePath.forEach(item => {
                     if (item.tId === e.tId) {
@@ -352,7 +399,6 @@ export default {
                     });
                 }
             }
-
         },
 
         getChart() {
@@ -363,7 +409,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss">
 .e-line {
     width: 100%;
@@ -402,7 +448,7 @@ export default {
     min-height: 36px;
 }
 </style>
-  
+
 <style scoped lang="scss">
 .home {
     blockquote {
@@ -472,5 +518,4 @@ export default {
     }
 }
 </style>
-  
-  
+
