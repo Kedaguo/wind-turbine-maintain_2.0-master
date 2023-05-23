@@ -157,6 +157,8 @@ public class TaskServiceImpl implements ITaskService
         taskStudent.setTaskState(1l);//任务未开始
         taskStudent.setTaskSimulateTime(task.getTaskStartTime());
         taskStudent.setTaskCount(0);
+        taskStudent.setTaskRandMaintain(0);
+        taskStudent.setTaskRandFault(0);
         taskStudent.setTaskCharge(0L);
         taskStudentMapper.insertTaskStudent(taskStudent);
     }
