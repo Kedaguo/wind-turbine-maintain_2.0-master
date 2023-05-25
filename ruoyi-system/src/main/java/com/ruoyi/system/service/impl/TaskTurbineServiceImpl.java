@@ -55,20 +55,6 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
         return taskTurbineMapper.selectTaskTurbineByTId(taskTurbine);
     }
 
-//    @Override
-//    public List<TaskTurbineDto> selectTaskTurbineListByUser (TaskTurbine taskTurbine) {
-//        List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
-//        ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
-//        for (TaskTurbine taskTurbine1:taskTurbines){
-//            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
-//            TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
-//            BeanUtils.copyProperties(turbineWind,taskTurbineDto);
-//            BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
-//            taskTurbineDtos.add(taskTurbineDto);
-//        }
-//        return taskTurbineDtos;
-//    }
-
     @Override
     public List<TaskTurbineDto> selectTaskTurbineListByStudent (TaskTurbine taskTurbine) {
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
@@ -98,18 +84,18 @@ public class TaskTurbineServiceImpl implements ITaskTurbineService
      * @return taskTurbine
      */
     @Override
-    public List<TurbineWind> selectTaskTurbineList(TaskTurbine taskTurbine)
+    public List<TaskTurbineDto> selectTaskTurbineList(TaskTurbine taskTurbine)
     {
         List<TaskTurbine> taskTurbines = taskTurbineMapper.selectTaskTurbineList(taskTurbine);
-        List<Long> turbineIds = taskTurbines.stream().map(TaskTurbine::gettId).collect(Collectors.toList());
-        ArrayList<TurbineWind> turbineWinds = new ArrayList<>();
-        for (Long id:turbineIds){
-            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(id);
-            turbineWinds.add(turbineWind);
-
+        ArrayList<TaskTurbineDto> taskTurbineDtos = new ArrayList<>();
+        for (TaskTurbine taskTurbine1:taskTurbines){
+            TaskTurbineDto taskTurbineDto = new TaskTurbineDto();
+            TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(taskTurbine1.gettId());
+            BeanUtils.copyProperties(turbineWind,taskTurbineDto);
+            BeanUtils.copyProperties(taskTurbine1,taskTurbineDto);
+            taskTurbineDtos.add(taskTurbineDto);
         }
-        return turbineWinds;
-
+        return taskTurbineDtos;
     }
 
     @Override

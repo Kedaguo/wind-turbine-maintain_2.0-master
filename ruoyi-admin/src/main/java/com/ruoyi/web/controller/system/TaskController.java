@@ -58,7 +58,7 @@ public class TaskController extends BaseController
     private ITaskStudentService iTaskStudentService;
 
     @Log(title = "开始任务", businessType = BusinessType.UPDATE)
-    @PutMapping("/startTaskJob")
+    @PostMapping("/startTaskJob")
     public AjaxResult startTaskJob(@RequestBody SysJobVo job, HttpServletRequest request) throws SchedulerException, TaskException
     {
         SysJob newJob = iSysJobService.selectJobById(job.getJobId());

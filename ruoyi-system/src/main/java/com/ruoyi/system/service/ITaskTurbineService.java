@@ -30,7 +30,7 @@ public interface ITaskTurbineService
      * @param taskTurbine taskTurbine
      * @return taskTurbine集合
      */
-    public List<TurbineWind> selectTaskTurbineList(TaskTurbine taskTurbine);
+    public List<TaskTurbineDto> selectTaskTurbineList(TaskTurbine taskTurbine);
 
     public List<TaskTurbine> selectTaskTurbineListSimulation(TaskTurbine taskTurbine);
     /**

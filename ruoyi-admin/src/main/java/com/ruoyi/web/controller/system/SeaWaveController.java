@@ -1,7 +1,14 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Date;
 import java.util.List;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.TaskStudent;
+import com.ruoyi.system.service.ITaskStudentService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +38,25 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RequestMapping("/system/seaWave")
 public class SeaWaveController extends BaseController
 {
-    @Autowired
+    @Resource
     private ISeaWaveService seaWaveService;
 
+    @Resource
+    private ITaskStudentService iTaskStudentService;
+
+    @Resource
+    private TokenService tokenService;
+
+//    @PreAuthorize("@ss.hasPermi('system:seaWave:list')")
+    @GetMapping("/weatherList")
+    public AjaxResult weather(TaskStudent taskStudent, HttpServletRequest request)
+    {
+//        taskStudent.setUserId(tokenService.getLoginUser(request).getUserId());
+        taskStudent.setUserId(110l);
+        Date taskSimulateTime = iTaskStudentService.selectTaskStudentByUserId(taskStudent).getTaskSimulateTime();
+        List<SeaWave> seaWaves = seaWaveService.selectWeatherList(taskSimulateTime);
+        return success(seaWaves);
+    }
     /**
      * 查询seaWave列表
      */

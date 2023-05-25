@@ -1,11 +1,16 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.SeaWaveMapper;
 import com.ruoyi.system.domain.SeaWave;
 import com.ruoyi.system.service.ISeaWaveService;
+
+import javax.annotation.Resource;
 
 /**
  * seaWaveService业务层处理
@@ -14,9 +19,9 @@ import com.ruoyi.system.service.ISeaWaveService;
  * @date 2023-04-21
  */
 @Service
-public class SeaWaveServiceImpl implements ISeaWaveService 
+public class SeaWaveServiceImpl implements ISeaWaveService
 {
-    @Autowired
+    @Resource
     private SeaWaveMapper seaWaveMapper;
 
     /**
@@ -29,6 +34,14 @@ public class SeaWaveServiceImpl implements ISeaWaveService
     public SeaWave selectSeaWaveBySId(Long sId)
     {
         return seaWaveMapper.selectSeaWaveBySId(sId);
+    }
+
+    @Override
+    public List<SeaWave> selectWeatherList (Date date) {
+        QueryWrapper<SeaWave> seaWaveQueryWrapper = new QueryWrapper<>();
+        seaWaveQueryWrapper.ge("st_time",date)
+                .last("LIMIT 24");
+        return seaWaveMapper.selectList(seaWaveQueryWrapper);
     }
 
     /**

@@ -16,7 +16,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-04-21
  */
 @TableName("tl_sea_wave")
-public class SeaWave extends BaseEntity
+public class SeaWave
 {
     private static final long serialVersionUID = 1L;
 

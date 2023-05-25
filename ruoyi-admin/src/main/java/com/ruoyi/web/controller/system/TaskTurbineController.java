@@ -39,11 +39,11 @@ public class TaskTurbineController extends BaseController
      * 查询taskTurbine列表    学生传task_id
      */
     @PostMapping("/list")
-    public AjaxResult list(TaskTurbine taskTurbine,HttpServletRequest request)
+    public AjaxResult list(@RequestBody TaskTurbine taskTurbine,HttpServletRequest request)
     {
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskTurbine.setUserId(loginUser.getUserId());
-        List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
+        List<TaskTurbineDto> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
         return success(list);
     }
 
@@ -102,15 +102,15 @@ public class TaskTurbineController extends BaseController
     /**
      * 导出taskTurbine列表
      */
-    @PreAuthorize("@ss.hasPermi('system:taskTurbine:export')")
-    @Log(title = "taskTurbine", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, TaskTurbine taskTurbine)
-    {
-        List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
-        ExcelUtil<TurbineWind> util = new ExcelUtil<TurbineWind>(TurbineWind.class);
-        util.exportExcel(response, list, "taskTurbine数据");
-    }
+//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:export')")
+//    @Log(title = "taskTurbine", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, TaskTurbine taskTurbine)
+//    {
+//        List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
+//        ExcelUtil<TurbineWind> util = new ExcelUtil<TurbineWind>(TurbineWind.class);
+//        util.exportExcel(response, list, "taskTurbine数据");
+//    }
 
     /**
      * 获取taskTurbine详细信息

@@ -163,11 +163,6 @@ public class WindTurbineSimulation {
 
                 }
 
-
-
-
-
-
             }
 
         }
@@ -263,6 +258,10 @@ public class WindTurbineSimulation {
             int i = iSysJobService.changeStatus(sysJob);
             //总发电量
             taskStudentChargeSum(taskId,userId);
+            taskStudent.setTaskState(3l);
+            int flag = iTaskStudentService.updateTaskStudent(taskStudent);
+
+
         }
         //更新用户模拟时间
         taskStudent.setTaskSimulateTime(date);

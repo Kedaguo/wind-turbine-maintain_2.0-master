@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.system.domain.SeaWave;
 
@@ -19,6 +20,7 @@ public interface ISeaWaveService
      */
     public SeaWave selectSeaWaveBySId(Long sId);
 
+    public List<SeaWave> selectWeatherList(Date date);
     /**
      * 查询seaWave列表
      * 
