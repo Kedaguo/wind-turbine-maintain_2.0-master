@@ -1,9 +1,6 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -11,10 +8,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.vo.ArrangementVo;
 import com.ruoyi.system.mapper.*;
-import com.ruoyi.system.service.IArrangementRepairService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.service.IArrangementService;
 
@@ -99,19 +93,19 @@ public class ArrangementServiceImpl implements IArrangementService
     {
 
         //更新出海作业船舶初始位置
-        Port port = portMapper.selectPortByPId(arrangementVo.getpId());
-        String startLocation = port.getpLongitude()+","+ port.getpLatitude();
+//        Port port = portMapper.selectPortByPId(arrangementVo.getpId());
+//        String startLocation = port.getpLongitude()+","+ port.getpLatitude();
         //出海作业维修单数量最少为1
         List<Long> repairOrderIds = arrangementVo.getArrangementRepairIds();
         RepairOrder repairOrder = repairOrderMapper.selectRepairOrderByRId(repairOrderIds.get(repairOrderIds.size() - 1));
         TurbineWind turbineWind = turbineWindMapper.selectTurbineWindByTId(repairOrder.gettId());
         //本次出海作业最终位置
-        String endLocation = turbineWind.gettLongitude()+","+turbineWind.gettLatitude();
+//        String endLocation = turbineWind.gettLongitude()+","+turbineWind.gettLatitude();
 
         Arrangement arrangement = new Arrangement();
         BeanUtils.copyProperties(arrangementVo,arrangement);
-        arrangement.setStartLocation(startLocation);
-        arrangement.setEndLocation(endLocation);
+//        arrangement.setStartLocation(startLocation);
+//        arrangement.setEndLocation(endLocation);
         arrangement.setaState(0);
         //毫秒级时间戳用来查询刚刚插入的数据
         arrangement.setaCreateTime(DateUtils.getMillsTime());
@@ -133,15 +127,23 @@ public class ArrangementServiceImpl implements IArrangementService
     }
     //路径规划关联维修单
     public void arrangementRelevanceRepairOrder(ArrangementVo arrangementVo){
-        List<Long> arrangementRepairIds = arrangementVo.getArrangementRepairIds();
+        List<Long> tIds = arrangementVo.getArrangementRepairIds();
         Long count = 1l;
-        for (Long arrangementRepairId:arrangementRepairIds){
+        for (Long tId:tIds){
+            QueryWrapper<RepairOrder> repairOrderQueryWrapper = new QueryWrapper<>();
+            repairOrderQueryWrapper.eq("t_id",tId)
+                    .eq("task_id",arrangementVo.getTaskId())
+                    .eq("user_id",arrangementVo.getUserId())
+                    .eq("r_state",0);
+            RepairOrder repairOrder = repairOrderMapper.selectOne(repairOrderQueryWrapper);
             //sequence  代表维修顺序
             ArrangementRepair arrangementRepair = new ArrangementRepair();
             arrangementRepair.setaId(arrangementVo.getaId());
-            arrangementRepair.setrId(arrangementRepairId);
+            arrangementRepair.setrId(repairOrder.getrId());
             arrangementRepair.setSequence(count++);
             int insertFlag = arrangementRepairMapper.insertArrangementRepair(arrangementRepair);
+            repairOrder.setrState(1);
+            int flag = repairOrderMapper.updateRepairOrder(repairOrder);
         }
     }
     //路径规划关联维修人员
@@ -170,28 +172,34 @@ public class ArrangementServiceImpl implements IArrangementService
     //路径规划关联船舶
     public AjaxResult arrangementRelevanceBoat(ArrangementVo arrangementVo){
         //查询现有船舶
-        TaskBoat taskBoat = new TaskBoat();
-        taskBoat.setTaskId(arrangementVo.getTaskId());
-        taskBoat.setUserId(arrangementVo.getUserId());
-        taskBoat.setbState(0);
+//        TaskBoat taskBoat = new TaskBoat();
+//        taskBoat.setTaskId(arrangementVo.getTaskId());
+//        taskBoat.setUserId(arrangementVo.getUserId());
+//        taskBoat.setbState(0);
 //        taskBoat.setbWorkState(0);
-        List<TaskBoat> taskBoats = taskBoatMapper.selectTaskBoatList(taskBoat);
-        List<Long> bIds = taskBoats.stream().map(TaskBoat::getbId).collect(Collectors.toList());
-        for (Long bId:bIds){
-            Boat boat = boatMapper.selectBoatByBId(bId);
-            if (boat.getbType() == arrangementVo.getbType()){
-                //规划关联船舶
-                ArrangementBoat arrangementBoat = new ArrangementBoat();
-                arrangementBoat.setaId(arrangementBoat.getaId());
-                arrangementBoat.setbId(bId);
-                arrangementBoatMapper.insertArrangementBoat(arrangementBoat);
-                //更新船舶状态
-                taskBoat.setbId(bId);
-                taskBoat.setbState(1);
+//        List<TaskBoat> taskBoats = taskBoatMapper.selectTaskBoatList(taskBoat);
+//        List<Long> bIds = taskBoats.stream().map(TaskBoat::getbId).collect(Collectors.toList());
+//        for (Long bId:bIds){
+//            Boat boat = boatMapper.selectBoatByBId(bId);
+//            if (boat.getbType() == arrangementVo.getbType()){
+//                //规划关联船舶
+//                ArrangementBoat arrangementBoat = new ArrangementBoat();
+//                arrangementBoat.setaId(arrangementBoat.getaId());
+//                arrangementBoat.setbId(bId);
+//                arrangementBoatMapper.insertArrangementBoat(arrangementBoat);
+//                //更新船舶状态
+//                taskBoat.setbId(bId);
+//                taskBoat.setbState(1);
 //                taskBoat.setbWorkState(1);
-            }
+//            }
+//
+//        }
+        TaskBoat taskBoat = new TaskBoat();
+        BeanUtils.copyProperties(arrangementVo,taskBoat);
+        //等待条件允许作业
+        taskBoat.setbState(1);
+        int flag = taskBoatMapper.updateTaskBoat(taskBoat);
 
-        }
         return AjaxResult.success();
     }
     //

@@ -54,6 +54,8 @@ public class ArrangementController extends BaseController
         return getDataTable(list);
     }
 
+    //出海作业结束
+
     /**
      * 导出arrangement列表
      */

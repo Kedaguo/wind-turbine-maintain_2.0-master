@@ -41,11 +41,12 @@ public class TaskBoatController extends BaseController
      */
 //    @PreAuthorize("@ss.hasPermi('system:taskBoat:list')")
     @GetMapping("/list")
-    public AjaxResult list(TaskBoat taskBoat,HttpServletRequest request)
+    public TableDataInfo list(TaskBoat taskBoat,HttpServletRequest request)
     {
+        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<TaskBoatDto> taskBoatDtos = taskBoatService.selectTaskBoatDtoByUserId(taskBoat.getTaskId(), loginUser.getUserId());
-        return success(taskBoatDtos);
+        return getDataTable(taskBoatDtos);
     }
     /**
      * 查询taskBoat 总数

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.Port;
+import com.ruoyi.system.domain.dto.TaskPortDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +39,14 @@ public class TaskPortController extends BaseController
     /**
      * 查询taskPort列表
      */
-    @PreAuthorize("@ss.hasPermi('system:taskPort:list')")
+//    @PreAuthorize("@ss.hasPermi('system:taskPort:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TaskPort taskPort)
+    public TableDataInfo list(TaskPort taskPort,HttpServletRequest request)
     {
         startPage();
-        List<TaskPort> list = taskPortService.selectTaskPortList(taskPort);
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskPort.setUserId(loginUser.getUserId());
+        List<TaskPortDto> list = taskPortService.selectTaskPortList(taskPort);
         return getDataTable(list);
     }
 
@@ -59,15 +62,15 @@ public class TaskPortController extends BaseController
     /**
      * 导出taskPort列表
      */
-    @PreAuthorize("@ss.hasPermi('system:taskPort:export')")
-    @Log(title = "taskPort", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, TaskPort taskPort)
-    {
-        List<TaskPort> list = taskPortService.selectTaskPortList(taskPort);
-        ExcelUtil<TaskPort> util = new ExcelUtil<TaskPort>(TaskPort.class);
-        util.exportExcel(response, list, "taskPort数据");
-    }
+//    @PreAuthorize("@ss.hasPermi('system:taskPort:export')")
+//    @Log(title = "taskPort", businessType = BusinessType.EXPORT)
+//    @PostMapping("/export")
+//    public void export(HttpServletResponse response, TaskPort taskPort)
+//    {
+//        List<TaskPort> list = taskPortService.selectTaskPortList(taskPort);
+//        ExcelUtil<TaskPort> util = new ExcelUtil<TaskPort>(TaskPort.class);
+//        util.exportExcel(response, list, "taskPort数据");
+//    }
 
     /**
      * 获取taskPort详细信息

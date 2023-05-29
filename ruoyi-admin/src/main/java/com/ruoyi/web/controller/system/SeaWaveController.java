@@ -51,8 +51,7 @@ public class SeaWaveController extends BaseController
     @GetMapping("/weatherList")
     public AjaxResult weather(TaskStudent taskStudent, HttpServletRequest request)
     {
-//        taskStudent.setUserId(tokenService.getLoginUser(request).getUserId());
-        taskStudent.setUserId(110l);
+        taskStudent.setUserId(tokenService.getLoginUser(request).getUserId());
         Date taskSimulateTime = iTaskStudentService.selectTaskStudentByUserId(taskStudent).getTaskSimulateTime();
         List<SeaWave> seaWaves = seaWaveService.selectWeatherList(taskSimulateTime);
         return success(seaWaves);

@@ -100,17 +100,16 @@ public class TaskTurbineController extends BaseController
     }
 
     /**
-     * 导出taskTurbine列表
+     * 修改风机状态
      */
-//    @PreAuthorize("@ss.hasPermi('system:taskTurbine:export')")
-//    @Log(title = "taskTurbine", businessType = BusinessType.EXPORT)
-//    @PostMapping("/export")
-//    public void export(HttpServletResponse response, TaskTurbine taskTurbine)
-//    {
-//        List<TurbineWind> list = taskTurbineService.selectTaskTurbineList(taskTurbine);
-//        ExcelUtil<TurbineWind> util = new ExcelUtil<TurbineWind>(TurbineWind.class);
-//        util.exportExcel(response, list, "taskTurbine数据");
-//    }
+    @PostMapping("/updateTaskTurbineState")
+    public AjaxResult updateTaskTurbineState(@RequestBody TaskTurbine taskTurbine,HttpServletRequest request){
+        taskTurbine.setUserId(tokenService.getLoginUser(request).getUserId());
+        taskTurbine.setmState(4);
+        taskTurbine.setfState(4);
+        int flag = taskTurbineService.updateTaskTurbine(taskTurbine);
+        return success();
+    }
 
     /**
      * 获取taskTurbine详细信息

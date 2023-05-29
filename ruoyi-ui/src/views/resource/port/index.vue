@@ -27,7 +27,7 @@
             @pagination="getList" />
     </div>
 </template>
-  
+
 <script>
 import { listPort } from "@/api/system/port";
 
@@ -47,6 +47,7 @@ export default {
             open: false,
             // 查询参数
             queryParams: {
+                taskId:91,
                 pageNum: 1,
                 pageSize: 10,
                 pPortname: null,
@@ -79,4 +80,3 @@ export default {
     }
 };
 </script>
-  

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询港口信息列表
 export function listPort(query) {
   return request({
-    url: '/system/port/list',
+    url: '/system/taskPort/list',
     method: 'get',
     params: query
   })

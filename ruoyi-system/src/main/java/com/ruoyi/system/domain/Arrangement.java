@@ -33,7 +33,7 @@ public class Arrangement extends BaseEntity
 
     /** 船舶数量 */
     @Excel(name = "船舶数量")
-    private Long bNum;
+    private Long bId;
 
     /** 船舶类型 */
     @Excel(name = "船舶类型")
@@ -112,16 +112,16 @@ public class Arrangement extends BaseEntity
     {
         return oNum;
     }
-    public void setbNum(Long bNum) 
-    {
-        this.bNum = bNum;
+
+    public Long getbId () {
+        return bId;
     }
 
-    public Long getbNum() 
-    {
-        return bNum;
+    public void setbId (Long bId) {
+        this.bId = bId;
     }
-    public void setbType(Integer bType) 
+
+    public void setbType(Integer bType)
     {
         this.bType = bType;
     }
@@ -209,7 +209,7 @@ public class Arrangement extends BaseEntity
             .append("aId", getaId())
             .append("pId", getpId())
             .append("oNum", getoNum())
-            .append("bNum", getbNum())
+            .append("bId", getbId())
             .append("bType", getbType())
             .append("userId", getUserId())
             .append("taskId", getTaskId())

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.system.domain.Port;
 import com.ruoyi.system.domain.TaskPort;
+import com.ruoyi.system.domain.dto.TaskPortDto;
 
 /**
  * taskPortService接口
@@ -29,7 +30,7 @@ public interface ITaskPortService
      * @param taskPort taskPort
      * @return taskPort集合
      */
-    public List<TaskPort> selectTaskPortList(TaskPort taskPort);
+    public List<TaskPortDto> selectTaskPortList(TaskPort taskPort);
 
     /**
      * 新增taskPort

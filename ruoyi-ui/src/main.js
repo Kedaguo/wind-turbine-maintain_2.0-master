@@ -5,9 +5,15 @@ import Cookies from 'js-cookie'
 import Element from 'element-ui'
 import './assets/styles/element-variables.scss'
 
+//引入echarts
+import echarts from 'echarts'
+//需要挂载到Vue原型上
+Vue.prototype.$echarts = echarts
+
+
+
 // 引入flexible
 import 'lib-flexible/flexible.js'
-
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
 import App from './App'

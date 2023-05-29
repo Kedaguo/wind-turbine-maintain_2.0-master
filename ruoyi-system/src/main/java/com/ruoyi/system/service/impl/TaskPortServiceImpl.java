@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.ruoyi.system.domain.Port;
+import com.ruoyi.system.domain.dto.TaskPortDto;
 import com.ruoyi.system.mapper.PortMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.TaskPortMapper;
@@ -64,9 +66,18 @@ public class TaskPortServiceImpl implements ITaskPortService
      * @return taskPort
      */
     @Override
-    public List<TaskPort> selectTaskPortList(TaskPort taskPort)
+    public List<TaskPortDto> selectTaskPortList(TaskPort taskPort)
     {
-        return taskPortMapper.selectTaskPortList(taskPort);
+        List<TaskPort> taskPorts = taskPortMapper.selectTaskPortList(taskPort);
+        ArrayList<TaskPortDto> taskPortDtos = new ArrayList<>();
+        for(TaskPort taskPort1:taskPorts){
+            TaskPortDto taskPortDto = new TaskPortDto();
+            Port port = portMapper.selectPortByPId(taskPort1.getpId());
+            BeanUtils.copyProperties(port,taskPortDto);
+            BeanUtils.copyProperties(taskPort1,taskPortDto);
+            taskPortDtos.add(taskPortDto);
+        }
+        return taskPortDtos;
     }
 
     /**

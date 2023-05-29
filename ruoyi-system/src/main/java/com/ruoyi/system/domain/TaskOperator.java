@@ -17,13 +17,10 @@ public class TaskOperator
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
-    private Long oId;
-
-    /** $column.columnComment */
     private Long taskId;
 
-    /** $column.columnComment */
+    private Long oId;
+
     private Long userId;
 
     /** 待命 1  出海  2 */
