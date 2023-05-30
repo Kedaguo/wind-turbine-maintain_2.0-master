@@ -50,14 +50,13 @@ public class TaskPortController extends BaseController
         return getDataTable(list);
     }
 
-//    @PreAuthorize("@ss.hasPermi('system:taskPort:listByUser')")
+    // @PreAuthorize("@ss.hasPermi('system:taskPort:listByUser')")
     @GetMapping("/listByUser")
-    public TableDataInfo listByUser(@RequestParam Long taskId, HttpServletRequest request)
+    public AjaxResult listByUser(@RequestParam Long taskId, HttpServletRequest request)
     {
-        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Port> list = taskPortService.selectTaskPortListByUser(taskId,loginUser.getUserId());
-        return getDataTable(list);
+        return success(list);
     }
     /**
      * 导出taskPort列表

@@ -141,7 +141,7 @@ public class SysJobController extends BaseController
     }
 
     @Log(title = "开始任务", businessType = BusinessType.UPDATE)
-    @PutMapping("/startTaskJob")
+    @PostMapping("/startTaskJob")
     public AjaxResult startTaskJob(@RequestBody SysJob job) throws SchedulerException, TaskException
     {
         System.out.println("开始的当前任务" + job);

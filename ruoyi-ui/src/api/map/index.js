@@ -59,3 +59,12 @@ export function listPort(data) {
         method: 'get',
     })
 }
+
+// 查询船只信息
+export function listShip(data) {
+    // console.log("111111")
+    return request({
+        url: '/system/taskBoat/list?taskId='+data,
+        method: 'get',
+    })
+}

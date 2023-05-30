@@ -100,7 +100,7 @@ public class WindTurbineSimulation {
                 lambda = Double.parseDouble(fault.getfFrequencyPerYear());
                 double rand = taskRandFaultPlus(taskId, userId);
                 //指数分布函数-按每小时发生故障指数分布
-                double probability = (1 - Math.exp(-lambda))/HoursOfYear;
+                double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"lambda"+lambda);
                 if (rand<=probability){
                     handleFault(taskTurbineFault,fault);
@@ -121,7 +121,7 @@ public class WindTurbineSimulation {
 //                double rand = random.nextDouble();
                 double rand = taskRandMaintainPlus(taskId,userId);
                 //指数分布函数-按每年发生保养指数分布
-                double probability = (1 - Math.exp(-lambda))/HoursOfYear;
+                double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"probability"+probability);
                 if (rand<=probability){
                     handleMaintain(taskTurbineMaintain,maintain);

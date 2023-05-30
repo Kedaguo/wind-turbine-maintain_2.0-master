@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { studentListTask, taskBegin } from "@/api/system/task";
+import { studentListTask, studentTaskBegin } from "@/api/system/task";
 
 export default {
     name: "Task",
@@ -104,7 +104,7 @@ export default {
         getList() {
             this.loading = true;
             studentListTask(this.queryParams).then(response => {
-                console.log(response)
+                console.log(response.rows)
                 this.taskList = response.rows;
                 this.total = response.total;
                 this.loading = false;
@@ -149,14 +149,16 @@ export default {
                 type: 'warning'
             }).then(() => {
                 //将当前开始的任务存储到session中
-                sessionStorage.setItem('taskId', row.taskId);
+                // sessionStorage.setItem('taskId', row.taskId);
                 let invokeTarget = `ryTask.windTurbineSimulation(${row.taskId}L,${row.userId}L,1000)`
                 let data = {
+                    taskId: row.taskId,
                     invokeTarget: invokeTarget,
                     jobId: row.jobId,
                     status: 0
                 }
-                taskBegin(data).then(() => {
+                // console.log("22222")
+                studentTaskBegin(data).then(() => {
                     this.$router.push(`task-map/index/${row.taskId}`)
                 })
             }).catch(() => {

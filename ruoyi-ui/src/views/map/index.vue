@@ -37,6 +37,11 @@
                             :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="maintain2Icon"
                             @click="clickHandler(point)">
                         </bm-marker>
+                        <!-- 叠加状态的点位 -->
+                        <bm-marker v-for="point in doubleStateList" :key="point.id" :title="'风机编号：' + point.tId.toString()"
+                            :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="doubleStateIcon"
+                            @click="clickHandler(point)">
+                        </bm-marker>
                         <!-- 正在维修中的风机点位 -->
                         <bm-marker v-for="point in onRepairList" :key="point.id" :title="'风机编号：' + point.tId.toString()"
                             :position="{ lng: point.tlongitude, lat: point.tlatitude }" :icon="onRepairIcon"
@@ -44,8 +49,9 @@
                         </bm-marker>
                         <!-- 维修的路线 -->
                         <!-- <bml-curve-line :points="linePath"></bml-curve-line> -->
-                        <bml-lush ref="lushu" @stop="reset" :path="path" :icon="icon" :play="play" :speed="500"
-                            :rotation="true">
+                        <!-- 要实现的是多艘船同时维修的功能 -->
+                        <bml-lush ref="lushu" v-for="ship in shipList" :key="ship.id" @stop="reset" :path="ship.path"
+                            :icon="icon" :play="ship.play" :speed="500" :rotation="false">
                         </bml-lush>
                     </baidu-map>
                 </div>
@@ -63,26 +69,29 @@
             <el-col :span="9">
                 <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
                     <el-col :span="12">
-                        <el-form-item label="码头" prop="wharf">
-                            <el-select v-model="formData.wharf" placeholder="请选择出海码头" clearable :style="{ width: '100%' }">
+                        <el-form-item label="码头" prop="port">
+                            <el-select v-model="formData.port" placeholder="请选择出海码头" clearable :style="{ width: '100%' }">
                                 <el-option v-for="(item, index) in harbourList" :key="index" :label="item.pPortname"
                                     :value="item.pId" :disabled="item.disabled"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
-                        <el-form-item label="海上平台" prop="ship" required>
-                            <el-switch v-model="formData.ship"></el-switch>
+                        <el-form-item label="海上平台" prop="motherShip" required>
+                            <el-switch v-model="formData.motherShip"></el-switch>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="船只" prop="ship">
+                            <el-select v-model="formData.ship" placeholder="请选择出海船只" clearable :style="{ width: '100%' }">
+                                <el-option v-for="(item, index) in shipList" :key="index" :label="item.bmodel"
+                                    :value="item.bId" :disabled="item.disabled"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
-                        <el-form-item label="船只" prop="shipNum">
-                            <el-input-number v-model="formData.shipNum" placeholder="船只数量"></el-input-number>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="人员" prop="number">
-                            <el-input-number v-model="formData.number" placeholder="人员数量" controls-position=right>
+                        <el-form-item label="维修工人" prop="number">
+                            <el-input-number v-model="formData.number" placeholder="维修工人数量" controls-position=right>
                             </el-input-number>
                         </el-form-item>
                     </el-col>
@@ -118,7 +127,7 @@ import { BmlCurveLine } from 'vue-baidu-map'
 import { BmlLushu } from 'vue-baidu-map'
 import VeLine from 'v-charts/lib/line.common'
 import { time } from 'console'
-import { listOnlineTurbine, listOfflineTurbine, listMaintainTurbine, listPort, listAllTurbine } from "@/api/map/index";
+import { listOnlineTurbine, listOfflineTurbine, listMaintainTurbine, listPort, listAllTurbine, listShip } from "@/api/map/index";
 
 export default {
     name: "TaskStart",
@@ -138,17 +147,19 @@ export default {
             data: [{ name: "平均线", type: "average" }]
         };
         return {
+            //当前正在执行的是那个任务
+            taskId: null,
             //海上路书
-            play: true,
-            path: [
-                { tId: 5, lng: 119.9215439, lat: 25.72599323 },
-                { tId: 5, lng: 119.9207479, lat: 25.71059923 },
-                { tId: 5, lng: 119.9235689, lat: 25.70135523 },
-            ],
+            // play: true,
+            // path: [
+            //     // { tId: 5, lng: 119.9215439, lat: 25.72599323 },
+            //     // { tId: 5, lng: 119.9207479, lat: 25.71059923 },
+            //     // { tId: 5, lng: 119.9235689, lat: 25.70135523 },
+            // ],
             icon: {
-                url: 'http://api.map.baidu.com/library/LuShu/1.2/examples/car.png',
-                size: { width: 52, height: 26 },
-                opts: { anchor: { width: 27, height: 13 } }
+                url: require('../../assets/turbine/ship.png'),
+                size: { width: 50, height: 50 },
+                // opts: { anchor: { width: 27, height: 13 } }
             },
             //定时任务的id
             onlineIntervalId: null,
@@ -173,14 +184,14 @@ export default {
                 imageSize: { width: 50, height: 50 },
                 size: { width: 50, height: 50 },
             },
-             //保养风机的图标
-             maintainIcon2: {
-                url: require('../../assets/turbine/maintain.png'),
+            //保养风机的图标
+            doubleStateIcon: {
+                url: require('../../assets/turbine/doubleState.png'),
                 imageSize: { width: 50, height: 50 },
                 size: { width: 50, height: 50 },
             },
             //正在维修的风机图标
-            maintainIcon: {
+            onRepairIcon: {
                 url: require('../../assets/turbine/onRepair.png'),
                 imageSize: { width: 50, height: 50 },
                 size: { width: 50, height: 50 },
@@ -218,10 +229,14 @@ export default {
             maintainList: [],
             //保养停机
             maintain2List: [],
+            //两种状态的叠加态
+            doubleStateList: [],
             // 维修中
             onRepairList: [],
             //港口列表
             harbourList: [],
+            //船只列表
+            shipList: [],
             chartData: {
                 columns: ["时间", "风速", "风机转速", "海浪高度"],
                 rows: [
@@ -231,22 +246,23 @@ export default {
             },
             //提交的表单
             formData: {
-                wharf: undefined,
-                ship: false,
-                shipNum: 0,
+                port: undefined,
+                motherShip: false,
+                ship: undefined,
                 number: undefined,
                 linePath: [],
             },
+            // 检验表单是否合格
             rules: {
-                wharf: [{
+                port: [{
                     required: true,
                     message: '请选择出海码头',
                     trigger: 'change'
                 }],
-                shipNum: [{
+                ship: [{
                     required: true,
                     message: '船只数量',
-                    trigger: 'blur'
+                    trigger: 'change'
                 }],
                 number: [{
                     required: true,
@@ -260,70 +276,64 @@ export default {
         // this.$refs.lushu.init()
     },
     created() {
+        //初始化正在执行的任务编号
+        this.taskId = this.$route.params && this.$route.params.taskId;
         this.timeIntervalId = setInterval(() => {
             this.time = Date().toLocaleString();
         }, 1000)
-        this.onlineIntervalId = setInterval(() => { this.getOnline() }, 2000)
-        this.offlineIntervalId = setInterval(() => { this.getOffline() }, 2000)
-        this.maintainIntervalId = setInterval(() => { this.getMaintain() }, 2000)
-        this.onRepairIntervalId = setInterval(() => { this.getOnRepair() }, 2000)
+        this.turbineIntervalId = setInterval(() => { this.getTurbine() }, 2000)
         this.getHarbour()
+        this.getShipList()
     },
     beforeDestroy() {
-        clearInterval(this.onlineIntervalId)
-        clearInterval(this.offlineIntervalId)
-        clearInterval(this.maintainIntervalId)
         clearInterval(this.timeIntervalId)
-        clearInterval(this.onRepairIntervalId)
+        clearInterval(this.turbineIntervalId)
     },
     destroyed() {
         //this.$refs.lushu.destroy()
     },
 
     methods: {
+        handleRouteLoaded(route) {
+            console.log('Route loaded:', route);
+            // 在路线加载完成后的回调函数中，可以对路线进行操作
+            // 例如获取路线长度、耗时等信息，或者在地图上绘制路线
+        },
         // 控制路书暂停
         reset() {
             this.play = false
         },
+        //查询船只
+        getShipList() {
+            listShip(this.taskId).then(res => {
+                this.shipList = res.data
+                console.log(JSON.stringify(res.data))
+            })
+        },
         //查询可用出海港口
         getHarbour() {
-            let taskId = this.$route.params && this.$route.params.taskId;
-            listPort(taskId).then(res => {
-                this.harbourList = res.rows
+            // let taskId = this.$route.params && this.$route.params.taskId;
+            listPort(this.taskId).then(res => {
+                this.harbourList = res.data
             })
         },
-        //查询风力发电机
-        getOnline() {
-            let taskId = this.$route.params && this.$route.params.taskId;
-            // let taskId = sessionStorage.getItem('taskId');
-            listOnlineTurbine(taskId).then(response => {
-                this.onlineList = response.data
-                // console.log("所有的风机" + response.data[0].taskId)
-            })
-        },
-        //查询故障的风机
-        getOffline() {
-            let taskId = this.$route.params && this.$route.params.taskId;
-            listOfflineTurbine(taskId).then(response => {
-                this.offlineList = response.data
-            })
-        },
-        //查询保养的风机
-        getMaintain() {
-            let taskId = this.$route.params && this.$route.params.taskId;
-            listMaintainTurbine(taskId).then(response => {
-                this.maintainList = response.data
-                // console.log(this.maintainList)
-            })
-        },
-        //查询处于正在维修状态的风机,遍历列表将处于维修状态的风机添加到维修列表中
-        getOnRepair() {
-            let taskId = this.$route.params && this.$route.params.taskId;
-            listAllTurbine(taskId).then(response => {
+        //查询所有风机根据风机状态添加到不同的风机列表中
+        getTurbine() {
+            // let taskId = this.$route.params && this.$route.params.taskId;
+            listAllTurbine(this.taskId).then(response => {
                 this.turbineList = response.data
+                console.log(response.data)
                 this.turbineList.forEach((item) => {
-                    if(item.fState === 4 || item.mState === 4){
+                    if (item.fState === 4 || item.mState === 4) {
                         this.onRepairList.push(item)
+                    } else if (item.fState === 1 && item.mState === 2) {
+                        this.doubleStateList.push(item)
+                    } else if (item.fState === 2 && item.mState === 3) {
+                        this.onlineList.push(item)
+                    } else if (item.fState === 1) {
+                        this.offlineList.push(item)
+                    } else if (item.mState === 2) {
+                        this.maintainList.push(item)
                     }
                 });
                 // console.log("所有的风机" + this.turbineList)
@@ -350,22 +360,27 @@ export default {
         goTarget(href) {
             window.open(href, "_blank");
         },
+        //将选择的风机添加到路书中
+        setPath() {
+            this.path = []
+            const portObj = this.harbourList.find(harbour => harbour.pId === this.formData.port);
+            //检验合格
+            this.path.push({ lng: portObj.pLongitude, lat: portObj.pLatitude }); // 将portObj添加到path列表中
+            this.formData.linePath.forEach(item => {
+                this.path.push({ lng: item.lng, lat: item.lat }); // 将linePath中的元素逐个添加到path列表中
+            })
+            this.path.push({ lng: portObj.pLongitude, lat: portObj.pLatitude }); // 将portObj添加到path列表中
+            this.play = true
+            // console.log(this.path);
+        },
         submitForm() {
             this.$refs['elForm'].validate(valid => {
                 if (!valid) return
                 else {
-                    //检验合格 
-                    this.path = this.formData.linePath
-                    this.play = true
-                    console.log(this.path)
+                    // 将表单提交给后端
+                    this.setPath(this.formData.ship)
                 }
             })
-
-            // this.harbourList.forEach(item => {
-            //     if(item.pId === this.formData.wharf){
-            //         this.path.push({lng:item.pLongitude, lat:item.pLatitude})
-            //     }
-            // });
         },
         resetForm() {
             this.$refs['elForm'].resetFields()
@@ -383,7 +398,7 @@ export default {
                     message: '正在维修中',
                     type: 'warning'
                 });
-            }else{
+            } else {
                 let mark = 0
                 this.formData.linePath.forEach(item => {
                     if (item.tId === e.tId) {
