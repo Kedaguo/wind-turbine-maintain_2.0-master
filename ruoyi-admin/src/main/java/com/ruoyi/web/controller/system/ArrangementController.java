@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.dto.ArrangementDto;
 import com.ruoyi.system.domain.vo.ArrangementVo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,17 +44,30 @@ public class ArrangementController extends BaseController
     @Resource
     private TokenService tokenService;
     /**
-     * 查询arrangement列表
+     * 查询arrangement列表 - teacher
      */
     @PreAuthorize("@ss.hasPermi('system:arrangement:list')")
     @GetMapping("/list")
     public TableDataInfo list(Arrangement arrangement)
     {
         startPage();
-        List<Arrangement> list = arrangementService.selectArrangementList(arrangement);
+        List<ArrangementDto> list = arrangementService.selectArrangementDtoList(arrangement);
         return getDataTable(list);
     }
 
+
+    /**
+     * 查询arrangement列表 - student
+     */
+//    @PreAuthorize("@ss.hasPermi('system:arrangement:listByStudent')")
+    @GetMapping("/listByStudent")
+    public TableDataInfo listByStudent(Arrangement arrangement,HttpServletRequest request)
+    {
+        startPage();
+        arrangement.setUserId(tokenService.getLoginUser(request).getUserId());
+        List<ArrangementDto> list = arrangementService.selectArrangementDtoList(arrangement);
+        return getDataTable(list);
+    }
     //出海作业结束
 
     /**

@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="aId"    column="a_id"    />
         <result property="pId"    column="p_id"    />
         <result property="oNum"    column="o_num"    />
-        <result property="bNum"    column="b_num"    />
+        <result property="bId"    column="b_id"    />
         <result property="bType"    column="b_type"    />
         <result property="userId"    column="user_id"    />
         <result property="taskId"    column="task_id"    />
@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectArrangementVo">
-        select a_id, p_id, o_num, b_num, b_type, user_id, task_id, a_name, start_location, end_location, start_time, end_time, a_create_time from tl_arrangement
+        select a_id, p_id, o_num, b_id, b_type, user_id, task_id, a_name, start_location, end_location, start_time, end_time, a_create_time from tl_arrangement
     </sql>
 
     <select id="selectArrangementList" parameterType="Arrangement" resultMap="ArrangementResult">
@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="pId != null "> and p_id = #{pId}</if>
             <if test="oNum != null "> and o_num = #{oNum}</if>
-            <if test="bNum != null "> and b_num = #{bNum}</if>
+            <if test="bId != null "> and b_id = #{bId}</if>
             <if test="bType != null "> and b_type = #{bType}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="taskId != null "> and task_id = #{taskId}</if>
@@ -54,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pId != null">p_id,</if>
             <if test="oNum != null">o_num,</if>
-            <if test="bNum != null">b_num,</if>
+            <if test="bId != null">b_id,</if>
             <if test="bType != null">b_type,</if>
             <if test="userId != null">user_id,</if>
             <if test="taskId != null">task_id,</if>
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pId != null">#{pId},</if>
             <if test="oNum != null">#{oNum},</if>
-            <if test="bNum != null">#{bNum},</if>
+            <if test="bId != null">#{bId},</if>
             <if test="bType != null">#{bType},</if>
             <if test="userId != null">#{userId},</if>
             <if test="taskId != null">#{taskId},</if>
@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="pId != null">p_id = #{pId},</if>
             <if test="oNum != null">o_num = #{oNum},</if>
-            <if test="bNum != null">b_num = #{bNum},</if>
+            <if test="bId != null">b_id = #{bId},</if>
             <if test="bType != null">b_type = #{bType},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="taskId != null">task_id = #{taskId},</if>

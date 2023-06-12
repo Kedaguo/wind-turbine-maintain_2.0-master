@@ -16,15 +16,13 @@ public interface ITaskStudentService
     /**
      * 查询taskStudent
      * 
-     * @param userId taskStudent主键
      * @return taskStudent
      */
     public TaskStudent selectTaskStudentByUserId(TaskStudent taskStudent);
-
+    public Integer selectNoStartTask(TaskStudent taskStudent);
     /**
      * 查询taskStudent列表
      * 
-     * @param taskStudent taskStudent
      * @return taskStudent集合
      */
     public List<TaskStudentDto> selectTaskStudentList(Long userId);

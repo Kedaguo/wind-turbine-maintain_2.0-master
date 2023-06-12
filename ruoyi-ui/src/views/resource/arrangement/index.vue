@@ -1,4 +1,15 @@
 <template>
+  <div id="main">
+    <!-- 弹框 -->
+    <div class="modal-wrapper"  v-if="showDialog">
+      <div class="modal-mask"  @click.stop></div>
+        <div class="modal-content">
+          <el-dialog  v-if="showDialog" title="提示消息" :visible.sync="showDialog">
+            <p class="alert-text" style="text-align: center;color:#ed0505;font-size: 25px;">任务尚未开始，请开始任务！</p>
+            <p class="alert-timer">跳转倒计时：{{ countdown }}秒</p>
+          </el-dialog>
+        </div>
+     </div>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="用户编号" prop="userId">
@@ -31,55 +42,10 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:arrangement:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:arrangement:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:arrangement:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:arrangement:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
     <el-table v-loading="loading" :data="arrangementList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="规划编号" align="center" prop="aId" />
+      <!-- <el-table-column type="selection" width="55" align="center" /> -->
+      <el-table-column label="规划序列" type="index" width="50"/>
+      <!-- <el-table-column label="规划编号" align="center" prop="aId" /> -->
       <el-table-column label="任务编号" align="center" prop="taskId" />
       <el-table-column label="港口" align="center" prop="pportName" />
       <el-table-column label="维修人员数量" align="center" prop="oNum" />
@@ -103,24 +69,6 @@
           <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:arrangement:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:arrangement:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
 
     <pagination
@@ -130,30 +78,52 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改arrangement对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户编号" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户编号" />
-        </el-form-item>
-        <el-form-item label="任务编号" prop="taskId">
-          <el-input v-model="form.taskId" placeholder="请输入任务编号" />
-        </el-form-item>
-        <el-form-item label="规划名称" prop="aName">
-          <el-input v-model="form.aName" placeholder="请输入规划名称" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </div>
-    </el-dialog>
   </div>
+</div>
 </template>
+<style>
+  /* .alert{
+    text-align: center;
+  } */
+  /* .alert{
+    width: 200px;
+    height: auto;
+  } */
+  .alert-text{
+    text-align: center;
+  }
+  .alert-timer{
+    font-size: 15px;
+  }
+  .modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
 
+  .modal-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+
+  .modal-content {
+    /* 弹框内容样式 */
+    z-index: 2;
+  }
+</style>
 <script>
-import { listArrangement, getArrangement, delArrangement, addArrangement, updateArrangement } from "@/api/system/arrangement";
+import { listArrangement, getArrangement, delArrangement, addArrangement, updateArrangement } from "@/api/resource/arrangement";
 
 export default {
   name: "Arrangement",
@@ -162,6 +132,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      showDialog: false,
+      countdown: 3, // 计时器初始值为3
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -208,7 +180,37 @@ export default {
   created() {
     this.getList();
   },
+  mounted(){
+     // 在通过mounted调用即可
+     const taskId = sessionStorage.getItem("taskId");
+    if (!taskId) {
+      // 不存在taskId，显示弹框
+      this.showDialog = true; // 使用一个变量来控制弹框的显示与隐藏
+      this.startCountdown(); // 开始计时器
+      // window.addEventListener("beforeunload", (event) => this.handleBeforeUnload(event));
+    }else{
+      this.getList();
+    }
+
+  },
   methods: {
+    startCountdown() {
+      let timer = setInterval(() => {
+        this.countdown--;
+        if (this.countdown === 0) {
+          clearInterval(timer);
+          // 在这里执行路由跳转
+          console.log("123123")
+          // this.$router.push('/your-route');
+          this.$router.push({ path: "/task" });
+
+          // 关闭当前页面
+          this.$nextTick(() => {
+            this.$destroy();
+          });
+        }
+      }, 1000); // 每秒减少1
+    },
     /** 查询arrangement列表 */
     getList() {
       this.loading = true;
@@ -254,64 +256,6 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.aId)
-      this.single = selection.length!==1
-      this.multiple = !selection.length
-    },
-    /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加arrangement";
-    },
-    /** 修改按钮操作 */
-    handleUpdate(row) {
-      this.reset();
-      const aId = row.aId || this.ids
-      getArrangement(aId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改arrangement";
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.aId != null) {
-            updateArrangement(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addArrangement(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 删除按钮操作 */
-    handleDelete(row) {
-      const aIds = row.aId || this.ids;
-      this.$modal.confirm('是否确认删除arrangement编号为"' + aIds + '"的数据项？').then(function() {
-        return delArrangement(aIds);
-      }).then(() => {
-        this.getList();
-        this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('system/arrangement/export', {
-        ...this.queryParams
-      }, `arrangement_${new Date().getTime()}.xlsx`)
-    }
   }
 };
 </script>

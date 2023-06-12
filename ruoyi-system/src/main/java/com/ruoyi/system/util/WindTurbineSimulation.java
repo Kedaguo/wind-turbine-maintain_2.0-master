@@ -103,7 +103,7 @@ public class WindTurbineSimulation {
                 double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"lambda"+lambda);
                 if (rand<=probability){
-                    handleFault(taskTurbineFault,fault);
+                    handleFault(taskTurbineFault,fault,date);
                     //发生故障后跳出循环
                     break;
                 }
@@ -124,7 +124,7 @@ public class WindTurbineSimulation {
                 double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"probability"+probability);
                 if (rand<=probability){
-                    handleMaintain(taskTurbineMaintain,maintain);
+                    handleMaintain(taskTurbineMaintain,maintain,date);
                     //发生故障后跳出循环
                     break;
                 }
@@ -153,13 +153,6 @@ public class WindTurbineSimulation {
                     updateBoatWork(arrangement1,taskId,userId);
                     //更新维修员工出海作业状态
                     updateOperatorWork(arrangement1,taskId,userId);
-
-
-
-
-
-
-
 
                 }
 
@@ -260,8 +253,6 @@ public class WindTurbineSimulation {
             taskStudentChargeSum(taskId,userId);
             taskStudent.setTaskState(3l);
             int flag = iTaskStudentService.updateTaskStudent(taskStudent);
-
-
         }
         //更新用户模拟时间
         taskStudent.setTaskSimulateTime(date);
@@ -337,7 +328,7 @@ public class WindTurbineSimulation {
         return taskTurbineMaintains;
     }
 
-    public void handleFault(TaskTurbine taskTurbine,Fault fault){
+    public void handleFault(TaskTurbine taskTurbine,Fault fault,Date date){
         System.out.println("Device fault occurred.");
         taskTurbine.setfId(fault.getfId());
         //0 未开始工作  1 故障停机  2 正常工作
@@ -346,7 +337,7 @@ public class WindTurbineSimulation {
         //生成维修单
         RepairOrder repairOrder = new RepairOrder();
         BeanUtils.copyProperties(taskTurbine,repairOrder);
-        repairOrder.setrCreateTime(DateUtils.getNowDate());
+        repairOrder.setrCreateTime(date);
         repairOrder.setrState(0);
 
         //生成故障维修单(condition 1 ：如果有相同风机发生保养了那么维修单就需要合并)
@@ -366,7 +357,7 @@ public class WindTurbineSimulation {
 
     }
 
-    public void handleMaintain(TaskTurbine taskTurbine, Maintain maintain){
+    public void handleMaintain(TaskTurbine taskTurbine, Maintain maintain,Date date){
         System.out.println("Device fault occurred.");
         taskTurbine.setmId(maintain.getmId());
          //0 未开始工作 1需要保养且正常工作  2  保养不工作  3 正常工作
@@ -378,8 +369,7 @@ public class WindTurbineSimulation {
         TaskStudent taskStudent = new TaskStudent();
         taskStudent.setTaskId(taskTurbine.getTaskId());
         taskStudent.setUserId(taskTurbine.getUserId());
-        TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
-        repairOrder.setrCreateTime(taskStudent1.getTaskSimulateTime());
+        repairOrder.setrCreateTime(date);
         repairOrder.setrState(0);
         //生成故障维修单(condition 1 ：如果有相同风机发生保养了那么维修单就需要合并)
         QueryWrapper<RepairOrder> repairOrderQueryWrapper = new QueryWrapper<>();

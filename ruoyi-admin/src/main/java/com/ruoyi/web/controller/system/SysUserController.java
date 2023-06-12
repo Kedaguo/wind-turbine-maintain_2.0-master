@@ -73,23 +73,6 @@ public class SysUserController extends BaseController
         return getDataTable(list);
     }
 
-    /*
-    老师分配小组
-     */
-
-//    @PreAuthorize("@ss.hasPermi('system:user:divide')")
-//    @GetMapping("/divide")
-//    public TableDataInfo divideStudentGroup(@RequestParam Integer groupNumber)
-//    {
-//        startPage();
-////        List<SysUser> list = userService.listByRoles(sysUserRole);
-////        return getDataTable(list);
-//        return
-//    }
-
-
-
-
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @PostMapping("/export")

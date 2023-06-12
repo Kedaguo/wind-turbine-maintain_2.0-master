@@ -8,7 +8,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="mId"    column="m_id"    />
         <result property="mFrequencyPerYear"    column="m_frequency_per_year"    />
         <result property="mConsumableCost"    column="m_consumable_cost"    />
-        <result property="mBoatModel"    column="m_boat_model"    />
         <result property="mPrepareDuration"    column="m_prepare_duration"    />
         <result property="mMaintainDuration"    column="m_maintain_duration"    />
         <result property="mPeopleNumber"    column="m_people_number"    />
@@ -18,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectMaintainVo">
-        select m_id, m_frequency_per_year, m_consumable_cost, m_boat_model, m_prepare_duration, m_maintain_duration, m_people_number, m_fault_type, m_fault_device, m_faultfre from tl_maintain
+        select m_id, m_frequency_per_year, m_consumable_cost,  m_prepare_duration, m_maintain_duration, m_people_number, m_fault_type, m_fault_device, m_faultfre from tl_maintain
     </sql>
 
     <select id="selectMaintainList" parameterType="Maintain" resultMap="MaintainResult">
@@ -42,7 +41,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mId != null">m_id,</if>
             <if test="mFrequencyPerYear != null">m_frequency_per_year,</if>
             <if test="mConsumableCost != null">m_consumable_cost,</if>
-            <if test="mBoatModel != null">m_boat_model,</if>
             <if test="mPrepareDuration != null">m_prepare_duration,</if>
             <if test="mMaintainDuration != null">m_maintain_duration,</if>
             <if test="mPeopleNumber != null">m_people_number,</if>
@@ -54,7 +52,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="mId != null">#{mId},</if>
             <if test="mFrequencyPerYear != null">#{mFrequencyPerYear},</if>
             <if test="mConsumableCost != null">#{mConsumableCost},</if>
-            <if test="mBoatModel != null">#{mBoatModel},</if>
             <if test="mPrepareDuration != null">#{mPrepareDuration},</if>
             <if test="mMaintainDuration != null">#{mMaintainDuration},</if>
             <if test="mPeopleNumber != null">#{mPeopleNumber},</if>
@@ -69,7 +66,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="mFrequencyPerYear != null">m_frequency_per_year = #{mFrequencyPerYear},</if>
             <if test="mConsumableCost != null">m_consumable_cost = #{mConsumableCost},</if>
-            <if test="mBoatModel != null">m_boat_model = #{mBoatModel},</if>
             <if test="mPrepareDuration != null">m_prepare_duration = #{mPrepareDuration},</if>
             <if test="mMaintainDuration != null">m_maintain_duration = #{mMaintainDuration},</if>
             <if test="mPeopleNumber != null">m_people_number = #{mPeopleNumber},</if>

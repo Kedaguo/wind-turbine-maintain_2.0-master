@@ -16,7 +16,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-04-14
  */
 @TableName(value = "tl_arrangement")
-public class Arrangement extends BaseEntity
+public class Arrangement
 {
     private static final long serialVersionUID = 1L;
 

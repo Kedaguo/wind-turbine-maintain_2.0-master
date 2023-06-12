@@ -43,6 +43,7 @@ public class OperatorController extends BaseController
     {
         startPage();
         List<Operator> list = operatorService.selectOperatorList(operator);
+        System.out.println("1111"+getDataTable(list).getTotal());
         return getDataTable(list);
     }
 

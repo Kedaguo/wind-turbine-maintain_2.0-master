@@ -82,19 +82,20 @@
     <el-table v-loading="loading" :data="taskList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="index" width="50"></el-table-column>
+      <el-table-column label="任务名称" align="center" prop="taskName" />
       <el-table-column label="任务开始时间" align="center" prop="taskStartTime" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.taskStartTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.taskStartTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="任务结束时间" align="center" prop="taskEndTime" >
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.taskEndTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.taskEndTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="任务发布时间" align="center" prop="taskCreateTime">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.taskCreateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.taskCreateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="发布人" align="center" prop="taskCreateBy" />
@@ -127,10 +128,17 @@
     <!-- 添加或修改task对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="任务名称" prop="taskName" >
+          <el-input
+          style="width: 220px;"
+          clearable
+          v-model="form.taskName" placeholder="请输入任务名称" />
+        </el-form-item>
         <el-form-item label="任务开始时间" prop="taskStartTime">
           <el-date-picker clearable
             v-model="form.taskStartTime"
             type="date"
+            :default-value="defaultTime"
             value-format="yyyy-MM-dd"
             placeholder="请选择任务开始时间">
           </el-date-picker>
@@ -139,6 +147,7 @@
           <el-date-picker clearable
             v-model="form.taskEndTime"
             type="date"
+            :default-value="defaultTime"
             value-format="yyyy-MM-dd"
             placeholder="请选择任务结束时间">
           </el-date-picker>
@@ -153,7 +162,7 @@
 </template>
 
 <script>
-import { listTask, getTask, delTask, addTask, updateTask } from "@/api/system/task";
+import { listTask, getTask, delTask, addTask, updateTask, getNoStartTask } from "@/api/system/task";
 
 export default {
   name: "Task",
@@ -164,6 +173,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      defaultTime: "2007-01-01",
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -221,6 +231,7 @@ export default {
         taskTime: null,
         taskPoints: null,
         taskState: null,
+        taskName: null,
         taskStartTime: null,
         taskEndTime: null,
         taskCreateTime: null,
@@ -248,7 +259,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加task";
+      this.title = "添加任务";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -257,11 +268,12 @@ export default {
       getTask(taskId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改task";
+        this.title = "修改人物";
       });
     },
     /** 提交按钮 */
     submitForm() {
+      console.log("123123123")
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.taskId != null) {
@@ -271,11 +283,20 @@ export default {
               this.getList();
             });
           } else {
-            addTask(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+            getNoStartTask(this.form).then(response =>{
+              if(response.data==0){
+                addTask(this.form).then(response => {
+                console.log("adddddd")
+                this.$modal.msgSuccess("新增成功");
+                this.open = false;
+                this.getList();
+              });
+              }else if(response.data == 1){
+                this.$modal.msgError("添加失败，存在未开始的任务！");
+              }
+
+            })
+
           }
         }
       });

@@ -22,7 +22,6 @@ public interface ITaskService
      * @return task
      */
     public Task selectTaskByTaskId(Long taskId);
-
     /*
     根据教师查询任务
      */

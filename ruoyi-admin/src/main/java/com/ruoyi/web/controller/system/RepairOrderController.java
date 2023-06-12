@@ -40,6 +40,77 @@ public class RepairOrderController extends BaseController
     /**
      * 查询repairOrder列表
      */
+//    @PreAuthorize("@ss.hasPermi('system:repairOrder:listByStudent')")
+    @GetMapping("/listByStudent")
+    public TableDataInfo listByStudent(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return getDataTable(list);
+    }
+    @GetMapping("/noStartNum")
+    public AjaxResult noStartNum(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        repairOrder.setrState(0);
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return success(list.size());
+    }
+    @GetMapping("/runningNum")
+    public AjaxResult runningNum(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        startPage();
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        repairOrder.setrState(1);
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return success(list.size());
+
+    }
+    @GetMapping("/endNum")
+    public AjaxResult endNum(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        repairOrder.setrState(2);
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return success(list.size());
+    }
+    @GetMapping("/rFaultNum")
+    public AjaxResult rFaultNum(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        repairOrder.setrType(1);
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return success(list.size());
+    }
+    @GetMapping("/rMaintainNum")
+    public AjaxResult rMaintainNum(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        repairOrder.setrType(2);
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return success(list.size());
+    }
+    @GetMapping("/rFaultAndMaintainNum")
+    public AjaxResult rFaultAndMaintainNum(RepairOrder repairOrder,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        repairOrder.setUserId(loginUser.getUserId());
+        repairOrder.setrType(3);
+        List<RepairOrder> list = repairOrderService.selectRepairOrderList(repairOrder);
+        return success(list.size());
+    }
+
+
+    /**
+     * 查询repairOrder列表
+     */
     @PreAuthorize("@ss.hasPermi('system:repairOrder:list')")
     @GetMapping("/list")
     public TableDataInfo list(RepairOrder repairOrder)

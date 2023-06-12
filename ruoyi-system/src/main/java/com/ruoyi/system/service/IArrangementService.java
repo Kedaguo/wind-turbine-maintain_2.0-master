@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 import com.ruoyi.system.domain.Arrangement;
+import com.ruoyi.system.domain.dto.ArrangementDto;
 import com.ruoyi.system.domain.vo.ArrangementVo;
 
 /**
@@ -28,6 +29,8 @@ public interface IArrangementService
      * @return arrangement集合
      */
     public List<Arrangement> selectArrangementList(Arrangement arrangement);
+
+    public List<ArrangementDto> selectArrangementDtoList(Arrangement arrangement);
 
     /**
      * 新增arrangement

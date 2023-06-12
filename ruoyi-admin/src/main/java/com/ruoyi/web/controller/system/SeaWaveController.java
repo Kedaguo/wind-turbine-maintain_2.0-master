@@ -52,8 +52,11 @@ public class SeaWaveController extends BaseController
     public AjaxResult weather(TaskStudent taskStudent, HttpServletRequest request)
     {
         taskStudent.setUserId(tokenService.getLoginUser(request).getUserId());
-        Date taskSimulateTime = iTaskStudentService.selectTaskStudentByUserId(taskStudent).getTaskSimulateTime();
-        List<SeaWave> seaWaves = seaWaveService.selectWeatherList(taskSimulateTime);
+        TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
+        if (taskStudent1==null){
+            return AjaxResult.error("查询数据为空",500);
+        }
+        List<SeaWave> seaWaves = seaWaveService.selectWeatherList(taskStudent1.getTaskSimulateTime());
         return success(seaWaves);
     }
     /**

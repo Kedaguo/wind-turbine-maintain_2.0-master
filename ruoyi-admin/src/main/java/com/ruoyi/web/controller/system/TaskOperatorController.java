@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.system.domain.TurbineWind;
 import com.ruoyi.system.domain.dto.TaskOperatorDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,14 +94,18 @@ public class TaskOperatorController extends BaseController
         Integer size = taskOperatorService.selectTaskOperatorList(taskOperator).size();
         return AjaxResult.success(size);
     }
-    @PreAuthorize("@ss.hasPermi('system:taskOperator:listByUser')")
+//    @PreAuthorize("@ss.hasPermi('system:taskOperator:listByUser')")
     @GetMapping("/listByUser")
-    public TableDataInfo selectTaskOperatorByUser(@RequestParam Long taskId, HttpServletRequest request)
+    public TableDataInfo selectTaskOperatorByUser(TaskOperator taskOperator, HttpServletRequest request)
     {
-        startPage();
         LoginUser loginUser = tokenService.getLoginUser(request);
-        List<TaskOperatorDto> list = taskOperatorService.selectTaskOperatorByUser(taskId,loginUser.getUserId());
-        return getDataTable(list);
+        taskOperator.setUserId(loginUser.getUserId());
+        List<TaskOperatorDto> list1 = taskOperatorService.selectTaskOperatorByUser(taskOperator);
+        startPage();
+        List<TaskOperatorDto> list = taskOperatorService.selectTaskOperatorByUser(taskOperator);
+        TableDataInfo dataTable = getDataTable(list);
+        dataTable.setTotal(list1.size());
+        return dataTable;
     }
     /**
      * 导出taskOperator列表

@@ -54,10 +54,7 @@ public class TaskOperatorServiceImpl implements ITaskOperatorService
     }
 
     @Override
-    public List<TaskOperatorDto> selectTaskOperatorByUser (Long taskId, Long userId) {
-        TaskOperator taskOperator = new TaskOperator();
-        taskOperator.setTaskId(taskId);
-        taskOperator.setUserId(userId);
+    public List<TaskOperatorDto> selectTaskOperatorByUser (TaskOperator taskOperator) {
         List<TaskOperator> taskOperators = taskOperatorMapper.selectTaskOperatorList(taskOperator);
         ArrayList<TaskOperatorDto> taskOperatorDtos = new ArrayList<>();
         for (TaskOperator taskOperator1:taskOperators){

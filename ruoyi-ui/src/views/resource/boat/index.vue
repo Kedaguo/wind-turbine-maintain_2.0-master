@@ -1,9 +1,21 @@
 <template>
   <div id="main">
+    <!-- 弹框 -->
+    <div class="modal-wrapper"  v-if="showDialog">
+      <div class="modal-mask"  @click.stop></div>
+        <div class="modal-content">
+          <el-dialog  v-if="showDialog" title="提示消息" :visible.sync="showDialog">
+            <p class="alert-text" style="text-align: center;color:#ed0505;font-size: 25px;">任务尚未开始，请开始任务！</p>
+            <p class="alert-timer">跳转倒计时：{{ countdown }}秒</p>
+          </el-dialog>
+        </div>
+     </div>
+
     <div style="width: 650px; height: 400px; float: left" id="boat"></div>
     <div style="width: 650px; height: 400px; float: right" id="operator"></div>
     <div class="app-container">
       <el-table v-loading="loading" :data="boatList">
+        <el-table-column label="序列" type="index" width="50"></el-table-column>
         <el-table-column label="船舶类型" align="center" prop="bt··ype">
           <template slot-scope="scope">
             <dict-tag :options="dict.type.b_type" :value="scope.row.bType" />
@@ -18,10 +30,57 @@
         <el-table-column label="空闲" align="center" prop="bhourCost" />
         <el-table-column label="工作" align="center" prop="bhourCost" />
       </el-table>
+      <pagination
+        v-show="total > 0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
     </div>
   </div>
 </template>
+<style>
+  /* .alert{
+    text-align: center;
+  } */
+  /* .alert{
+    width: 200px;
+    height: auto;
+  } */
+  .alert-text{
+    text-align: center;
+  }
+  .alert-timer{
+    font-size: 15px;
+  }
+  .modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
 
+  .modal-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+
+  .modal-content {
+    /* 弹框内容样式 */
+    z-index: 2;
+  }
+</style>
 <script>
 import {
   listBoat,
@@ -38,6 +97,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      showDialog: false,
+      countdown: 3, // 计时器初始值为3
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -58,7 +119,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        taskId: 91,
+        taskId: sessionStorage.getItem("taskId"),
         bModel: null,
         bSpeed: null,
         bCapacity: null,
@@ -83,24 +144,51 @@ export default {
       workBoatNumber: 0,
       waitBoatNumber: 0,
       queryEchartsParams: {
-      taskId: sessionStorage.getItem("taskId"),
+        taskId: sessionStorage.getItem("taskId"),
       },
     };
   },
   created() {
-    this.getBoatData();
-    this.getList();
+
   },
   mounted() {
     // 在通过mounted调用即可
+    const taskId = sessionStorage.getItem("taskId");
+    if (!taskId) {
+      // 不存在taskId，显示弹框
+      this.showDialog = true; // 使用一个变量来控制弹框的显示与隐藏
+      this.startCountdown(); // 开始计时器
+      // window.addEventListener("beforeunload", (event) => this.handleBeforeUnload(event));
+    }else{
+      this.getBoatData();
+      this.getList();
+    }
   },
+
   methods: {
+
+    startCountdown() {
+      let timer = setInterval(() => {
+        this.countdown--;
+        if (this.countdown === 0) {
+          clearInterval(timer);
+          // 在这里执行路由跳转
+          console.log("123123")
+          // this.$router.push('/your-route');
+          this.$router.push({ path: "/task" });
+
+          // 关闭当前页面
+          this.$nextTick(() => {
+            this.$destroy();
+          });
+        }
+      }, 1000); // 每秒减少1
+    },
     /** 查询boat列表 */
     getList() {
       this.loading = true;
       listBoat(this.queryParams).then((response) => {
         this.boatList = response.rows;
-        console.log("1111" + this.boatList);
         this.total = response.total;
         this.loading = false;
       });

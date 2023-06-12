@@ -41,13 +41,24 @@ public class TaskStudentServiceImpl implements ITaskStudentService
     /**
      * 查询taskStudent
      * 
-     * @param userId taskStudent主键
      * @return taskStudent
      */
     @Override
     public TaskStudent selectTaskStudentByUserId(TaskStudent taskStudent)
     {
         return taskStudentMapper.selectTaskStudentByUserId(taskStudent);
+    }
+
+    @Override
+    public Integer selectNoStartTask (TaskStudent taskStudent) {
+        List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
+        System.out.println("taskStudents"+taskStudents);
+        if (taskStudents.size() == 0){
+            System.out.println("11111111");
+            return 0;
+        }else {
+            return 1;
+        }
     }
 
     /**

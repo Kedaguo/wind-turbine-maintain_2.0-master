@@ -1,11 +1,14 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.domain.*;
+import com.ruoyi.system.domain.dto.ArrangementDto;
 import com.ruoyi.system.domain.vo.ArrangementVo;
 import com.ruoyi.system.mapper.*;
 import org.springframework.beans.BeanUtils;
@@ -55,6 +58,9 @@ public class ArrangementServiceImpl implements IArrangementService
     @Resource
     private ArrangementOperatorMapper arrangementOperatorMapper;
 
+    @Resource
+    private SysUserMapper sysUserMapper;
+
 //    @Resource
 //    private RyTask ryTask;
 
@@ -70,6 +76,11 @@ public class ArrangementServiceImpl implements IArrangementService
         return arrangementMapper.selectArrangementByAId(aId);
     }
 
+    @Override
+    public List<Arrangement> selectArrangementList (Arrangement arrangement) {
+        return arrangementMapper.selectArrangementList(arrangement);
+    }
+
     /**
      * 查询arrangement列表
      * 
@@ -77,9 +88,20 @@ public class ArrangementServiceImpl implements IArrangementService
      * @return arrangement
      */
     @Override
-    public List<Arrangement> selectArrangementList(Arrangement arrangement)
+    public List<ArrangementDto> selectArrangementDtoList(Arrangement arrangement)
     {
-        return arrangementMapper.selectArrangementList(arrangement);
+        List<Arrangement> arrangements = arrangementMapper.selectArrangementList(arrangement);
+        ArrayList<ArrangementDto> arrangementDtos = new ArrayList<>();
+        for (Arrangement arrangement1:arrangements){
+            ArrangementDto arrangementDto = new ArrangementDto();
+            Port port = portMapper.selectPortByPId(arrangement1.getpId());
+            SysUser sysUser = sysUserMapper.selectUserById(arrangement1.getUserId());
+            arrangementDto.setPPortName(port.getpPortname());
+            arrangementDto.setUserName(sysUser.getUserName());
+            BeanUtils.copyProperties(arrangement1,arrangementDto);
+            arrangementDtos.add(arrangementDto);
+        }
+        return arrangementDtos;
     }
 
     /**

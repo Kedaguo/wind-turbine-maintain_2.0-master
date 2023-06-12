@@ -27,7 +27,8 @@ public interface ITaskOperatorService
      * @return taskOperator集合
      */
     public List<TaskOperator> selectTaskOperatorList(TaskOperator taskOperator);
-    public List<TaskOperatorDto> selectTaskOperatorByUser(Long taskId,Long userId);
+
+    public List<TaskOperatorDto> selectTaskOperatorByUser(TaskOperator taskOperator);
     /**
      * 新增taskOperator
      * 

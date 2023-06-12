@@ -38,21 +38,6 @@ public class FaultController extends BaseController
     @Autowired
     private IFaultService faultService;
 
-
-    /*
-    风机按照指数分布发生故障
-     */
-//    @ApiOperation(value = "风机按照指数分布发生故障")
-//    @PreAuthorize("@ss.hasPermi('system:fault:generateFaultByDistribution')")
-//    @GetMapping("/generateFaultByDistribution")
-//    public AjaxResult generateFaultByDistribution(Fault fault)
-//    {
-//        return getDataTable(list);
-//    }
-
-
-
-
     /**
      * 查询故障信息列表
      */
@@ -60,6 +45,18 @@ public class FaultController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:fault:list')")
     @GetMapping("/list")
     public TableDataInfo list(Fault fault)
+    {
+        startPage();
+        List<Fault> list = faultService.selectFaultList(fault);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询故障信息列表-student
+     */
+//    @PreAuthorize("@ss.hasPermi('system:fault:list')")
+    @GetMapping("/listByStudent")
+    public TableDataInfo listByStudent(Fault fault)
     {
         startPage();
         List<Fault> list = faultService.selectFaultList(fault);

@@ -44,7 +44,7 @@ public class RepairOrder extends BaseEntity
     private Integer rType;
 
     /**  发生时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = " 发生时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date rCreateTime;
 

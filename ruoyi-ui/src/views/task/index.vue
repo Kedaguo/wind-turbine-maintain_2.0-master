@@ -149,7 +149,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 //将当前开始的任务存储到session中
-                // sessionStorage.setItem('taskId', row.taskId);
+                sessionStorage.setItem('taskId', row.taskId);
                 let invokeTarget = `ryTask.windTurbineSimulation(${row.taskId}L,${row.userId}L,1000)`
                 let data = {
                     taskId: row.taskId,
@@ -166,6 +166,8 @@ export default {
         },
         //继续任务
         continueTask(row){
+            //将当前开始的任务存储到session中
+            sessionStorage.setItem('taskId', row.taskId);
             this.$router.push(`task-map/index/${row.taskId}`)
         },
         //查看任务的详细信息

@@ -69,7 +69,11 @@ public class TaskBoatController extends BaseController
         taskBoat.setbState(0);
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
-        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
+        Integer size = taskBoatService.selectTaskBoatListSize(taskBoat);
+        if(taskBoat.getTaskId()==null){
+            size = 0;
+        }
+        return success(size);
     }
     /**
      * 查询taskBoat 等待条件出海作业
@@ -81,7 +85,11 @@ public class TaskBoatController extends BaseController
         taskBoat.setbState(1);
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
-        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
+        Integer size = taskBoatService.selectTaskBoatListSize(taskBoat);
+        if(taskBoat.getTaskId()==null){
+            size = 0;
+        }
+        return success(size);
     }
     /**
      * 查询taskBoat 工作数量
@@ -94,7 +102,11 @@ public class TaskBoatController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         taskBoat.setUserId(loginUser.getUserId());
         System.out.println("bbbbbbooooooaaaatttt"+taskBoat);
-        return success(taskBoatService.selectTaskBoatListSize(taskBoat));
+        Integer size = taskBoatService.selectTaskBoatListSize(taskBoat);
+        if(taskBoat.getTaskId()==null){
+            size = 0;
+        }
+        return success(size);
     }
 
     /**

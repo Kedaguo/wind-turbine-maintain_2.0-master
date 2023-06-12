@@ -57,6 +57,7 @@ public class TaskController extends BaseController
     @Resource
     private ITaskStudentService iTaskStudentService;
 
+
     @Log(title = "开始任务", businessType = BusinessType.UPDATE)
     @PostMapping("/startTaskJob")
     public AjaxResult startTaskJob(@RequestBody SysJobVo job, HttpServletRequest request) throws SchedulerException, TaskException
@@ -82,6 +83,13 @@ public class TaskController extends BaseController
         LoginUser loginUser = tokenService.getLoginUser(request);
         List<Task> list = taskService.selectTaskListByTeacher(loginUser.getUsername());
         return getDataTable(list);
+    }
+    //查询任务列表 返回 0 1
+    @GetMapping("/getNoStartTask")
+    public AjaxResult getNoStartTask(TaskStudent taskStudent)
+    {
+        taskStudent.setTaskState(1l);
+        return success(iTaskStudentService.selectNoStartTask(taskStudent));
     }
     /**
      *查询task列表  学生查看查询task列表  user_id

@@ -29,7 +29,7 @@
       </el-col>
       <el-col :span="7">
         <div class="grid-content e-form">
-          <el-row :gutter="6"><ve-line :data="chartData" :mark-line="markLine"></ve-line></el-row>
+          <!-- <el-row :gutter="6"><ve-line :data="chartData" :mark-line="markLine"></ve-line></el-row> -->
           <el-row :gutter="6">
             <el-form ref="elForm" :model="formData" :rules="rules" size="medium" label-width="100px">
               <el-col :span="12">

@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询boat列表
 export function listOperator(query) {
   return request({
-    url: '/system/taskOperator/list',
+    url: '/system/taskOperator/listByUser',
     method: 'get',
     params:query
   })
