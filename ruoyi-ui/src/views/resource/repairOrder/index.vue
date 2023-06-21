@@ -1,9 +1,9 @@
 <template>
   <div class="main">
     <!-- 弹框 -->
-    <div class="modal-wrapper"  v-if="showDialog">
-      <div class="modal-mask"  @click.stop></div>
-        <div class="modal-content">
+    <div class="modal-wrapper"   v-if="showDialog"  @click.stop>
+      <div class="modal-mask"  v-if="showDialog"  @click.stop></div>
+        <div class="modal-content" >
           <el-dialog  v-if="showDialog" title="提示消息" :visible.sync="showDialog">
             <p class="alert-text" style="text-align: center;color:#ed0505;font-size: 25px;">任务尚未开始，请开始任务！</p>
             <p class="alert-timer">跳转倒计时：{{ countdown }}秒</p>
@@ -179,12 +179,22 @@ export default {
       this.startCountdown(); // 开始计时器
       // window.addEventListener("beforeunload", (event) => this.handleBeforeUnload(event));
     }else{
-      this.getList();
-      this.getRepairOrderData();
+      this.startTimer();
     }
 
   },
   methods: {
+    startTimer(){
+      this.timerId = setInterval(this.timerHandler, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.timerId);
+      this.timerId = null;
+    },
+    timerHandler(){
+      this.getList();
+      this.getRepairOrderData();
+    },
     startCountdown() {
       let timer = setInterval(() => {
         this.countdown--;

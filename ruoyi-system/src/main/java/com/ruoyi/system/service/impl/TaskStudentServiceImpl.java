@@ -50,15 +50,16 @@ public class TaskStudentServiceImpl implements ITaskStudentService
     }
 
     @Override
-    public Integer selectNoStartTask (TaskStudent taskStudent) {
-        List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
-        System.out.println("taskStudents"+taskStudents);
-        if (taskStudents.size() == 0){
-            System.out.println("11111111");
-            return 0;
-        }else {
-            return 1;
+    public Integer selectNoStartTask (List<Task> tasks,TaskStudent taskStudent) {
+        for (Task task:tasks){
+            taskStudent.setTaskId(task.getTaskId());
+            List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
+            System.out.println("taskStudents"+taskStudents);
+            if (taskStudents.size() != 0){
+                return 1;
+            }
         }
+        return 0;
     }
 
     /**

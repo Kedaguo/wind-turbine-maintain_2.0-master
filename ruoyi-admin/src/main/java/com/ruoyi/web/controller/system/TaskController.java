@@ -86,10 +86,17 @@ public class TaskController extends BaseController
     }
     //查询任务列表 返回 0 1
     @GetMapping("/getNoStartTask")
-    public AjaxResult getNoStartTask(TaskStudent taskStudent)
+    public AjaxResult getNoStartTask(TaskStudent taskStudent,HttpServletRequest request)
     {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        Task task = new Task();
+        task.setTaskCreateBy(loginUser.getUsername());
+        List<Task> tasks = taskService.selectTaskList(task);
+        if (tasks.size() == 0){
+            return success(0);
+        }
         taskStudent.setTaskState(1l);
-        return success(iTaskStudentService.selectNoStartTask(taskStudent));
+        return success(iTaskStudentService.selectNoStartTask(tasks,taskStudent));
     }
     /**
      *查询task列表  学生查看查询task列表  user_id
@@ -134,7 +141,6 @@ public class TaskController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Task task, HttpServletRequest request)
     {
-        System.out.println("task"+task);
         LoginUser loginUser = tokenService.getLoginUser(request);
         return taskService.insertTask(task,loginUser);
     }

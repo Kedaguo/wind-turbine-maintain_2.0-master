@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.TaskStudent;
 import com.ruoyi.system.domain.dto.TaskStudentDto;
 import com.ruoyi.system.domain.dto.TaskTeacherDto;
@@ -19,7 +21,7 @@ public interface ITaskStudentService
      * @return taskStudent
      */
     public TaskStudent selectTaskStudentByUserId(TaskStudent taskStudent);
-    public Integer selectNoStartTask(TaskStudent taskStudent);
+    public Integer selectNoStartTask(List<Task> tasks, TaskStudent taskStudent);
     /**
      * 查询taskStudent列表
      * 

@@ -41,12 +41,14 @@
                     <span>{{ parseTime(scope.row.taskCreateTime, '{y}-{m}-{d}') }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="发布人" align="center" prop="taskCreateBy" />
+            <el-table-column label="发布人" align="center" prop="taskId" />
+            <el-table-column label="任务编号" align="center" prop="taskId" />
             <el-table-column label="学生学号" align="center" prop="userName" />
             <el-table-column label="学生姓名" align="center" prop="nickName" />
             <el-table-column label="任务花费" align="center" prop="taskCost" />
+            <el-table-column label="任务盈利" align="center" prop="taskEarn" />
+            <el-table-column label="发电量" align="center" prop="taskCharge" />
             <el-table-column label="时间消耗" align="center" prop="taskTime" />
-            <el-table-column label="出海失败" align="center" prop="taskTime" />
             <el-table-column label="任务状态" align="center" prop="taskState">
                 <template slot-scope="scope">
                     <el-tag v-if="scope.row.taskState === 1"><dict-tag :options="dict.type.tl_task_state"
@@ -60,10 +62,10 @@
             <el-table-column label="任务成绩" align="center" prop="taskPoints" />
             <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                 <template slot-scope="scope">
-                    <el-button v-if="scope.row.taskState === 1" size="mini" type="text" icon="el-icon-edit"
+                    <el-button v-if="scope.row.taskState === 3  || scope.row.taskState === 2" size="mini" type="text" icon="el-icon-edit"
                         @click="queryLog(scope.row)" v-hasPermi="['system:task:remove']">出海日志</el-button>
-                    <el-button v-if="scope.row.taskState === 1" size="mini" type="text" icon="el-icon-edit"
-                        @click="handleGrade(scope.row)" v-hasPermi="['system:task:remove']">任务评价</el-button>
+                    <el-button v-if="scope.row.taskState === 3" size="mini" type="text" icon="el-icon-edit"
+                        @click="handleGrade(scope.row)" v-hasPermi="['system:task:remove']">成绩评定</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -74,7 +76,7 @@
                 <el-table-column property="address" label="风机编号"></el-table-column>
                 <el-table-column property="date" label="码头" width="150"></el-table-column>
                 <el-table-column property="name" label="海上平台" width="200"></el-table-column>
-                <el-table-column property="address" label="船只"></el-table-column>
+                <el-table-column property="address" label="船舶"></el-table-column>
                 <el-table-column property="address" label="人员"></el-table-column>
                 <el-table-column property="address" label="维修顺序"></el-table-column>
             </el-table>
@@ -82,23 +84,22 @@
                 <el-button @click="logDialog = false">关 闭</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="任务评价" :visible.sync="gradeDialog" width="30%">
+        <el-dialog title="成绩评定" :visible.sync="gradeDialog" width="30%">
             <el-form ref="gradeForm" :rules="rules" :model="gradeForm" label-width="80px">
-                <el-form-item label="输入学生成绩" prop="gradeForm.grade">
-                    <el-input v-model="gradeForm.grade"></el-input>
+                <el-form-item label="学生成绩" placeholder ="请输入学生成绩" prop="gradeForm.taskPoints" >
+                    <el-input v-model="gradeForm.taskPoints"></el-input>
                 </el-form-item>
-
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="logDialog = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm('gradeForm')">确 定</el-button>
+                <el-button @click="gradeDialog = false">取 消</el-button>
+                <el-button type="primary" @click="submitForm">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-import { teacherListTask, studentLog } from "@/api/system/grade";
+import { teacherListTask, studentLog, gradeScoring} from "@/api/system/grade";
 
 export default {
     name: "Task",
@@ -106,7 +107,9 @@ export default {
     data() {
         return {
             gradeForm: {
-                grade: '',
+                taskPoints: '',
+                userName:null,
+                taskId:null,
             },
             rules: {
                 number: [
@@ -153,11 +156,14 @@ export default {
         //查看学生出海日志
         queryLog(row) {
             this.logDialog = true;
-            studentLog().then
+            // studentLog().then
         },
         //老师评分
-        handleGrade() {
-
+        handleGrade(row) {
+          this.gradeDialog = true;
+          this.gradeForm.taskId = row.taskId
+          console.log("1111"+this.gradeForm.taskId)
+          this.gradeForm.userName = row.userName
         },
         /** 查询task列表 */
         getList() {
@@ -188,15 +194,17 @@ export default {
         },
 
         // 提交学生成绩
-        submitForm(form) {
-            this.$refs[form].validate(valid => {
+        submitForm() {
+            this.$refs["gradeForm"].validate(valid => {
                 if (valid) {
-                    console.log(this.form);
-                    // 在这里写提交表单的业务逻辑
+                  gradeScoring(this.gradeForm).then(response =>{
+                    this.$modal.msgSuccess("打分成功")
                     this.dialogVisible = false; // 关闭对话框
+                    this.getList();
+                  })
                 } else {
-                    console.log('error submit!!');
-                    return false;
+                  this.$modal.msgSuccess("打分失败")
+                  return false;
                 }
             });
         },

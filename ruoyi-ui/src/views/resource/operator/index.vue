@@ -137,11 +137,20 @@ export default {
       this.startCountdown(); // 开始计时器
       // window.addEventListener("beforeunload", (event) => this.handleBeforeUnload(event));
     }else{
-      this.getList();
-      this.getOperatorData();
+      this.startTimer();
     }
   },
   methods: {
+    startTimer(){
+      this.timerId = setInterval(this.timerHandler, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.timerId);
+      this.timerId = null;
+    },
+    timerHandler(){
+      this.getList();
+    },
     startCountdown() {
       let timer = setInterval(() => {
         this.countdown--;

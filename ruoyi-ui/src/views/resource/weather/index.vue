@@ -76,6 +76,7 @@ export default {
       xAxisData: [],
       res: [],
       currentTime:"",
+      timeId: null,
     };
   },
   created() {},
@@ -89,7 +90,7 @@ export default {
       this.startCountdown(); // 开始计时器
       // window.addEventListener("beforeunload", (event) => this.handleBeforeUnload(event));
     }else{
-      this.echartsInit();
+      this.startTimer();
     }
 
   },
@@ -100,8 +101,6 @@ export default {
         if (this.countdown === 0) {
           clearInterval(timer);
           // 在这里执行路由跳转
-          console.log("123123")
-          // this.$router.push('/your-route');
           this.$router.push({ path: "/task" });
 
           // 关闭当前页面
@@ -110,6 +109,16 @@ export default {
           });
         }
       }, 1000); // 每秒减少1
+    },
+    startTimer(){
+      this.timerId = setInterval(this.timerHandler, 1000);
+    },
+    stopTimer() {
+      clearInterval(this.timerId);
+      this.timerId = null;
+    },
+    timerHandler(){
+      this.echartsInit();
     },
     echartsInit() {
       weatherList(this.queryParams).then((response) => {

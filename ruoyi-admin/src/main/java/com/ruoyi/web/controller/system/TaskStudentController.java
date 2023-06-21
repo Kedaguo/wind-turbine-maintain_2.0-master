@@ -6,11 +6,15 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.framework.web.service.TokenService;
 import com.ruoyi.system.domain.dto.TaskStudentDto;
+import com.ruoyi.system.domain.dto.TaskStudentGradeDto;
 import com.ruoyi.system.domain.dto.TaskTeacherDto;
+import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.Api;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +44,8 @@ public class TaskStudentController extends BaseController
     @Resource
     private TokenService tokenService;
 
+    @Resource
+    private ISysUserService iSysUserService;
 
     /**
      *  学生查询自己的所有任务
@@ -108,11 +114,16 @@ public class TaskStudentController extends BaseController
     /**
      * 修改taskStudent
      */
-    @PreAuthorize("@ss.hasPermi('system:taskStudent:edit')")
+//    @PreAuthorize("@ss.hasPermi('system:taskStudent:edit')")
     @Log(title = "taskStudent", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TaskStudent taskStudent)
+    public AjaxResult edit(@RequestBody TaskStudentGradeDto taskStudentGradeDto)
     {
+        SysUser sysUser = iSysUserService.selectUserByUserName(taskStudentGradeDto.getUserName());
+        TaskStudent taskStudent = new TaskStudent();
+        BeanUtils.copyProperties(taskStudentGradeDto,taskStudent);
+        taskStudent.setUserId(sysUser.getUserId());
+        System.out.println("!1111"+taskStudent);
         return toAjax(taskStudentService.updateTaskStudent(taskStudent));
     }
 

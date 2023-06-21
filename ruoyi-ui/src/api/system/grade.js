@@ -16,3 +16,11 @@ export function studentLog(query) {
         params: query
     })
 }
+// 查询学生的出海日志
+export function gradeScoring(query) {
+    return request({
+        url: '/system/taskStudent',
+        method: 'put',
+        data: query
+    })
+}
