@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 @Service
 public class TaskStudentServiceImpl implements ITaskStudentService 
 {
-    @Autowired
+    @Resource
     private TaskStudentMapper taskStudentMapper;
 
     @Resource
@@ -95,6 +95,16 @@ public class TaskStudentServiceImpl implements ITaskStudentService
     public int insertTaskStudent(TaskStudent taskStudent)
     {
         return taskStudentMapper.insertTaskStudent(taskStudent);
+    }
+
+    @Override
+    public int checkTaskState (TaskStudent taskStudent) {
+        taskStudent.setTaskState(2l);
+        List<TaskStudent> taskStudents = taskStudentMapper.selectTaskStudentList(taskStudent);
+        if (taskStudents.size()==0){
+            return 0;
+        }
+        return 0;
     }
 
     /**
@@ -167,14 +177,14 @@ public class TaskStudentServiceImpl implements ITaskStudentService
         TaskTeacherDto taskTeacherDto = new TaskTeacherDto();
         if (taskTeachers.size()!=0) {
             BeanUtils.copyProperties(taskTeachers.get(0), taskTeacherDto);
-            ArrayList<TaskTeacher> taskTeachers1 = new ArrayList<>();
-            Integer i=0;
-            for (TaskTeacher taskTeacher:taskTeachers){
-                i++;
-                taskTeacher.setTaskId(Long.valueOf(taskTeacher.getTaskId().toString()+i.toString()));
-                taskTeachers1.add(taskTeacher);
-            }
-            taskTeacherDto.setChildren(taskTeachers1);
+//            ArrayList<TaskTeacher> taskTeachers1 = new ArrayList<>();
+//            Integer i=0;
+//            for (TaskTeacher taskTeacher:taskTeachers){
+//                i++;
+//                taskTeacher.setTaskId(Long.valueOf(taskTeacher.getTaskId().toString()+i.toString()));
+//                taskTeachers1.add(taskTeacher);
+//            }
+            taskTeacherDto.setChildren(taskTeachers);
         }
         System.out.println("taskTeacherDto"+taskTeacherDto);
         return taskTeacherDto;

@@ -36,6 +36,7 @@ public interface ITaskStudentService
      * @return 结果
      */
     public int insertTaskStudent(TaskStudent taskStudent);
+    public int checkTaskState(TaskStudent taskStudent);
 
     /**
      * 修改taskStudent

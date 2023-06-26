@@ -99,7 +99,13 @@ public class TaskStudentController extends BaseController
         taskStudent.setTaskId(taskId);
         return success(taskStudentService.selectTaskStudentByUserId(taskStudent).getTaskSimulateTime());
     }
-
+    @GetMapping(value = "/checkTaskState")
+    public AjaxResult checkTaskState(TaskStudent taskStudent,HttpServletRequest request)
+    {
+        LoginUser loginUser = tokenService.getLoginUser(request);
+        taskStudent.setUserId(loginUser.getUserId());
+        return success(taskStudentService.checkTaskState(taskStudent));
+    }
     /**
      * 新增taskStudent
      */

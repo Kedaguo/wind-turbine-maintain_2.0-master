@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { studentListTask, studentTaskBegin } from "@/api/system/task";
+import { studentListTask, studentTaskBegin, checkTaskState} from "@/api/system/task";
 
 export default {
     name: "Task",
@@ -143,7 +143,10 @@ export default {
         },
         // 开始任务
         startTask(row) {
-            this.$confirm('开始执行当前任务', '提示', {
+          console.log("1111")
+          checkTaskState().then(response =>{
+            if(response.data == 0){
+              this.$confirm('开始执行当前任务', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -163,6 +166,12 @@ export default {
                 })
             }).catch(() => {
             });
+            }else{
+              this.$model.msgError("当前时间存在未完成的任务！")
+            }
+
+          })
+
         },
         //继续任务
         continueTask(row){

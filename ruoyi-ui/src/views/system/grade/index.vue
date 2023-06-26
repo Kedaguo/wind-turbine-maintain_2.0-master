@@ -34,15 +34,15 @@
             <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="loading" :data="taskList"  row-key="taskId"
+        <el-table v-loading="loading" :data="taskList"  row-key="userName"
             :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">>
             <el-table-column label="发布时间" align="center" prop="taskTime">
                 <template slot-scope="scope">
                     <span>{{ parseTime(scope.row.taskCreateTime, '{y}-{m}-{d}') }}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="发布人" align="center" prop="taskId" />
             <el-table-column label="任务编号" align="center" prop="taskId" />
+            <el-table-column label="发布人" align="center" prop="taskCreateBy" />
             <el-table-column label="学生学号" align="center" prop="userName" />
             <el-table-column label="学生姓名" align="center" prop="nickName" />
             <el-table-column label="任务花费" align="center" prop="taskCost" />
@@ -199,7 +199,7 @@ export default {
                 if (valid) {
                   gradeScoring(this.gradeForm).then(response =>{
                     this.$modal.msgSuccess("打分成功")
-                    this.dialogVisible = false; // 关闭对话框
+                    this.gradeDialog = false; // 关闭对话框
                     this.getList();
                   })
                 } else {
