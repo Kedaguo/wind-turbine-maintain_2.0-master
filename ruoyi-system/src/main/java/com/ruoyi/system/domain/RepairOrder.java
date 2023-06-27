@@ -16,7 +16,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-04-04
  */
 @TableName("tl_repair_order")
-public class RepairOrder extends BaseEntity
+public class RepairOrder
 {
     private static final long serialVersionUID = 1L;
 

@@ -193,7 +193,7 @@ export default {
     },
     /** 查询港口信息列表 */
     getList() {
-      this.loading = true;
+      this.loading = false;
       listPort(this.queryParams).then((response) => {
         this.portList = response.rows;
         this.total = response.total;

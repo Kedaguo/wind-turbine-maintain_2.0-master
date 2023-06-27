@@ -47,6 +47,18 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
      * 
      * @return String
      */
+    public static Date saveYearMonthDayHour(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH");
+        String format = simpleDateFormat.format(date);
+        Date date1 =null;
+        try{
+            date1 = simpleDateFormat.parse(format);
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+        return date1;
+
+    }
     public static String getDate()
     {
         return dateTimeNow(YYYY_MM_DD);
@@ -167,8 +179,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
 
     /**
      * 计算时间差
-     *
-     * @param endTime 最后时间
      * @param startTime 开始时间
      * @return 时间差（天/小时/分钟）
      */

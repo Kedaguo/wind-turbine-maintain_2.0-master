@@ -69,3 +69,9 @@ export function getNoStartTask(query) {
     params: query,
   });
 }
+export function checkTaskState() {
+  return request({
+    url: "/system/taskStudent/checkTaskState",
+    method: "get",
+  });
+}

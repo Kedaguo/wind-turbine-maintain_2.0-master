@@ -195,7 +195,7 @@ export default {
     },
     /** 查询boat列表 */
     getList() {
-      this.loading = true;
+      this.loading = false;
       listBoat(this.queryParams).then((response) => {
         this.boatList = response.rows;
         this.total = response.total;

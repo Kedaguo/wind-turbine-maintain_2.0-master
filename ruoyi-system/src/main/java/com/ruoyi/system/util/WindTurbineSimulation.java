@@ -6,6 +6,8 @@ import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.TaskTurbineDto;
 import com.ruoyi.system.mapper.ArrangementMapper;
 import com.ruoyi.system.mapper.RepairOrderMapper;
+import com.ruoyi.system.mapper.SeaWaveMapper;
+import com.ruoyi.system.mapper.TaskTurbineMapper;
 import com.ruoyi.system.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.annotation.Configuration;
@@ -68,6 +70,15 @@ public class WindTurbineSimulation {
     @Resource
     private ITaskOperatorService iTaskOperatorService;
 
+    @Resource
+    private ISeaWaveService iSeaWaveService;
+
+    @Resource
+    private SeaWaveMapper seaWaveMapper;
+
+    @Resource
+    private TaskTurbineMapper taskTurbineMapper;
+
     private Random random = new Random();
 
     private double lambda = 0;
@@ -91,6 +102,8 @@ public class WindTurbineSimulation {
         Integer randCount = 1;
         //模拟仿真时间已经修改-taskStudent
         Date date = simulationTimes(runSpeed, taskId, userId);
+        //风机根据海浪天气信息进行暂停
+        updateWindTurbineStateBySeaWave(taskId,userId,date);
         List<TaskTurbine> taskTurbineFaults = selectTaskTurbineFault(taskId, userId);
         for (TaskTurbine taskTurbineFault :taskTurbineFaults){
             //风机发电
@@ -131,74 +144,48 @@ public class WindTurbineSimulation {
             }
         }
         //出海作业
-        arrangementRunning(taskId,userId,date);
+//        arrangementRunning(taskId,userId,date);
         //终止仿真模拟
         simulationJobFinish(date,userId,taskId);
     }
-    //任务规划
-    public void arrangementRunning(Long taskId,Long userId,Date date){
-        //查询arrangement
-        Arrangement arrangement = new Arrangement();
-        arrangement.setTaskId(taskId);
-        arrangement.setUserId(userId);
-        //0 未开始  1进行中  2结束
-        arrangement.setaState(0);
-        List<Arrangement> arrangements = iArrangementService.selectArrangementList(arrangement);
-        if (arrangements !=null){
-            //路径规划逐步开始
-            for (Arrangement arrangement1:arrangements){
-                //规划的出海时间大于现在仿真时间
-                if (arrangement1.getStartTime().compareTo(date) >= 0){
-                    //更新船舶出海作业状态
-                    updateBoatWork(arrangement1,taskId,userId);
-                    //更新维修员工出海作业状态
-                    updateOperatorWork(arrangement1,taskId,userId);
-
+    //浪高Max=1.8m  风速最高  12 m/s  最小 4m/s
+    public void updateWindTurbineStateBySeaWave(Long taskId,Long userId,Date date){
+        Date date1 = DateUtils.saveYearMonthDayHour(date);
+        QueryWrapper<SeaWave> seaWaveQueryWrapper = new QueryWrapper<>();
+        seaWaveQueryWrapper.eq("st_time",date1);
+        List<SeaWave> seaWaves = seaWaveMapper.selectList(seaWaveQueryWrapper);
+        if (seaWaves.size() != 0){
+            Double waveHeight =Double.parseDouble(seaWaves.get(0).getStWaveHeight());
+            Double windSpeed =Double.parseDouble(seaWaves.get(0).getStWindSpeed());
+            if (waveHeight<=1.8 && windSpeed<= 12 && windSpeed >= 4){
+                TaskTurbine taskTurbine = new TaskTurbine();
+                taskTurbine.setTaskId(taskId);
+                taskTurbine.setUserId(userId);
+                taskTurbine.setfState(0);
+                taskTurbine.setmState(0);
+                List<TaskTurbine> taskTurbines = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbine);
+                for (TaskTurbine taskTurbine1 : taskTurbines){
+                    taskTurbine1.setmState(3);
+                    taskTurbine1.setfState(2);
+                    taskTurbineMapper.updateTaskTurbine(taskTurbine1);
                 }
-
+            }else{
+                TaskTurbine taskTurbine = new TaskTurbine();
+                taskTurbine.setTaskId(taskId);
+                taskTurbine.setUserId(userId);
+                taskTurbine.setmState(3);
+                taskTurbine.setfState(2);
+                List<TaskTurbine> taskTurbines = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbine);
+                for (TaskTurbine taskTurbine1 : taskTurbines){
+                    taskTurbine1.setmState(0);
+                    taskTurbine1.setfState(0);
+                    taskTurbineMapper.updateTaskTurbine(taskTurbine1);
+                }
             }
+        }
 
-        }
     }
-    //更新维修员工状态-出海作业
-    public void updateOperatorWork(Arrangement arrangement,Long taskId,Long userId){
-        ArrangementOperator arrangementOperator = new ArrangementOperator();
-        arrangementOperator.setaId(arrangement.getaId());
-        List<ArrangementOperator> arrangementOperators = iArrangementOperatorService.selectArrangementOperatorList(arrangementOperator);
-        for (ArrangementOperator arrangementOperator1:arrangementOperators){
-            TaskOperator taskOperator = new TaskOperator();
-            taskOperator.setTaskId(taskId);
-            taskOperator.setUserId(userId);
-            taskOperator.setoId(arrangementOperator1.getoId());
-//            待命 1  等待条件出海作业  2  出海作业 3
-            taskOperator.setoState(3l);
-            int flag = iTaskOperatorService.updateTaskOperator(taskOperator);
-        }
-    }
-    public void updateBoatWork(Arrangement arrangement,Long taskId,Long userId){
-        //船舶出海作业
-        ArrangementBoat arrangementBoat = new ArrangementBoat();
-        arrangementBoat.setaId(arrangement.getaId());
-        List<ArrangementBoat> arrangementBoats = iArrangementBoatService.selectArrangementBoatList(arrangementBoat);
-        for (ArrangementBoat arrangementBoat1:arrangementBoats){
-            TaskBoat taskBoat = new TaskBoat();
-            taskBoat.setTaskId(taskId);
-            taskBoat.setUserId(userId);
-            taskBoat.setbId(arrangementBoat1.getbId());
-            //出海作业
-            taskBoat.setbState(2);
-            //    0  待命
-            //    1  等待条件允许出海
-            //    2  去风场/返回码头
-            //    3  风机之间穿梭，把工人放下
-            //    4  风机之间穿梭，把工人接上
-            //    5  等待工人施工完成
-            //    6  去风机/返回抛锚点
-            taskBoat.setbWorkState(2);
-            int flag = iTaskBoatService.updateTaskBoat(taskBoat);
 
-        }
-    }
     //task_rand_fault次数++
     public double taskRandFaultPlus(Long taskId,Long userId){
         //task_rand_fault 次数
@@ -224,11 +211,12 @@ public class WindTurbineSimulation {
         TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
         Integer taskRandMaintain = taskStudent1.getTaskRandMaintain();
         if(taskRandMaintain == 10000){
-            taskRandMaintain=0;
+            taskRandMaintain=1;
         }
         taskStudent1.setTaskRandMaintain(taskRandMaintain+1);
         int flag= iTaskStudentService.updateTaskStudent(taskStudent1);
         Rand rand = iRandService.selectRandByRandId(taskRandMaintain.longValue());
+        System.out.println("rand"+rand+"taskRandMaintain"+taskRandMaintain);
         return Double.parseDouble(rand.getRand());
     }
 
@@ -254,9 +242,7 @@ public class WindTurbineSimulation {
             taskStudent.setTaskState(3l);
             int flag = iTaskStudentService.updateTaskStudent(taskStudent);
         }
-        //更新用户模拟时间
-        taskStudent.setTaskSimulateTime(date);
-        iTaskStudentService.updateTaskStudent(taskStudent);
+
     }
     //任务终止时，总发电量
     public void taskStudentChargeSum(Long taskId,Long userId){
@@ -290,23 +276,24 @@ public class WindTurbineSimulation {
         LocalDateTime simulationChargeStartTime = DateUtils.getSimulationChargeTime(taskStudent.getTaskSimulateTime());
         Duration duration = Duration.between(simulationChargeStartTime, simulationChargeEndTime);
         Integer ratePower = Integer.parseInt(iTurbineWindService.selectTurbineWindByTId(tId).gettRatePower());
-        Long hours = duration.toHours();
+        double minutes = duration.toMinutes();
+        double hours = minutes /60;
         //ratePower  kwh
-        Integer turbineCharge =Math.round(ratePower * hours.intValue()) ;
-        System.out.println("turbineCharge"+turbineCharge);
+        Integer turbineCharge =(int)Math.round(ratePower * hours) ;
+        System.out.println("turbineCharge"+turbineCharge+"hours"+hours+"simulationChargeEndTime"+simulationChargeEndTime+"simulationChargeStartTime"+simulationChargeStartTime);
         TaskTurbine taskTurbineCharge = iTaskTurbineService.selectTaskTurbineByTId(tId, taskId, userId);
         //发电做累加
         if (taskTurbineCharge.getfState()==2){
-            taskTurbine.settCharge(taskTurbineCharge.gettCharge()+turbineCharge.longValue());
+            taskTurbine.settCharge(taskTurbineCharge.gettCharge()+turbineCharge);
             int i = iTaskTurbineService.updateTaskTurbine(taskTurbine);
         }
         if (taskTurbineCharge.getmState()==3){
             //注意Long类型相加时，不能为空，会报空指针错误——类比一下进行数学方面计算时,其变量不能为空
-            taskTurbine.settCharge(taskTurbineCharge.gettCharge()+turbineCharge.longValue());
+            taskTurbine.settCharge(taskTurbineCharge.gettCharge()+turbineCharge);
             int i = iTaskTurbineService.updateTaskTurbine(taskTurbine);
         }else if (taskTurbineCharge.getmState()==1){
             //需要保养但可以运行 发电效率是80%
-            double charge = taskTurbineCharge.gettCharge() + (turbineCharge.longValue() * 0.8) ;
+            double charge = taskTurbineCharge.gettCharge() + (turbineCharge * 0.8) ;
             taskTurbine.settCharge(Math.round(charge));
             int i = iTaskTurbineService.updateTaskTurbine(taskTurbine);
         }
@@ -339,17 +326,17 @@ public class WindTurbineSimulation {
         BeanUtils.copyProperties(taskTurbine,repairOrder);
         repairOrder.setrCreateTime(date);
         repairOrder.setrState(0);
-
         //生成故障维修单(condition 1 ：如果有相同风机发生保养了那么维修单就需要合并)
         QueryWrapper<RepairOrder> repairOrderQueryWrapper = new QueryWrapper<>();
-        repairOrderQueryWrapper.eq("userId",taskTurbine.getUserId())
-                .eq("taskId",taskTurbine.getTaskId())
-                .eq("tId",taskTurbine.gettId())
-                .eq("rState",0);
+        repairOrderQueryWrapper.eq("user_id",taskTurbine.getUserId())
+                .eq("task_id",taskTurbine.getTaskId())
+                .eq("t_id",taskTurbine.gettId())
+                .eq("r_state",0);
         RepairOrder repairOrder1 = repairOrderMapper.selectOne(repairOrderQueryWrapper);
         if (repairOrder1==null){
             repairOrder.setrType(1);
             int flag = repairOrderService.insertRepairOrder(repairOrder);
+            System.out.println("repairOrder"+repairOrder1);
         }else {
             repairOrder.setrType(3);
             int flag = repairOrderService.insertRepairOrder(repairOrder);
@@ -373,10 +360,10 @@ public class WindTurbineSimulation {
         repairOrder.setrState(0);
         //生成故障维修单(condition 1 ：如果有相同风机发生保养了那么维修单就需要合并)
         QueryWrapper<RepairOrder> repairOrderQueryWrapper = new QueryWrapper<>();
-        repairOrderQueryWrapper.eq("userId",taskTurbine.getUserId())
-                .eq("taskId",taskTurbine.getTaskId())
-                .eq("tId",taskTurbine.gettId())
-                .eq("rState",0);
+        repairOrderQueryWrapper.eq("user_id",taskTurbine.getUserId())
+                .eq("task_id",taskTurbine.getTaskId())
+                .eq("t_id",taskTurbine.gettId())
+                .eq("r_state",0);
         RepairOrder repairOrder1 = repairOrderMapper.selectOne(repairOrderQueryWrapper);
         if (repairOrder1 == null){
             repairOrder.setrType(2);
@@ -417,9 +404,13 @@ public class WindTurbineSimulation {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         LocalDateTime taskSimulateTime = LocalDateTime.parse(taskStudent.getTaskSimulateTime().toString(),formatter);
         Duration duration = Duration.ofSeconds(simulationTimeSeconds.longValue());
-//        Duration duration = Duration.ofHours(simulationTimeSeconds.longValue());
         LocalDateTime newTime = taskSimulateTime.plus(duration);
         System.out.println("newTime"+newTime);
-        return DateUtils.getSimulationTimes(newTime);
+        Date simulationTimes = DateUtils.getSimulationTimes(newTime);
+        //更新用户模拟时间
+        taskStudent.setTaskSimulateTime(simulationTimes);
+        int i = iTaskStudentService.updateTaskStudent(taskStudent);
+        System.out.println("abc"+i);
+        return simulationTimes;
     }
 }

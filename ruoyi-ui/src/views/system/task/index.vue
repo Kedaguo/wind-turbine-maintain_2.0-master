@@ -273,25 +273,22 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      console.log("123123123")
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.taskId != null) {
-            updateTask(this.form).then(response => {
+              updateTask(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            getNoStartTask(this.form).then(response =>{
-              if(response.data==0){
-                addTask(this.form).then(response => {
+            addTask(this.form).then(response =>{
+              if(response.code==200){
                 console.log("adddddd")
                 this.$modal.msgSuccess("新增成功");
                 this.open = false;
                 this.getList();
-              });
-              }else if(response.data == 1){
+              }else{
                 this.$modal.msgError("添加失败，存在未开始的任务！");
               }
 

@@ -104,7 +104,7 @@ public class TaskStudentServiceImpl implements ITaskStudentService
         if (taskStudents.size()==0){
             return 0;
         }
-        return 0;
+        return 1;
     }
 
     /**

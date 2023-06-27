@@ -104,7 +104,6 @@ export default {
         getList() {
             this.loading = true;
             studentListTask(this.queryParams).then(response => {
-                console.log(response.rows)
                 this.taskList = response.rows;
                 this.total = response.total;
                 this.loading = false;
@@ -145,6 +144,7 @@ export default {
         startTask(row) {
           console.log("1111")
           checkTaskState().then(response =>{
+            console.log("3333"+response.data)
             if(response.data == 0){
               this.$confirm('开始执行当前任务', '提示', {
                 confirmButtonText: '确定',
@@ -162,12 +162,13 @@ export default {
                 }
                 // console.log("22222")
                 studentTaskBegin(data).then(() => {
+                    this.getList();
                     this.$router.push(`task-map/index/${row.taskId}`)
                 })
             }).catch(() => {
             });
             }else{
-              this.$model.msgError("当前时间存在未完成的任务！")
+              this.$modal.msgError("当前存在未完成的任务!")
             }
 
           })
@@ -176,6 +177,7 @@ export default {
         //继续任务
         continueTask(row){
             //将当前开始的任务存储到session中
+            this.getList();
             sessionStorage.setItem('taskId', row.taskId);
             this.$router.push(`task-map/index/${row.taskId}`)
         },

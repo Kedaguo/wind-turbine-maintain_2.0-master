@@ -150,6 +150,7 @@ export default {
     },
     timerHandler(){
       this.getList();
+      this.getOperatorData();
     },
     startCountdown() {
       let timer = setInterval(() => {
@@ -169,7 +170,7 @@ export default {
       }, 1000); // 每秒减少1
     },
     getList() {
-      this.loading = true;
+      this.loading = false;
       listOperator(this.query).then(response => {
         this.operatorList = response.rows;
         console.log("!!!!"+this.operatorList)

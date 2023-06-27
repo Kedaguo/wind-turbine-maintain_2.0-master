@@ -185,7 +185,7 @@ export default {
   },
   methods: {
     startTimer(){
-      this.timerId = setInterval(this.timerHandler, 1000);
+      this.timerId = setInterval(this.timerHandler, 10000);
     },
     stopTimer() {
       clearInterval(this.timerId);
@@ -214,7 +214,7 @@ export default {
     },
     /** 查询repairOrder列表 */
     getList() {
-      this.loading = true;
+      this.loading = false;
       listRepairOrder(this.queryParams).then(response => {
         this.repairOrderList = response.rows;
         this.total = response.total;
