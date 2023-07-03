@@ -5,7 +5,7 @@
       <div class="modal-mask"  @click.stop></div>
         <div class="modal-content">
           <el-dialog  v-if="showDialog" title="提示消息" :visible.sync="showDialog">
-            <p class="alert-text" style="text-align: center;color:#ed0505;font-size: 25px;">任务尚未开始，请开始任务！</p>
+            <p class="alert-text" style="text-align: center;font-size: 25px;">任务尚未开始，请开始任务！</p>
             <p class="alert-timer">跳转倒计时：{{ countdown }}秒</p>
           </el-dialog>
         </div>

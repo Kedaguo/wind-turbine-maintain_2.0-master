@@ -20,6 +20,7 @@
 
         <el-table v-loading="loading" :data="taskList">
             <el-table-column label="序号" type="index" align="center"></el-table-column>
+            <el-table-column label="任务名称" align="center" prop="taskName" />
             <el-table-column label="发布时间" align="center" prop="taskCreateTime" width="180">
                 <template slot-scope="scope">
                     <span>{{ parseTime(scope.row.taskCreateTime, '{y}-{m}-{d}') }}</span>

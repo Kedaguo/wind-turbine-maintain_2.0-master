@@ -96,22 +96,28 @@ public class WindTurbineSimulation {
     private Integer SecondsOfHour = 3600;
 
     public void  deviceSimulation(Long taskId,Long userId,Integer runSpeed) throws Exception{
+        TaskStudent taskStudent = new TaskStudent();
+        taskStudent.setTaskId(taskId);
+        taskStudent.setUserId(userId);
+        TaskTurbine taskTurbine = new TaskTurbine();
+        taskTurbine.setTaskId(taskId);
+        taskTurbine.setUserId(userId);
         System.out.println("taskId"+taskId+"userId"+userId+"runSpeed"+runSpeed);
         //Simulation Time
-        Integer taskCount = TaskCounts(taskId,userId);
+        Integer taskCount = TaskCounts(taskStudent);
         Integer randCount = 1;
         //模拟仿真时间已经修改-taskStudent
-        Date date = simulationTimes(runSpeed, taskId, userId);
+        Date date = simulationTimes(runSpeed,taskStudent);
         //风机根据海浪天气信息进行暂停
-        updateWindTurbineStateBySeaWave(taskId,userId,date);
-        List<TaskTurbine> taskTurbineFaults = selectTaskTurbineFault(taskId, userId);
+        updateWindTurbineStateBySeaWave(taskTurbine,date);
+        List<TaskTurbine> taskTurbineFaults = selectTaskTurbineFault(taskTurbine);
         for (TaskTurbine taskTurbineFault :taskTurbineFaults){
             //风机发电
-            turbineWindCharge(taskTurbineFault.gettId(),taskId,userId,date);
+            turbineWindCharge(taskTurbineFault.gettId(),taskStudent,taskTurbine,date);
             List<Fault> faults = iFaultService.selectFaultList(null);
             for (Fault fault:faults){
                 lambda = Double.parseDouble(fault.getfFrequencyPerYear());
-                double rand = taskRandFaultPlus(taskId, userId);
+                double rand = taskRandFaultPlus(taskStudent);
                 //指数分布函数-按每小时发生故障指数分布
                 double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"lambda"+lambda);
@@ -126,13 +132,13 @@ public class WindTurbineSimulation {
         List<TaskTurbine> taskTurbineMaintains = selectTaskTurbineMaintain(taskId, userId);
         for (TaskTurbine taskTurbineMaintain:taskTurbineMaintains){
             //风机发电
-            turbineWindCharge(taskTurbineMaintain.gettId(),taskId,userId,date);
+            turbineWindCharge(taskTurbineMaintain.gettId(),taskStudent,taskTurbine,date);
             System.out.println("taskTurbineMaintain"+taskTurbineMaintain);
             List<Maintain> maintains = iMaintainService.selectMaintainList(null);
             for (Maintain maintain:maintains){
                 lambda = Double.parseDouble(maintain.getmFrequencyPerYear());
 //                double rand = random.nextDouble();
-                double rand = taskRandMaintainPlus(taskId,userId);
+                double rand = taskRandMaintainPlus(taskStudent);
                 //指数分布函数-按每年发生保养指数分布
                 double probability = (1 - Math.exp(-lambda))/DayOfYear;
                 System.out.println("rand"+rand+"probability"+probability);
@@ -149,7 +155,7 @@ public class WindTurbineSimulation {
         simulationJobFinish(date,userId,taskId);
     }
     //浪高Max=1.8m  风速最高  12 m/s  最小 4m/s
-    public void updateWindTurbineStateBySeaWave(Long taskId,Long userId,Date date){
+    public void updateWindTurbineStateBySeaWave(TaskTurbine taskTurbine,Date date){
         Date date1 = DateUtils.saveYearMonthDayHour(date);
         QueryWrapper<SeaWave> seaWaveQueryWrapper = new QueryWrapper<>();
         seaWaveQueryWrapper.eq("st_time",date1);
@@ -158,9 +164,6 @@ public class WindTurbineSimulation {
             Double waveHeight =Double.parseDouble(seaWaves.get(0).getStWaveHeight());
             Double windSpeed =Double.parseDouble(seaWaves.get(0).getStWindSpeed());
             if (waveHeight<=1.8 && windSpeed<= 12 && windSpeed >= 4){
-                TaskTurbine taskTurbine = new TaskTurbine();
-                taskTurbine.setTaskId(taskId);
-                taskTurbine.setUserId(userId);
                 taskTurbine.setfState(0);
                 taskTurbine.setmState(0);
                 List<TaskTurbine> taskTurbines = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbine);
@@ -170,9 +173,6 @@ public class WindTurbineSimulation {
                     taskTurbineMapper.updateTaskTurbine(taskTurbine1);
                 }
             }else{
-                TaskTurbine taskTurbine = new TaskTurbine();
-                taskTurbine.setTaskId(taskId);
-                taskTurbine.setUserId(userId);
                 taskTurbine.setmState(3);
                 taskTurbine.setfState(2);
                 List<TaskTurbine> taskTurbines = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbine);
@@ -185,13 +185,9 @@ public class WindTurbineSimulation {
         }
 
     }
-
     //task_rand_fault次数++
-    public double taskRandFaultPlus(Long taskId,Long userId){
+    public double taskRandFaultPlus(TaskStudent taskStudent){
         //task_rand_fault 次数
-        TaskStudent taskStudent = new TaskStudent();
-        taskStudent.setTaskId(taskId);
-        taskStudent.setUserId(userId);
         TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
         Integer taskRandFault = taskStudent1.getTaskRandFault();
         if(taskRandFault == 10000){
@@ -203,11 +199,8 @@ public class WindTurbineSimulation {
         return Double.parseDouble(rand.getRand());
     }
     //task_rand_maintain次数++
-    public double taskRandMaintainPlus(Long taskId,Long userId){
+    public double taskRandMaintainPlus(TaskStudent taskStudent){
         //task_rand_fault 次数
-        TaskStudent taskStudent = new TaskStudent();
-        taskStudent.setTaskId(taskId);
-        taskStudent.setUserId(userId);
         TaskStudent taskStudent1 = iTaskStudentService.selectTaskStudentByUserId(taskStudent);
         Integer taskRandMaintain = taskStudent1.getTaskRandMaintain();
         if(taskRandMaintain == 10000){
@@ -262,14 +255,8 @@ public class WindTurbineSimulation {
     }
 
     //风机发电
-    public void turbineWindCharge(Long tId,Long taskId,Long userId,Date date){
-        TaskTurbine taskTurbine = new TaskTurbine();
+    public void turbineWindCharge(Long tId,TaskStudent taskStudent1,TaskTurbine taskTurbine,Date date){
         taskTurbine.settId(tId);
-        taskTurbine.setTaskId(taskId);
-        taskTurbine.setUserId(userId);
-        TaskStudent taskStudent1 = new TaskStudent();
-        taskStudent1.setTaskId(taskId);
-        taskStudent1.setUserId(userId);
         TaskStudent taskStudent = iTaskStudentService.selectTaskStudentByUserId(taskStudent1);
         //计算每一次执行所发电量
         LocalDateTime simulationChargeEndTime = DateUtils.getSimulationChargeTime(date);
@@ -281,7 +268,7 @@ public class WindTurbineSimulation {
         //ratePower  kwh
         Integer turbineCharge =(int)Math.round(ratePower * hours) ;
         System.out.println("turbineCharge"+turbineCharge+"hours"+hours+"simulationChargeEndTime"+simulationChargeEndTime+"simulationChargeStartTime"+simulationChargeStartTime);
-        TaskTurbine taskTurbineCharge = iTaskTurbineService.selectTaskTurbineByTId(tId, taskId, userId);
+        TaskTurbine taskTurbineCharge = iTaskTurbineService.selectTaskTurbineByTId(tId, taskTurbine.getTaskId(), taskTurbine.getUserId());
         //发电做累加
         if (taskTurbineCharge.getfState()==2){
             taskTurbine.settCharge(taskTurbineCharge.gettCharge()+turbineCharge);
@@ -298,10 +285,7 @@ public class WindTurbineSimulation {
             int i = iTaskTurbineService.updateTaskTurbine(taskTurbine);
         }
     }
-    public List<TaskTurbine> selectTaskTurbineFault(Long taskId,Long userId){
-        TaskTurbine taskTurbine = new TaskTurbine();
-        taskTurbine.setTaskId(taskId);
-        taskTurbine.setUserId(userId);
+    public List<TaskTurbine> selectTaskTurbineFault(TaskTurbine taskTurbine){
         taskTurbine.setfState(2);
         List<TaskTurbine> taskTurbines = iTaskTurbineService.selectTaskTurbineListSimulation(taskTurbine);
         return taskTurbines;
@@ -378,11 +362,7 @@ public class WindTurbineSimulation {
 
     }
 
-    public int TaskCounts(Long taskId, Long userId){
-        System.out.println("taskId"+taskId+"userId"+userId);
-        TaskStudent taskStudent2 = new TaskStudent();
-        taskStudent2.setTaskId(taskId);
-        taskStudent2.setUserId(userId);
+    public int TaskCounts(TaskStudent taskStudent2){
         TaskStudent taskStudent = iTaskStudentService.selectTaskStudentByUserId(taskStudent2);
         TaskStudent taskStudent1 = new TaskStudent();
         BeanUtils.copyProperties(taskStudent,taskStudent1);
@@ -392,25 +372,20 @@ public class WindTurbineSimulation {
         return taskStudent1.getTaskCount();
     }
     //学生任务仿真模拟时间
-    public Date simulationTimes(Integer runSpeed,Long taskId, Long userId){
+    public Date simulationTimes(Integer runSpeed,TaskStudent taskStudent1){
         //总的时间
 //        Integer simulationTimeSeconds = taskCount * runSpeed;
         Integer simulationTimeSeconds = runSpeed;
-        TaskStudent taskStudent1 = new TaskStudent();
-        taskStudent1.setTaskId(taskId);
-        taskStudent1.setUserId(userId);
         TaskStudent taskStudent = iTaskStudentService.selectTaskStudentByUserId(taskStudent1);
         // 定义DateTimeFormatter格式化器
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
         LocalDateTime taskSimulateTime = LocalDateTime.parse(taskStudent.getTaskSimulateTime().toString(),formatter);
         Duration duration = Duration.ofSeconds(simulationTimeSeconds.longValue());
         LocalDateTime newTime = taskSimulateTime.plus(duration);
-        System.out.println("newTime"+newTime);
         Date simulationTimes = DateUtils.getSimulationTimes(newTime);
         //更新用户模拟时间
         taskStudent.setTaskSimulateTime(simulationTimes);
         int i = iTaskStudentService.updateTaskStudent(taskStudent);
-        System.out.println("abc"+i);
         return simulationTimes;
     }
 }

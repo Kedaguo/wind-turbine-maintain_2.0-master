@@ -11,7 +11,7 @@
         >
           <p
             class="alert-text"
-            style="text-align: center; color: #ed0505; font-size: 25px"
+            style="text-align: center; font-size: 25px"
           >
             任务尚未开始，请开始任务！
           </p>
