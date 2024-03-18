@@ -1,37 +1,17 @@
 # windTurbineMaintain_2.0
 
-#### 介绍
-海上风电
+#### Introduce
+Offshore Wind Power
+Offshore Wind Power Repair and Maintenance Online teaching platform is an online teaching platform with the goal of providing comprehensive wind power repair and maintenance knowledge. By combining the latest technology and teaching methods, we aim to provide students with high-quality teaching resources and practical opportunities to help them improve their skills and expertise in the field of offshore wind power repair and maintenance. The platform covers a wide range of course content, including repair and maintenance techniques for wind power equipment, safe operating practices, troubleshooting methods, and more. Participants can practice practical skills through practical simulations. Our practical simulation environment provides a real working environment and equipment simulation, enabling the College to conduct practical operations in a virtual environment and solve various repair and maintenance problems through simulation. Through our online teaching platform for offshore wind power repair and maintenance, students will gain comprehensive knowledge of wind power repair and maintenance, develop practical skills, and lay a solid foundation for their career development in the field of offshore wind power repair and maintenance. We invite you to join us and explore the exciting world of offshore wind!
 
-#### 软件架构
-软件架构说明
+#### Software Architecture
+Software architecture specification
+The project is based on Spring Boot and Vue technologies to realize the overall business functions and build an online teaching platform for offshore wind power maintenance and maintenance. On the basis of B/S model architecture, the front-end adopts Vue framework to display page data and render page effects. At the back end, Spring Boot framework is used to realize the business logic and data processing of the online teaching platform for offshore wind power repair and maintenance.
 
+#### Participation Contribution
 
-#### 安装教程
+1.  Front-end visual interface design
+2.  Code normalization
+3.  Data entry and check
+  
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
